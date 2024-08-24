@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "dart run orm"
+  output     = "../lib/_generated_prisma_client"
+  engineType = "flutter"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:sailBlog.db"
+}
+
+model Datapoint_local {
+  id                String    @id @default(cuid())
+  time              DateTime  @updatedAt
+  lat               Decimal
+  long              Decimal
+  speed             Decimal?
+  heading           Decimal?
+  depth             Decimal?
+  h_accuracy        Decimal?
+  v_accuracy        Decimal?
+  propulsion        String?
+  uploaded          Int       @default(0) // 0 local, 
+                                          // 1 uploaded,
+                                          // 2 different data
+}
