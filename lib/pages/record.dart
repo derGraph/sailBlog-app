@@ -40,24 +40,43 @@ class _RecordPage extends State<RecordPage> {
         ],
       ),
       Container(
+        margin: EdgeInsets.only(top: 5),
         alignment: Alignment.topCenter,
-        child: SegmentedButton(
-          showSelectedIcon: false,
-          style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
-          segments: const <ButtonSegment>[
-            ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
-            ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
-            ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
-            ButtonSegment(
-                value: Modes.motor, label: Icon(Icons.directions_boat))
-          ],
-          selected: {recorder.mode},
-          onSelectionChanged: (selectedState) {
-            setState(() {
-              recorder.setMode(selectedState.first);
-            });
-          },
-        ),
+        child: Column(children: [
+          SegmentedButton(
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              backgroundColor: Colors.grey[200],
+            ),
+            segments: const <ButtonSegment>[
+              ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
+              ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
+              ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
+              ButtonSegment(
+                  value: Modes.motor, label: Icon(Icons.directions_boat))
+            ],
+            selected: {recorder.mode},
+            onSelectionChanged: (selectedState) {
+              setState(() {
+                recorder.setMode(selectedState.first);
+              });
+            },
+          ),
+          SegmentedButton(
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
+            segments: const <ButtonSegment>[
+              ButtonSegment(value: false, label: Icon(Icons.wifi_off)),
+              ButtonSegment(value: true, label: Icon(Icons.wifi))
+            ],
+            selected: {recorder.online},
+            onSelectionChanged: (selectedOnline) {
+              setState(() {
+                recorder.setOnline(selectedOnline.first);
+              });
+            },
+          ),
+        ]),
       )
     ]);
   }
