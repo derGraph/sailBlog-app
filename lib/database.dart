@@ -37,7 +37,8 @@ class Database {
   }
 
   Future<List<LogMessage>> getLogs() async {
-    List<LogMessage> logs = (await prisma.logMessage.findMany()).toList();
+    List<LogMessage> logs =
+        (await prisma.logMessage.findMany()).toList().reversed.toList();
     return logs;
   }
 }
