@@ -18,7 +18,7 @@ class _SettingsPage extends State<SettingsPage> {
           child: const Text("Logs"),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const _LogsPage()));
+                MaterialPageRoute(builder: (context) => _LogsPage()));
           },
         )
       ],
@@ -27,8 +27,6 @@ class _SettingsPage extends State<SettingsPage> {
 }
 
 class _LogsPage extends StatelessWidget {
-  const _LogsPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
