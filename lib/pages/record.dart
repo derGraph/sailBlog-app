@@ -12,37 +12,40 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPage extends State<RecordPage> {
+  FlutterMap map = FlutterMap(
+    mapController: MapController(),
+    options: MapOptions(
+        initialCenter: LatLng(43.95, 14.79),
+        initialZoom: 8,
+        keepAlive: true,
+        interactionOptions: InteractionOptions(
+            flags: InteractiveFlag.drag |
+                InteractiveFlag.doubleTapZoom |
+                InteractiveFlag.flingAnimation |
+                InteractiveFlag.pinchMove |
+                InteractiveFlag.pinchZoom |
+                InteractiveFlag.doubleTapDragZoom |
+                InteractiveFlag.scrollWheelZoom)),
+    children: [
+      TileLayer(
+        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        maxZoom: 19,
+        tileProvider: FMTCStore('mapStore').getTileProvider(),
+      ),
+      TileLayer(
+        urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+        maxZoom: 19,
+        minNativeZoom: 9,
+        tileProvider: FMTCStore('mapStore').getTileProvider(),
+      ),
+      SimpleAttributionWidget(source: Text("OpenStreetMap"))
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      FlutterMap(
-        mapController: MapController(),
-        options: MapOptions(
-            initialCenter: LatLng(43.95, 14.79),
-            initialZoom: 8,
-            interactionOptions: InteractionOptions(
-                flags: InteractiveFlag.drag |
-                    InteractiveFlag.doubleTapZoom |
-                    InteractiveFlag.flingAnimation |
-                    InteractiveFlag.pinchMove |
-                    InteractiveFlag.pinchZoom |
-                    InteractiveFlag.doubleTapDragZoom |
-                    InteractiveFlag.scrollWheelZoom)),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            maxZoom: 19,
-            tileProvider: FMTCStore('mapStore').getTileProvider(),
-          ),
-          TileLayer(
-            urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-            maxZoom: 19,
-            minNativeZoom: 9,
-            tileProvider: FMTCStore('mapStore').getTileProvider(),
-          ),
-          SimpleAttributionWidget(source: Text("OpenStreetMap"))
-        ],
-      ),
+      map,
       Container(
         margin: EdgeInsets.only(top: 5),
         alignment: Alignment.topCenter,

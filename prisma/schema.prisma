@@ -36,3 +36,9 @@ model LogMessage {
   time            DateTime @updatedAt
   message         String
 }
+
+model StoredSettings {
+  id              String   @id @default(cuid())
+  own_source      Boolean
+  ip              String?
+}

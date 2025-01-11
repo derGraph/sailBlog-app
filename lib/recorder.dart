@@ -1,4 +1,6 @@
 import 'package:sailblog/database.dart';
+import 'package:sailblog/location_service.dart';
+import 'package:sailblog/pages/settings.dart';
 
 Recorder recorder = Recorder();
 
@@ -15,6 +17,15 @@ class Recorder {
 
   void setMode(Modes newMode) {
     database.log("Selected transportation ${newMode.name}!");
+    if (newMode.name == "off") {
+      //disable logger
+    } else {
+      //enable logger
+      if (settings.ownSource) {
+        //get data with own gps
+        locationService.init();
+      }
+    }
     mode = newMode;
   }
 }

@@ -4,8 +4,15 @@ import 'package:sailblog/pages/record.dart';
 import 'package:sailblog/pages/settings.dart';
 import 'package:sailblog/database.dart';
 
-void main() {
-  runApp(const MainApp());
+MainApp mainApp = MainApp();
+
+void main() async {
+  await database.init();
+  runApp(MaterialApp(home: mainApp));
+}
+
+class NavigationService {
+  static final navigatorKey = GlobalKey<NavigatorState>();
 }
 
 class MainApp extends StatelessWidget {
@@ -13,19 +20,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await database.init();
-    });
-    return const MaterialApp(
-      home: HomePage(),
+    return MaterialApp(
+      navigatorKey: NavigationService.navigatorKey, // line of interest
+      home: const HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -46,7 +49,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+      Scaffold(
         appBar: AppBar(title: const Text('sailBlog')),
         drawer: Drawer(
           child: ListView(

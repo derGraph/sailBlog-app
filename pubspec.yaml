@@ -74,3 +74,4 @@ flutter:
   assets:
     - prisma/migrations/
     - prisma/migrations/20250110230441_/
+    - prisma/migrations/20250111192702_/

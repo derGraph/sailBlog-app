@@ -17,8 +17,8 @@ class _SettingsPage extends State<SettingsPage> {
         ElevatedButton(
           child: const Text("Logs"),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => _LogsPage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => _LogsPage()));
           },
         )
       ],
@@ -63,4 +63,21 @@ class _LogsPage extends StatelessWidget {
     }
     return returnWidgets;
   }
+}
+
+Settings settings = Settings();
+
+class Settings {
+  bool ownSource = true;
+  String ip = "127.0.0.1:1000";
+  String id = "";
+
+  Future<void> init() async {
+    StoredSettings setting = (await database.getSettings());
+    ownSource = setting.ownSource!;
+    if (setting.ip != null) ip = setting.ip!;
+    if (setting.id != null) id = setting.id!;
+  }
+
+  Map<String, dynamic> toJson() => {'id': id, 'ownSource': ownSource, 'ip': ip};
 }

@@ -1519,6 +1519,60 @@ class DatapointLocalUncheckedUpdateManyInput
       };
 }
 
+class UpdateManyDatapointLocalAndReturnOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const UpdateManyDatapointLocalAndReturnOutputTypeSelect({
+    this.id,
+    this.time,
+    this.lat,
+    this.long,
+    this.speed,
+    this.heading,
+    this.depth,
+    this.hAccuracy,
+    this.vAccuracy,
+    this.propulsion,
+    this.uploaded,
+  });
+
+  final bool? id;
+
+  final bool? time;
+
+  final bool? lat;
+
+  final bool? long;
+
+  final bool? speed;
+
+  final bool? heading;
+
+  final bool? depth;
+
+  final bool? hAccuracy;
+
+  final bool? vAccuracy;
+
+  final bool? propulsion;
+
+  final bool? uploaded;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'time': time,
+        'lat': lat,
+        'long': long,
+        'speed': speed,
+        'heading': heading,
+        'depth': depth,
+        'h_accuracy': hAccuracy,
+        'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
+        'uploaded': uploaded,
+      };
+}
+
 class DatapointLocalCountAggregateOutputType {
   const DatapointLocalCountAggregateOutputType({
     this.id,
@@ -3996,6 +4050,28 @@ class LogMessageUncheckedUpdateManyInput
       };
 }
 
+class UpdateManyLogMessageAndReturnOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const UpdateManyLogMessageAndReturnOutputTypeSelect({
+    this.id,
+    this.time,
+    this.message,
+  });
+
+  final bool? id;
+
+  final bool? time;
+
+  final bool? message;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'time': time,
+        'message': message,
+      };
+}
+
 class LogMessageCountAggregateOutputType {
   const LogMessageCountAggregateOutputType({
     this.id,
@@ -4487,6 +4563,947 @@ class AggregateLogMessageSelect
   final _i1.PrismaUnion<bool, _i2.AggregateLogMessageMinArgs>? $min;
 
   final _i1.PrismaUnion<bool, _i2.AggregateLogMessageMaxArgs>? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
+class NestedBoolFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const NestedBoolFilter({
+    this.equals,
+    this.not,
+  });
+
+  final _i1.PrismaUnion<bool, _i1.Reference<bool>>? equals;
+
+  final _i1.PrismaUnion<bool, _i2.NestedBoolFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'not': not,
+      };
+}
+
+class BoolFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const BoolFilter({
+    this.equals,
+    this.not,
+  });
+
+  final _i1.PrismaUnion<bool, _i1.Reference<bool>>? equals;
+
+  final _i1.PrismaUnion<bool, _i2.NestedBoolFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'not': not,
+      };
+}
+
+class StoredSettingsWhereInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
+      Iterable<_i2.StoredSettingsWhereInput>>? AND;
+
+  final Iterable<_i2.StoredSettingsWhereInput>? OR;
+
+  final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
+      Iterable<_i2.StoredSettingsWhereInput>>? NOT;
+
+  final _i1.PrismaUnion<_i2.StringFilter, String>? id;
+
+  final _i1.PrismaUnion<_i2.BoolFilter, bool>? ownSource;
+
+  final _i1.PrismaUnion<_i2.StringNullableFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsWhereUniqueInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsWhereUniqueInput({
+    this.id,
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.ownSource,
+    this.ip,
+  });
+
+  final String? id;
+
+  final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
+      Iterable<_i2.StoredSettingsWhereInput>>? AND;
+
+  final Iterable<_i2.StoredSettingsWhereInput>? OR;
+
+  final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
+      Iterable<_i2.StoredSettingsWhereInput>>? NOT;
+
+  final _i1.PrismaUnion<_i2.BoolFilter, bool>? ownSource;
+
+  final _i1.PrismaUnion<_i2.StringNullableFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsOrderByWithRelationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsOrderByWithRelationInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i2.SortOrder? id;
+
+  final _i2.SortOrder? ownSource;
+
+  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+enum StoredSettingsScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
+  id<String>('id', 'StoredSettings'),
+  ownSource<bool>('own_source', 'StoredSettings'),
+  ip<String>('ip', 'StoredSettings');
+
+  const StoredSettingsScalar(
+    this.name,
+    this.model,
+  );
+
+  @override
+  final String name;
+
+  @override
+  final String model;
+}
+
+class StoredSettingsCreateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsCreateInput({
+    this.id,
+    required this.ownSource,
+    this.ip,
+  });
+
+  final String? id;
+
+  final bool ownSource;
+
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsUncheckedCreateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsUncheckedCreateInput({
+    this.id,
+    required this.ownSource,
+    this.ip,
+  });
+
+  final String? id;
+
+  final bool ownSource;
+
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsCreateManyInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsCreateManyInput({
+    this.id,
+    required this.ownSource,
+    this.ip,
+  });
+
+  final String? id;
+
+  final bool ownSource;
+
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class CreateManyStoredSettingsAndReturnOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const CreateManyStoredSettingsAndReturnOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class BoolFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const BoolFieldUpdateOperationsInput({this.set});
+
+  final bool? set;
+
+  @override
+  Map<String, dynamic> toJson() => {'set': set};
+}
+
+class StoredSettingsUpdateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsUpdateInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsUncheckedUpdateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsUncheckedUpdateInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsUpdateManyMutationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsUpdateManyMutationInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsUncheckedUpdateManyInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsUncheckedUpdateManyInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class UpdateManyStoredSettingsAndReturnOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const UpdateManyStoredSettingsAndReturnOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsCountAggregateOutputType {
+  const StoredSettingsCountAggregateOutputType({
+    this.id,
+    this.ownSource,
+    this.ip,
+    this.$all,
+  });
+
+  factory StoredSettingsCountAggregateOutputType.fromJson(Map json) =>
+      StoredSettingsCountAggregateOutputType(
+        id: json['id'],
+        ownSource: json['own_source'],
+        ip: json['ip'],
+        $all: json['_all'],
+      );
+
+  final int? id;
+
+  final int? ownSource;
+
+  final int? ip;
+
+  final int? $all;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+        '_all': $all,
+      };
+}
+
+class StoredSettingsMinAggregateOutputType {
+  const StoredSettingsMinAggregateOutputType({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  factory StoredSettingsMinAggregateOutputType.fromJson(Map json) =>
+      StoredSettingsMinAggregateOutputType(
+        id: json['id'],
+        ownSource: json['own_source'],
+        ip: json['ip'],
+      );
+
+  final String? id;
+
+  final bool? ownSource;
+
+  final String? ip;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsMaxAggregateOutputType {
+  const StoredSettingsMaxAggregateOutputType({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  factory StoredSettingsMaxAggregateOutputType.fromJson(Map json) =>
+      StoredSettingsMaxAggregateOutputType(
+        id: json['id'],
+        ownSource: json['own_source'],
+        ip: json['ip'],
+      );
+
+  final String? id;
+
+  final bool? ownSource;
+
+  final String? ip;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsGroupByOutputType {
+  const StoredSettingsGroupByOutputType({
+    this.id,
+    this.ownSource,
+    this.ip,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  factory StoredSettingsGroupByOutputType.fromJson(Map json) =>
+      StoredSettingsGroupByOutputType(
+        id: json['id'],
+        ownSource: json['own_source'],
+        ip: json['ip'],
+        $count: json['_count'] is Map
+            ? _i2.StoredSettingsCountAggregateOutputType.fromJson(
+                json['_count'])
+            : null,
+        $min: json['_min'] is Map
+            ? _i2.StoredSettingsMinAggregateOutputType.fromJson(json['_min'])
+            : null,
+        $max: json['_max'] is Map
+            ? _i2.StoredSettingsMaxAggregateOutputType.fromJson(json['_max'])
+            : null,
+      );
+
+  final String? id;
+
+  final bool? ownSource;
+
+  final String? ip;
+
+  final _i2.StoredSettingsCountAggregateOutputType? $count;
+
+  final _i2.StoredSettingsMinAggregateOutputType? $min;
+
+  final _i2.StoredSettingsMaxAggregateOutputType? $max;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+        '_count': $count?.toJson(),
+        '_min': $min?.toJson(),
+        '_max': $max?.toJson(),
+      };
+}
+
+class StoredSettingsCountOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsCountOrderByAggregateInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i2.SortOrder? id;
+
+  final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsMaxOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsMaxOrderByAggregateInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i2.SortOrder? id;
+
+  final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsMinOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsMinOrderByAggregateInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i2.SortOrder? id;
+
+  final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsOrderByWithAggregationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsOrderByWithAggregationInput({
+    this.id,
+    this.ownSource,
+    this.ip,
+    this.$count,
+    this.$max,
+    this.$min,
+  });
+
+  final _i2.SortOrder? id;
+
+  final _i2.SortOrder? ownSource;
+
+  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
+
+  final _i2.StoredSettingsCountOrderByAggregateInput? $count;
+
+  final _i2.StoredSettingsMaxOrderByAggregateInput? $max;
+
+  final _i2.StoredSettingsMinOrderByAggregateInput? $min;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+        '_count': $count,
+        '_max': $max,
+        '_min': $min,
+      };
+}
+
+class NestedBoolWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const NestedBoolWithAggregatesFilter({
+    this.equals,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final _i1.PrismaUnion<bool, _i1.Reference<bool>>? equals;
+
+  final _i1.PrismaUnion<bool, _i2.NestedBoolWithAggregatesFilter>? not;
+
+  final _i2.NestedIntFilter? $count;
+
+  final _i2.NestedBoolFilter? $min;
+
+  final _i2.NestedBoolFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
+class BoolWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const BoolWithAggregatesFilter({
+    this.equals,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final _i1.PrismaUnion<bool, _i1.Reference<bool>>? equals;
+
+  final _i1.PrismaUnion<bool, _i2.NestedBoolWithAggregatesFilter>? not;
+
+  final _i2.NestedIntFilter? $count;
+
+  final _i2.NestedBoolFilter? $min;
+
+  final _i2.NestedBoolFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
+class StoredSettingsScalarWhereWithAggregatesInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final _i1.PrismaUnion<_i2.StoredSettingsScalarWhereWithAggregatesInput,
+      Iterable<_i2.StoredSettingsScalarWhereWithAggregatesInput>>? AND;
+
+  final Iterable<_i2.StoredSettingsScalarWhereWithAggregatesInput>? OR;
+
+  final _i1.PrismaUnion<_i2.StoredSettingsScalarWhereWithAggregatesInput,
+      Iterable<_i2.StoredSettingsScalarWhereWithAggregatesInput>>? NOT;
+
+  final _i1.PrismaUnion<_i2.StringWithAggregatesFilter, String>? id;
+
+  final _i1.PrismaUnion<_i2.BoolWithAggregatesFilter, bool>? ownSource;
+
+  final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsCountAggregateOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsCountAggregateOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+    this.$all,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  final bool? $all;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+        '_all': $all,
+      };
+}
+
+class StoredSettingsGroupByOutputTypeCountArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeCountArgs({this.select});
+
+  final _i2.StoredSettingsCountAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class StoredSettingsMinAggregateOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsMinAggregateOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsGroupByOutputTypeMinArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeMinArgs({this.select});
+
+  final _i2.StoredSettingsMinAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class StoredSettingsMaxAggregateOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsMaxAggregateOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+      };
+}
+
+class StoredSettingsGroupByOutputTypeMaxArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeMaxArgs({this.select});
+
+  final _i2.StoredSettingsMaxAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class StoredSettingsGroupByOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeSelect({
+    this.id,
+    this.ownSource,
+    this.ip,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final bool? id;
+
+  final bool? ownSource;
+
+  final bool? ip;
+
+  final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeCountArgs>?
+      $count;
+
+  final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeMinArgs>? $min;
+
+  final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeMaxArgs>? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'own_source': ownSource,
+        'ip': ip,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
+class AggregateStoredSettings {
+  const AggregateStoredSettings({
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  factory AggregateStoredSettings.fromJson(Map json) => AggregateStoredSettings(
+        $count: json['_count'] is Map
+            ? _i2.StoredSettingsCountAggregateOutputType.fromJson(
+                json['_count'])
+            : null,
+        $min: json['_min'] is Map
+            ? _i2.StoredSettingsMinAggregateOutputType.fromJson(json['_min'])
+            : null,
+        $max: json['_max'] is Map
+            ? _i2.StoredSettingsMaxAggregateOutputType.fromJson(json['_max'])
+            : null,
+      );
+
+  final _i2.StoredSettingsCountAggregateOutputType? $count;
+
+  final _i2.StoredSettingsMinAggregateOutputType? $min;
+
+  final _i2.StoredSettingsMaxAggregateOutputType? $max;
+
+  Map<String, dynamic> toJson() => {
+        '_count': $count?.toJson(),
+        '_min': $min?.toJson(),
+        '_max': $max?.toJson(),
+      };
+}
+
+class AggregateStoredSettingsCountArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsCountArgs({this.select});
+
+  final _i2.StoredSettingsCountAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class AggregateStoredSettingsMinArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsMinArgs({this.select});
+
+  final _i2.StoredSettingsMinAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class AggregateStoredSettingsMaxArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsMaxArgs({this.select});
+
+  final _i2.StoredSettingsMaxAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class AggregateStoredSettingsSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsSelect({
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsCountArgs>? $count;
+
+  final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsMinArgs>? $min;
+
+  final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsMaxArgs>? $max;
 
   @override
   Map<String, dynamic> toJson() => {

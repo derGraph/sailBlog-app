@@ -324,6 +324,39 @@ class DatapointLocalDelegate {
     );
   }
 
+  _i1.ActionClient<Iterable<_i2.UpdateManyDatapointLocalAndReturnOutputType>>
+      updateManyAndReturn({
+    required _i1.PrismaUnion<_i3.DatapointLocalUpdateManyMutationInput,
+            _i3.DatapointLocalUncheckedUpdateManyInput>
+        data,
+    _i3.DatapointLocalWhereInput? where,
+    _i3.UpdateManyDatapointLocalAndReturnOutputTypeSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'Datapoint_local',
+      action: _i1.JsonQueryAction.updateManyAndReturn,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<
+        Iterable<_i2.UpdateManyDatapointLocalAndReturnOutputType>>(
+      action: 'updateManyDatapoint_localAndReturn',
+      result: result,
+      factory: (values) => (values as Iterable).map(
+          (e) => _i2.UpdateManyDatapointLocalAndReturnOutputType.fromJson(e)),
+    );
+  }
+
   _i1.ActionClient<_i2.DatapointLocal> upsert({
     required _i3.DatapointLocalWhereUniqueInput where,
     required _i1.PrismaUnion<_i3.DatapointLocalCreateInput,
@@ -798,6 +831,39 @@ class LogMessageDelegate {
     );
   }
 
+  _i1.ActionClient<Iterable<_i2.UpdateManyLogMessageAndReturnOutputType>>
+      updateManyAndReturn({
+    required _i1.PrismaUnion<_i3.LogMessageUpdateManyMutationInput,
+            _i3.LogMessageUncheckedUpdateManyInput>
+        data,
+    _i3.LogMessageWhereInput? where,
+    _i3.UpdateManyLogMessageAndReturnOutputTypeSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'LogMessage',
+      action: _i1.JsonQueryAction.updateManyAndReturn,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<
+        Iterable<_i2.UpdateManyLogMessageAndReturnOutputType>>(
+      action: 'updateManyLogMessageAndReturn',
+      result: result,
+      factory: (values) => (values as Iterable)
+          .map((e) => _i2.UpdateManyLogMessageAndReturnOutputType.fromJson(e)),
+    );
+  }
+
   _i1.ActionClient<_i2.LogMessage> upsert({
     required _i3.LogMessageWhereUniqueInput where,
     required _i1.PrismaUnion<_i3.LogMessageCreateInput,
@@ -953,6 +1019,516 @@ class LogMessageDelegate {
       action: 'aggregateLogMessage',
       result: result,
       factory: (e) => _i3.AggregateLogMessage.fromJson(e),
+    );
+  }
+}
+
+class StoredSettingsDelegate {
+  const StoredSettingsDelegate._(this._client);
+
+  final PrismaClient _client;
+
+  _i1.ActionClient<_i2.StoredSettings?> findUnique({
+    required _i3.StoredSettingsWhereUniqueInput where,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.findUnique,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings?>(
+      action: 'findUniqueStoredSettings',
+      result: result,
+      factory: (e) => e != null ? _i2.StoredSettings.fromJson(e) : null,
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings> findUniqueOrThrow({
+    required _i3.StoredSettingsWhereUniqueInput where,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.findUniqueOrThrow,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings>(
+      action: 'findUniqueStoredSettingsOrThrow',
+      result: result,
+      factory: (e) => _i2.StoredSettings.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings?> findFirst({
+    _i3.StoredSettingsWhereInput? where,
+    _i1.PrismaUnion<Iterable<_i3.StoredSettingsOrderByWithRelationInput>,
+            _i3.StoredSettingsOrderByWithRelationInput>?
+        orderBy,
+    _i3.StoredSettingsWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    _i1.PrismaUnion<_i3.StoredSettingsScalar,
+            Iterable<_i3.StoredSettingsScalar>>?
+        distinct,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'orderBy': orderBy,
+      'cursor': cursor,
+      'take': take,
+      'skip': skip,
+      'distinct': distinct,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.findFirst,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings?>(
+      action: 'findFirstStoredSettings',
+      result: result,
+      factory: (e) => e != null ? _i2.StoredSettings.fromJson(e) : null,
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings> findFirstOrThrow({
+    _i3.StoredSettingsWhereInput? where,
+    _i1.PrismaUnion<Iterable<_i3.StoredSettingsOrderByWithRelationInput>,
+            _i3.StoredSettingsOrderByWithRelationInput>?
+        orderBy,
+    _i3.StoredSettingsWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    _i1.PrismaUnion<_i3.StoredSettingsScalar,
+            Iterable<_i3.StoredSettingsScalar>>?
+        distinct,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'orderBy': orderBy,
+      'cursor': cursor,
+      'take': take,
+      'skip': skip,
+      'distinct': distinct,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.findFirstOrThrow,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings>(
+      action: 'findFirstStoredSettingsOrThrow',
+      result: result,
+      factory: (e) => _i2.StoredSettings.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<Iterable<_i2.StoredSettings>> findMany({
+    _i3.StoredSettingsWhereInput? where,
+    _i1.PrismaUnion<Iterable<_i3.StoredSettingsOrderByWithRelationInput>,
+            _i3.StoredSettingsOrderByWithRelationInput>?
+        orderBy,
+    _i3.StoredSettingsWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    _i1.PrismaUnion<_i3.StoredSettingsScalar,
+            Iterable<_i3.StoredSettingsScalar>>?
+        distinct,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'orderBy': orderBy,
+      'cursor': cursor,
+      'take': take,
+      'skip': skip,
+      'distinct': distinct,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.findMany,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<Iterable<_i2.StoredSettings>>(
+      action: 'findManyStoredSettings',
+      result: result,
+      factory: (values) =>
+          (values as Iterable).map((e) => _i2.StoredSettings.fromJson(e)),
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings> create({
+    required _i1.PrismaUnion<_i3.StoredSettingsCreateInput,
+            _i3.StoredSettingsUncheckedCreateInput>
+        data,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.createOne,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings>(
+      action: 'createOneStoredSettings',
+      result: result,
+      factory: (e) => _i2.StoredSettings.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<_i3.AffectedRowsOutput> createMany(
+      {required _i1.PrismaUnion<_i3.StoredSettingsCreateManyInput,
+              Iterable<_i3.StoredSettingsCreateManyInput>>
+          data}) {
+    final args = {'data': data};
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.createMany,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i3.AffectedRowsOutput>(
+      action: 'createManyStoredSettings',
+      result: result,
+      factory: (e) => _i3.AffectedRowsOutput.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<Iterable<_i2.CreateManyStoredSettingsAndReturnOutputType>>
+      createManyAndReturn({
+    required _i1.PrismaUnion<_i3.StoredSettingsCreateManyInput,
+            Iterable<_i3.StoredSettingsCreateManyInput>>
+        data,
+    _i3.CreateManyStoredSettingsAndReturnOutputTypeSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.createManyAndReturn,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<
+        Iterable<_i2.CreateManyStoredSettingsAndReturnOutputType>>(
+      action: 'createManyStoredSettingsAndReturn',
+      result: result,
+      factory: (values) => (values as Iterable).map(
+          (e) => _i2.CreateManyStoredSettingsAndReturnOutputType.fromJson(e)),
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings?> update({
+    required _i1.PrismaUnion<_i3.StoredSettingsUpdateInput,
+            _i3.StoredSettingsUncheckedUpdateInput>
+        data,
+    required _i3.StoredSettingsWhereUniqueInput where,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.updateOne,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings?>(
+      action: 'updateOneStoredSettings',
+      result: result,
+      factory: (e) => e != null ? _i2.StoredSettings.fromJson(e) : null,
+    );
+  }
+
+  _i1.ActionClient<_i3.AffectedRowsOutput> updateMany({
+    required _i1.PrismaUnion<_i3.StoredSettingsUpdateManyMutationInput,
+            _i3.StoredSettingsUncheckedUpdateManyInput>
+        data,
+    _i3.StoredSettingsWhereInput? where,
+  }) {
+    final args = {
+      'data': data,
+      'where': where,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.updateMany,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i3.AffectedRowsOutput>(
+      action: 'updateManyStoredSettings',
+      result: result,
+      factory: (e) => _i3.AffectedRowsOutput.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<Iterable<_i2.UpdateManyStoredSettingsAndReturnOutputType>>
+      updateManyAndReturn({
+    required _i1.PrismaUnion<_i3.StoredSettingsUpdateManyMutationInput,
+            _i3.StoredSettingsUncheckedUpdateManyInput>
+        data,
+    _i3.StoredSettingsWhereInput? where,
+    _i3.UpdateManyStoredSettingsAndReturnOutputTypeSelect? select,
+  }) {
+    final args = {
+      'data': data,
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.updateManyAndReturn,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<
+        Iterable<_i2.UpdateManyStoredSettingsAndReturnOutputType>>(
+      action: 'updateManyStoredSettingsAndReturn',
+      result: result,
+      factory: (values) => (values as Iterable).map(
+          (e) => _i2.UpdateManyStoredSettingsAndReturnOutputType.fromJson(e)),
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings> upsert({
+    required _i3.StoredSettingsWhereUniqueInput where,
+    required _i1.PrismaUnion<_i3.StoredSettingsCreateInput,
+            _i3.StoredSettingsUncheckedCreateInput>
+        create,
+    required _i1.PrismaUnion<_i3.StoredSettingsUpdateInput,
+            _i3.StoredSettingsUncheckedUpdateInput>
+        update,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'create': create,
+      'update': update,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.upsertOne,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings>(
+      action: 'upsertOneStoredSettings',
+      result: result,
+      factory: (e) => _i2.StoredSettings.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<_i2.StoredSettings?> delete({
+    required _i3.StoredSettingsWhereUniqueInput where,
+    _i3.StoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.deleteOne,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i2.StoredSettings?>(
+      action: 'deleteOneStoredSettings',
+      result: result,
+      factory: (e) => e != null ? _i2.StoredSettings.fromJson(e) : null,
+    );
+  }
+
+  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany(
+      {_i3.StoredSettingsWhereInput? where}) {
+    final args = {'where': where};
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.deleteMany,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i3.AffectedRowsOutput>(
+      action: 'deleteManyStoredSettings',
+      result: result,
+      factory: (e) => _i3.AffectedRowsOutput.fromJson(e),
+    );
+  }
+
+  _i1.ActionClient<Iterable<_i3.StoredSettingsGroupByOutputType>> groupBy({
+    _i3.StoredSettingsWhereInput? where,
+    _i1.PrismaUnion<Iterable<_i3.StoredSettingsOrderByWithAggregationInput>,
+            _i3.StoredSettingsOrderByWithAggregationInput>?
+        orderBy,
+    required _i1.PrismaUnion<Iterable<_i3.StoredSettingsScalar>,
+            _i3.StoredSettingsScalar>
+        by,
+    _i3.StoredSettingsScalarWhereWithAggregatesInput? having,
+    int? take,
+    int? skip,
+    _i3.StoredSettingsGroupByOutputTypeSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'orderBy': orderBy,
+      'by': _i1.JsonQuery.groupBySerializer(by),
+      'having': having,
+      'take': take,
+      'skip': skip,
+      'select': select ?? _i1.JsonQuery.groupBySelectSerializer(by),
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.groupBy,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<Iterable<_i3.StoredSettingsGroupByOutputType>>(
+      action: 'groupByStoredSettings',
+      result: result,
+      factory: (values) => (values as Iterable)
+          .map((e) => _i3.StoredSettingsGroupByOutputType.fromJson(e)),
+    );
+  }
+
+  _i1.ActionClient<_i3.AggregateStoredSettings> aggregate({
+    _i3.StoredSettingsWhereInput? where,
+    _i1.PrismaUnion<Iterable<_i3.StoredSettingsOrderByWithRelationInput>,
+            _i3.StoredSettingsOrderByWithRelationInput>?
+        orderBy,
+    _i3.StoredSettingsWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    _i3.AggregateStoredSettingsSelect? select,
+  }) {
+    final args = {
+      'where': where,
+      'orderBy': orderBy,
+      'cursor': cursor,
+      'take': take,
+      'skip': skip,
+      'select': select,
+    };
+    final query = _i1.serializeJsonQuery(
+      args: args,
+      modelName: 'StoredSettings',
+      action: _i1.JsonQueryAction.aggregate,
+      datamodel: PrismaClient.datamodel,
+    );
+    final result = _client.$engine.request(
+      query,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
+    );
+    return _i1.ActionClient<_i3.AggregateStoredSettings>(
+      action: 'aggregateStoredSettings',
+      result: result,
+      factory: (e) => _i3.AggregateStoredSettings.fromJson(e),
     );
   }
 }
@@ -1196,6 +1772,63 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
         'uniqueIndexes': [],
         'isGenerated': false,
       },
+      {
+        'name': 'StoredSettings',
+        'dbName': null,
+        'schema': null,
+        'fields': [
+          {
+            'name': 'id',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': true,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'String',
+            'nativeType': null,
+            'default': {
+              'name': 'cuid',
+              'args': [1],
+            },
+            'isGenerated': false,
+            'isUpdatedAt': false,
+          },
+          {
+            'name': 'own_source',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'Boolean',
+            'nativeType': null,
+            'isGenerated': false,
+            'isUpdatedAt': false,
+          },
+          {
+            'name': 'ip',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': false,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'String',
+            'nativeType': null,
+            'isGenerated': false,
+            'isUpdatedAt': false,
+          },
+        ],
+        'primaryKey': null,
+        'uniqueFields': [],
+        'uniqueIndexes': [],
+        'isGenerated': false,
+      },
     ],
     'types': [],
     'indexes': [
@@ -1215,6 +1848,14 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
           {'name': 'id'}
         ],
       },
+      {
+        'model': 'StoredSettings',
+        'type': 'id',
+        'isDefinedOnField': true,
+        'fields': [
+          {'name': 'id'}
+        ],
+      },
     ],
   });
 
@@ -1227,6 +1868,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
     if (_transaction != null) return _transaction!;
     PrismaClient factory(_i1.TransactionClient<PrismaClient> transaction) {
       final client = PrismaClient(
+        engine: $engine,
         datasources: $options.datasources,
         datasourceUrl: $options.datasourceUrl,
         errorFormat: $options.errorFormat,
@@ -1244,7 +1886,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
   @override
   get $engine => _engine ??= _i5.LibraryEngine(
         schema:
-            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion String?\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n',
+            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion String?\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n\nmodel StoredSettings {\n  id         String  @id @default(cuid())\n  own_source Boolean\n  ip         String?\n}\n',
         datasources: const {
           'db': _i1.Datasource(
             _i1.DatasourceType.url,
@@ -1260,4 +1902,6 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
   DatapointLocalDelegate get datapointLocal => DatapointLocalDelegate._(this);
 
   LogMessageDelegate get logMessage => LogMessageDelegate._(this);
+
+  StoredSettingsDelegate get storedSettings => StoredSettingsDelegate._(this);
 }

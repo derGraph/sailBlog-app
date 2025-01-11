@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
+import 'package:sailblog/pages/settings.dart';
 import '_generated_prisma_client/client.dart';
 
 late final PrismaClient prisma;
@@ -28,6 +29,8 @@ class Database {
       await prisma.$connect();
       await engine?.applyMigrations(path: 'prisma/migrations');
       log("Connected to DB");
+      await settings.init();
+      log("Settings loaded: ${settings.toJson()}");
       connected = true;
       await FMTCObjectBoxBackend().initialise();
       await FMTCStore('mapStore').manage.create();
@@ -44,6 +47,21 @@ class Database {
     List<LogMessage> logs =
         (await prisma.logMessage.findMany()).toList().reversed.toList();
     return logs;
+  }
+
+  Future<StoredSettings> getSettings() async {
+    StoredSettings? settings;
+    try {
+      settings = (await prisma.storedSettings.findFirst());
+    } catch (exception) {
+      log("getSettings Error: $exception");
+    }
+    settings ??= StoredSettings(
+      id: "id",
+      ownSource: true,
+      ip: null,
+    );
+    return settings;
   }
 }
 
