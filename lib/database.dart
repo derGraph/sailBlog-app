@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:orm/orm.dart';
+import 'package:orm_flutter/orm_flutter.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sailblog/_generated_prisma_client/model.dart';
+import 'package:sailblog/_generated_prisma_client/prisma.dart';
+import '_generated_prisma_client/client.dart';
+
+late final PrismaClient prisma;
+
+class Database {
+  bool connected = false;
+  Future<void> init() async {
+    if (!connected) {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      final supportDir = await getApplicationSupportDirectory();
+      final database = join(supportDir.path, 'database.sqlite.db');
+
+      prisma = PrismaClient(datasourceUrl: 'file:$database');
+      final engine = switch (prisma.$engine) {
+        LibraryEngine engine => engine,
+        _ => null,
+      };
+
+      await prisma.$connect();
+      await engine?.applyMigrations(path: 'prisma/migrations');
+      log("Connected to DB");
+      connected = true;
+    }
+  }
+
+  Future<void> log(String logMessage) async {
+    await prisma.logMessage.create(
+        data: PrismaUnion.$1(LogMessageCreateInput(message: logMessage)));
+  }
+
+  Future<List<LogMessage>> getLogs() async {
+    List<LogMessage> logs = (await prisma.logMessage.findMany()).toList();
+    return logs;
+  }
+}
+
+Database database = Database();
