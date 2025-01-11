@@ -14,8 +14,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () async {
+      WidgetsFlutterBinding.ensureInitialized();
       await database.init();
-      await database.log("HI");
     });
     return const MaterialApp(
       home: HomePage(),

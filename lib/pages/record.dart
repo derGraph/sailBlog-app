@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sailblog/recorder.dart';
 
@@ -29,12 +30,15 @@ class _RecordPage extends State<RecordPage> {
                     InteractiveFlag.scrollWheelZoom)),
         children: [
           TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              maxZoom: 19),
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            maxZoom: 19,
+            tileProvider: FMTCStore('mapStore').getTileProvider(),
+          ),
           TileLayer(
             urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
             maxZoom: 19,
             minNativeZoom: 9,
+            tileProvider: FMTCStore('mapStore').getTileProvider(),
           ),
           SimpleAttributionWidget(source: Text("OpenStreetMap"))
         ],

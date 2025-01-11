@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:orm/orm.dart';
 import 'package:orm_flutter/orm_flutter.dart';
 import 'package:path/path.dart';
@@ -28,6 +29,9 @@ class Database {
       await engine?.applyMigrations(path: 'prisma/migrations');
       log("Connected to DB");
       connected = true;
+      await FMTCObjectBoxBackend().initialise();
+      await FMTCStore('mapStore').manage.create();
+      await log("Map storage Initialized!");
     }
   }
 
