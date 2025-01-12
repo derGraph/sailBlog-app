@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/pages/settings.dart';
+import 'package:sailblog/recorder.dart';
 import '_generated_prisma_client/client.dart';
 
 late final PrismaClient prisma;
@@ -62,6 +63,26 @@ class Database {
       ip: null,
     );
     return settings;
+  }
+
+  Future<void> addDatapoint(String latitude, String longitude, Modes mode, {String? hAccuracy, String? vAccuracy, String? heading, String? speed}) async {
+
+    await prisma.datapointLocal.create(
+          data: PrismaUnion.$1(DatapointLocalCreateInput(
+              lat: Decimal.fromJson(latitude.toString()),
+              long: Decimal.fromJson(longitude.toString()),
+              hAccuracy: PrismaUnion.$1(
+                  Decimal.fromJson(hAccuracy.toString())),
+              vAccuracy: PrismaUnion.$1(Decimal.fromJson(
+                  vAccuracy.toString())),
+              heading: PrismaUnion.$1(
+                  Decimal.fromJson(heading.toString())),
+              speed: PrismaUnion.$1(
+                  Decimal.fromJson(speed.toString())),
+              propulsion: PrismaUnion.$1(
+                  mode.toString(),
+                  ))),
+        );
   }
 }
 
