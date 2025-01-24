@@ -52,7 +52,7 @@ class DatapointLocal {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -123,7 +123,7 @@ class CreateManyDatapointLocalAndReturnOutputType {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -194,7 +194,7 @@ class UpdateManyDatapointLocalAndReturnOutputType {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -310,12 +310,14 @@ class StoredSettings {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   factory StoredSettings.fromJson(Map json) => StoredSettings(
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
       );
 
   final String? id;
@@ -324,10 +326,13 @@ class StoredSettings {
 
   final String? ip;
 
+  final int? lastMode;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -336,6 +341,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   factory CreateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
@@ -343,6 +349,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
       );
 
   final String? id;
@@ -351,10 +358,13 @@ class CreateManyStoredSettingsAndReturnOutputType {
 
   final String? ip;
 
+  final int? lastMode;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -363,6 +373,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   factory UpdateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
@@ -370,6 +381,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
       );
 
   final String? id;
@@ -378,9 +390,12 @@ class UpdateManyStoredSettingsAndReturnOutputType {
 
   final String? ip;
 
+  final int? lastMode;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }

@@ -25,7 +25,7 @@ model Datapoint_local {
   depth             Decimal?
   h_accuracy        Decimal?
   v_accuracy        Decimal?
-  propulsion        String?
+  propulsion        Int
   uploaded          Int       @default(0) // 0 local, 
                                           // 1 uploaded,
                                           // 2 different data
@@ -41,4 +41,5 @@ model StoredSettings {
   id              String   @id @default(cuid())
   own_source      Boolean
   ip              String?
+  lastMode        Int
 }

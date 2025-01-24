@@ -1,12 +1,13 @@
 import 'package:sailblog/database.dart';
 import 'package:sailblog/location_service.dart';
+import 'package:sailblog/pages/settings.dart';
 
 Recorder recorder = Recorder();
 
 enum Modes { off, anchor, sailing, motor }
 
 class Recorder {
-  Modes mode = Modes.values[0];
+  Modes mode = Modes.values[settings.lastMode];
   bool online = false;
 
   void setOnline(bool newOnline) {
@@ -15,6 +16,7 @@ class Recorder {
   }
 
   void setMode(Modes newMode) {
+    settings.changeLastMode(newMode.index);
     database.log("Selected transportation ${newMode.name}!");
     if (newMode.name == "off") {
       //disable logger

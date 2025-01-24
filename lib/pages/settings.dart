@@ -20,7 +20,14 @@ class _SettingsPage extends State<SettingsPage> {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => _LogsPage()));
           },
-        )
+        ),
+        ElevatedButton(
+          child: const Text("Datapoints"),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => _DatapointsPage()));
+          },
+        ),
       ],
     );
   }
@@ -65,19 +72,68 @@ class _LogsPage extends StatelessWidget {
   }
 }
 
+class _DatapointsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Datapoints")),
+      body: FutureBuilder<List<Widget>>(
+        future: _getDatapointsObjects(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            return CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(snapshot.data!),
+                ),
+              ],
+            );
+          } else {
+            return const Center(child: Text('No Datapoints available'));
+          }
+        },
+      ),
+    );
+  }
+
+  Future<List<Widget>> _getDatapointsObjects() async {
+    List<Widget> returnWidgets = [];
+    List<DatapointLocal> datapoints = (await database.getDatapoints()).reversed.toList();
+    for (DatapointLocal datapoint in datapoints) {
+      returnWidgets
+          .add(Text("${datapoint.propulsion} ${datapoint.time!.toIso8601String()}: ${datapoint.lat}, ${datapoint.long}, spd: ${datapoint.speed}, hdg: ${datapoint.heading}"));
+    }
+    return returnWidgets;
+  }
+}
+
 Settings settings = Settings();
 
 class Settings {
   bool ownSource = true;
   String ip = "127.0.0.1:1000";
   String id = "";
+  int lastMode = 0;
+
 
   Future<void> init() async {
     StoredSettings setting = (await database.getSettings());
     ownSource = setting.ownSource!;
+    lastMode = setting.lastMode!;
     if (setting.ip != null) ip = setting.ip!;
     if (setting.id != null) id = setting.id!;
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'ownSource': ownSource, 'ip': ip};
+  Future<void> changeLastMode(int mode) async {
+    StoredSettings oldSetting = await database.getSettings();
+    lastMode = mode;
+    await database.setSettings(oldSetting.ownSource!, oldSetting.ip, mode);
+    return;
+  }
+
+  Map<String, dynamic> toJson() => {'id': id, 'ownSource': ownSource, 'ip': ip, 'lastMode': lastMode};
 }

@@ -44,6 +44,7 @@ class _RecordPage extends State<RecordPage> {
 
   @override
   Widget build(BuildContext context) {
+    recorder.setMode(recorder.mode);
     return Stack(children: [
       map,
       Container(

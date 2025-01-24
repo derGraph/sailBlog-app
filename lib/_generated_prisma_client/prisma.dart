@@ -364,118 +364,6 @@ class DecimalNullableFilter
       };
 }
 
-class NestedStringNullableFilter
-    implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const NestedStringNullableFilter({
-    this.equals,
-    this.$in,
-    this.notIn,
-    this.lt,
-    this.lte,
-    this.gt,
-    this.gte,
-    this.contains,
-    this.startsWith,
-    this.endsWith,
-    this.not,
-  });
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i2.NestedStringNullableFilter, _i1.PrismaNull>>? not;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'equals': equals,
-        'in': $in,
-        'notIn': notIn,
-        'lt': lt,
-        'lte': lte,
-        'gt': gt,
-        'gte': gte,
-        'contains': contains,
-        'startsWith': startsWith,
-        'endsWith': endsWith,
-        'not': not,
-      };
-}
-
-class StringNullableFilter
-    implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const StringNullableFilter({
-    this.equals,
-    this.$in,
-    this.notIn,
-    this.lt,
-    this.lte,
-    this.gt,
-    this.gte,
-    this.contains,
-    this.startsWith,
-    this.endsWith,
-    this.not,
-  });
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i2.NestedStringNullableFilter, _i1.PrismaNull>>? not;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'equals': equals,
-        'in': $in,
-        'notIn': notIn,
-        'lt': lt,
-        'lte': lte,
-        'gt': gt,
-        'gte': gte,
-        'contains': contains,
-        'startsWith': startsWith,
-        'endsWith': endsWith,
-        'not': not,
-      };
-}
-
 class NestedIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedIntFilter({
     this.equals,
@@ -608,8 +496,7 @@ class DatapointLocalWhereInput
   final _i1.PrismaUnion<_i2.DecimalNullableFilter,
       _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<_i2.StringNullableFilter,
-      _i1.PrismaUnion<String, _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<_i2.IntFilter, int>? propulsion;
 
   final _i1.PrismaUnion<_i2.IntFilter, int>? uploaded;
 
@@ -682,8 +569,7 @@ class DatapointLocalWhereUniqueInput
   final _i1.PrismaUnion<_i2.DecimalNullableFilter,
       _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<_i2.StringNullableFilter,
-      _i1.PrismaUnion<String, _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<_i2.IntFilter, int>? propulsion;
 
   final _i1.PrismaUnion<_i2.IntFilter, int>? uploaded;
 
@@ -831,7 +717,7 @@ class DatapointLocalOrderByWithRelationInput
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? vAccuracy;
 
-  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? propulsion;
+  final _i2.SortOrder? propulsion;
 
   final _i2.SortOrder? uploaded;
 
@@ -861,7 +747,7 @@ enum DatapointLocalScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
   depth<_i1.Decimal>('depth', 'Datapoint_local'),
   hAccuracy<_i1.Decimal>('h_accuracy', 'Datapoint_local'),
   vAccuracy<_i1.Decimal>('v_accuracy', 'Datapoint_local'),
-  propulsion<String>('propulsion', 'Datapoint_local'),
+  propulsion<int>('propulsion', 'Datapoint_local'),
   uploaded<int>('uploaded', 'Datapoint_local');
 
   const DatapointLocalScalar(
@@ -888,7 +774,7 @@ class DatapointLocalCreateInput
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
-    this.propulsion,
+    required this.propulsion,
     this.uploaded,
   });
 
@@ -910,7 +796,7 @@ class DatapointLocalCreateInput
 
   final _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>? vAccuracy;
 
-  final _i1.PrismaUnion<String, _i1.PrismaNull>? propulsion;
+  final int propulsion;
 
   final int? uploaded;
 
@@ -942,7 +828,7 @@ class DatapointLocalUncheckedCreateInput
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
-    this.propulsion,
+    required this.propulsion,
     this.uploaded,
   });
 
@@ -964,7 +850,7 @@ class DatapointLocalUncheckedCreateInput
 
   final _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>? vAccuracy;
 
-  final _i1.PrismaUnion<String, _i1.PrismaNull>? propulsion;
+  final int propulsion;
 
   final int? uploaded;
 
@@ -1007,7 +893,7 @@ class DatapointLocalCreateManyInput
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
-    this.propulsion,
+    required this.propulsion,
     this.uploaded,
   });
 
@@ -1029,7 +915,7 @@ class DatapointLocalCreateManyInput
 
   final _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>? vAccuracy;
 
-  final _i1.PrismaUnion<String, _i1.PrismaNull>? propulsion;
+  final int propulsion;
 
   final int? uploaded;
 
@@ -1183,16 +1069,6 @@ class NullableDecimalFieldUpdateOperationsInput
       };
 }
 
-class NullableStringFieldUpdateOperationsInput
-    implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const NullableStringFieldUpdateOperationsInput({this.set});
-
-  final _i1.PrismaUnion<String, _i1.PrismaNull>? set;
-
-  @override
-  Map<String, dynamic> toJson() => {'set': set};
-}
-
 class IntFieldUpdateOperationsInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntFieldUpdateOperationsInput({
@@ -1274,10 +1150,7 @@ class DatapointLocalUpdateInput
       _i1.PrismaUnion<_i2.NullableDecimalFieldUpdateOperationsInput,
           _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
-          _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? propulsion;
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? uploaded;
 
@@ -1348,10 +1221,7 @@ class DatapointLocalUncheckedUpdateInput
       _i1.PrismaUnion<_i2.NullableDecimalFieldUpdateOperationsInput,
           _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
-          _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? propulsion;
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? uploaded;
 
@@ -1422,10 +1292,7 @@ class DatapointLocalUpdateManyMutationInput
       _i1.PrismaUnion<_i2.NullableDecimalFieldUpdateOperationsInput,
           _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
-          _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? propulsion;
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? uploaded;
 
@@ -1496,10 +1363,7 @@ class DatapointLocalUncheckedUpdateManyInput
       _i1.PrismaUnion<_i2.NullableDecimalFieldUpdateOperationsInput,
           _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
-          _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? propulsion;
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? uploaded;
 
@@ -1654,6 +1518,7 @@ class DatapointLocalAvgAggregateOutputType {
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -1666,6 +1531,7 @@ class DatapointLocalAvgAggregateOutputType {
         depth: json['depth'],
         hAccuracy: json['h_accuracy'],
         vAccuracy: json['v_accuracy'],
+        propulsion: json['propulsion'],
         uploaded: json['uploaded'],
       );
 
@@ -1683,6 +1549,8 @@ class DatapointLocalAvgAggregateOutputType {
 
   final _i1.Decimal? vAccuracy;
 
+  final double? propulsion;
+
   final double? uploaded;
 
   Map<String, dynamic> toJson() => {
@@ -1693,6 +1561,7 @@ class DatapointLocalAvgAggregateOutputType {
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -1706,6 +1575,7 @@ class DatapointLocalSumAggregateOutputType {
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -1718,6 +1588,7 @@ class DatapointLocalSumAggregateOutputType {
         depth: json['depth'],
         hAccuracy: json['h_accuracy'],
         vAccuracy: json['v_accuracy'],
+        propulsion: json['propulsion'],
         uploaded: json['uploaded'],
       );
 
@@ -1735,6 +1606,8 @@ class DatapointLocalSumAggregateOutputType {
 
   final _i1.Decimal? vAccuracy;
 
+  final int? propulsion;
+
   final int? uploaded;
 
   Map<String, dynamic> toJson() => {
@@ -1745,6 +1618,7 @@ class DatapointLocalSumAggregateOutputType {
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -1801,7 +1675,7 @@ class DatapointLocalMinAggregateOutputType {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -1872,7 +1746,7 @@ class DatapointLocalMaxAggregateOutputType {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -1964,7 +1838,7 @@ class DatapointLocalGroupByOutputType {
 
   final _i1.Decimal? vAccuracy;
 
-  final String? propulsion;
+  final int? propulsion;
 
   final int? uploaded;
 
@@ -2062,6 +1936,7 @@ class DatapointLocalAvgOrderByAggregateInput
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -2079,6 +1954,8 @@ class DatapointLocalAvgOrderByAggregateInput
 
   final _i2.SortOrder? vAccuracy;
 
+  final _i2.SortOrder? propulsion;
+
   final _i2.SortOrder? uploaded;
 
   @override
@@ -2090,6 +1967,7 @@ class DatapointLocalAvgOrderByAggregateInput
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -2212,6 +2090,7 @@ class DatapointLocalSumOrderByAggregateInput
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -2229,6 +2108,8 @@ class DatapointLocalSumOrderByAggregateInput
 
   final _i2.SortOrder? vAccuracy;
 
+  final _i2.SortOrder? propulsion;
+
   final _i2.SortOrder? uploaded;
 
   @override
@@ -2240,6 +2121,7 @@ class DatapointLocalSumOrderByAggregateInput
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -2283,7 +2165,7 @@ class DatapointLocalOrderByWithAggregationInput
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? vAccuracy;
 
-  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? propulsion;
+  final _i2.SortOrder? propulsion;
 
   final _i2.SortOrder? uploaded;
 
@@ -2861,146 +2743,6 @@ class DecimalNullableWithAggregatesFilter
       };
 }
 
-class NestedStringNullableWithAggregatesFilter
-    implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const NestedStringNullableWithAggregatesFilter({
-    this.equals,
-    this.$in,
-    this.notIn,
-    this.lt,
-    this.lte,
-    this.gt,
-    this.gte,
-    this.contains,
-    this.startsWith,
-    this.endsWith,
-    this.not,
-    this.$count,
-    this.$min,
-    this.$max,
-  });
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
-
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NestedStringNullableWithAggregatesFilter,
-          _i1.PrismaNull>>? not;
-
-  final _i2.NestedIntNullableFilter? $count;
-
-  final _i2.NestedStringNullableFilter? $min;
-
-  final _i2.NestedStringNullableFilter? $max;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'equals': equals,
-        'in': $in,
-        'notIn': notIn,
-        'lt': lt,
-        'lte': lte,
-        'gt': gt,
-        'gte': gte,
-        'contains': contains,
-        'startsWith': startsWith,
-        'endsWith': endsWith,
-        'not': not,
-        '_count': $count,
-        '_min': $min,
-        '_max': $max,
-      };
-}
-
-class StringNullableWithAggregatesFilter
-    implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const StringNullableWithAggregatesFilter({
-    this.equals,
-    this.$in,
-    this.notIn,
-    this.lt,
-    this.lte,
-    this.gt,
-    this.gte,
-    this.contains,
-    this.startsWith,
-    this.endsWith,
-    this.not,
-    this.$count,
-    this.$min,
-    this.$max,
-  });
-
-  final _i1.PrismaUnion<String,
-      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
-
-  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
-
-  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
-
-  final _i1.PrismaUnion<
-      String,
-      _i1.PrismaUnion<_i2.NestedStringNullableWithAggregatesFilter,
-          _i1.PrismaNull>>? not;
-
-  final _i2.NestedIntNullableFilter? $count;
-
-  final _i2.NestedStringNullableFilter? $min;
-
-  final _i2.NestedStringNullableFilter? $max;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'equals': equals,
-        'in': $in,
-        'notIn': notIn,
-        'lt': lt,
-        'lte': lte,
-        'gt': gt,
-        'gte': gte,
-        'contains': contains,
-        'startsWith': startsWith,
-        'endsWith': endsWith,
-        'not': not,
-        '_count': $count,
-        '_min': $min,
-        '_max': $max,
-      };
-}
-
 class NestedFloatFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedFloatFilter({
     this.equals,
@@ -3216,8 +2958,7 @@ class DatapointLocalScalarWhereWithAggregatesInput
   final _i1.PrismaUnion<_i2.DecimalNullableWithAggregatesFilter,
       _i1.PrismaUnion<_i1.Decimal, _i1.PrismaNull>>? vAccuracy;
 
-  final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
-      _i1.PrismaUnion<String, _i1.PrismaNull>>? propulsion;
+  final _i1.PrismaUnion<_i2.IntWithAggregatesFilter, int>? propulsion;
 
   final _i1.PrismaUnion<_i2.IntWithAggregatesFilter, int>? uploaded;
 
@@ -3318,6 +3059,7 @@ class DatapointLocalAvgAggregateOutputTypeSelect
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -3335,6 +3077,8 @@ class DatapointLocalAvgAggregateOutputTypeSelect
 
   final bool? vAccuracy;
 
+  final bool? propulsion;
+
   final bool? uploaded;
 
   @override
@@ -3346,6 +3090,7 @@ class DatapointLocalAvgAggregateOutputTypeSelect
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -3370,6 +3115,7 @@ class DatapointLocalSumAggregateOutputTypeSelect
     this.depth,
     this.hAccuracy,
     this.vAccuracy,
+    this.propulsion,
     this.uploaded,
   });
 
@@ -3387,6 +3133,8 @@ class DatapointLocalSumAggregateOutputTypeSelect
 
   final bool? vAccuracy;
 
+  final bool? propulsion;
+
   final bool? uploaded;
 
   @override
@@ -3398,6 +3146,7 @@ class DatapointLocalSumAggregateOutputTypeSelect
         'depth': depth,
         'h_accuracy': hAccuracy,
         'v_accuracy': vAccuracy,
+        'propulsion': propulsion,
         'uploaded': uploaded,
       };
 }
@@ -4606,6 +4355,118 @@ class BoolFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
       };
 }
 
+class NestedStringNullableFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const NestedStringNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+  });
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i2.NestedStringNullableFilter, _i1.PrismaNull>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'in': $in,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not,
+      };
+}
+
+class StringNullableFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StringNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+  });
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i2.NestedStringNullableFilter, _i1.PrismaNull>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'in': $in,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not,
+      };
+}
+
 class StoredSettingsWhereInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsWhereInput({
@@ -4615,6 +4476,7 @@ class StoredSettingsWhereInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
@@ -4632,6 +4494,8 @@ class StoredSettingsWhereInput
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'AND': AND,
@@ -4640,6 +4504,7 @@ class StoredSettingsWhereInput
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4652,6 +4517,7 @@ class StoredSettingsWhereUniqueInput
     this.NOT,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final String? id;
@@ -4669,6 +4535,8 @@ class StoredSettingsWhereUniqueInput
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -4677,6 +4545,7 @@ class StoredSettingsWhereUniqueInput
         'NOT': NOT,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4686,6 +4555,7 @@ class StoredSettingsSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final bool? id;
@@ -4694,11 +4564,14 @@ class StoredSettingsSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4708,6 +4581,7 @@ class StoredSettingsOrderByWithRelationInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i2.SortOrder? id;
@@ -4716,18 +4590,22 @@ class StoredSettingsOrderByWithRelationInput
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
+  final _i2.SortOrder? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
 enum StoredSettingsScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
   id<String>('id', 'StoredSettings'),
   ownSource<bool>('own_source', 'StoredSettings'),
-  ip<String>('ip', 'StoredSettings');
+  ip<String>('ip', 'StoredSettings'),
+  lastMode<int>('lastMode', 'StoredSettings');
 
   const StoredSettingsScalar(
     this.name,
@@ -4747,6 +4625,7 @@ class StoredSettingsCreateInput
     this.id,
     required this.ownSource,
     this.ip,
+    required this.lastMode,
   });
 
   final String? id;
@@ -4755,11 +4634,14 @@ class StoredSettingsCreateInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final int lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4769,6 +4651,7 @@ class StoredSettingsUncheckedCreateInput
     this.id,
     required this.ownSource,
     this.ip,
+    required this.lastMode,
   });
 
   final String? id;
@@ -4777,11 +4660,14 @@ class StoredSettingsUncheckedCreateInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final int lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4791,6 +4677,7 @@ class StoredSettingsCreateManyInput
     this.id,
     required this.ownSource,
     this.ip,
+    required this.lastMode,
   });
 
   final String? id;
@@ -4799,11 +4686,14 @@ class StoredSettingsCreateManyInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final int lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4813,6 +4703,7 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final bool? id;
@@ -4821,11 +4712,14 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4839,12 +4733,23 @@ class BoolFieldUpdateOperationsInput
   Map<String, dynamic> toJson() => {'set': set};
 }
 
+class NullableStringFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const NullableStringFieldUpdateOperationsInput({this.set});
+
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? set;
+
+  @override
+  Map<String, dynamic> toJson() => {'set': set};
+}
+
 class StoredSettingsUpdateInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsUpdateInput({
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4856,11 +4761,14 @@ class StoredSettingsUpdateInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4870,6 +4778,7 @@ class StoredSettingsUncheckedUpdateInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4881,11 +4790,14 @@ class StoredSettingsUncheckedUpdateInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4895,6 +4807,7 @@ class StoredSettingsUpdateManyMutationInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4906,11 +4819,14 @@ class StoredSettingsUpdateManyMutationInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4920,6 +4836,7 @@ class StoredSettingsUncheckedUpdateManyInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4931,11 +4848,14 @@ class StoredSettingsUncheckedUpdateManyInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4945,6 +4865,7 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final bool? id;
@@ -4953,11 +4874,14 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -4966,6 +4890,7 @@ class StoredSettingsCountAggregateOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
     this.$all,
   });
 
@@ -4974,6 +4899,7 @@ class StoredSettingsCountAggregateOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
         $all: json['_all'],
       );
 
@@ -4983,14 +4909,39 @@ class StoredSettingsCountAggregateOutputType {
 
   final int? ip;
 
+  final int? lastMode;
+
   final int? $all;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
         '_all': $all,
       };
+}
+
+class StoredSettingsAvgAggregateOutputType {
+  const StoredSettingsAvgAggregateOutputType({this.lastMode});
+
+  factory StoredSettingsAvgAggregateOutputType.fromJson(Map json) =>
+      StoredSettingsAvgAggregateOutputType(lastMode: json['lastMode']);
+
+  final double? lastMode;
+
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
+}
+
+class StoredSettingsSumAggregateOutputType {
+  const StoredSettingsSumAggregateOutputType({this.lastMode});
+
+  factory StoredSettingsSumAggregateOutputType.fromJson(Map json) =>
+      StoredSettingsSumAggregateOutputType(lastMode: json['lastMode']);
+
+  final int? lastMode;
+
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
 }
 
 class StoredSettingsMinAggregateOutputType {
@@ -4998,6 +4949,7 @@ class StoredSettingsMinAggregateOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   factory StoredSettingsMinAggregateOutputType.fromJson(Map json) =>
@@ -5005,6 +4957,7 @@ class StoredSettingsMinAggregateOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
       );
 
   final String? id;
@@ -5013,10 +4966,13 @@ class StoredSettingsMinAggregateOutputType {
 
   final String? ip;
 
+  final int? lastMode;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5025,6 +4981,7 @@ class StoredSettingsMaxAggregateOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   factory StoredSettingsMaxAggregateOutputType.fromJson(Map json) =>
@@ -5032,6 +4989,7 @@ class StoredSettingsMaxAggregateOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
       );
 
   final String? id;
@@ -5040,10 +4998,13 @@ class StoredSettingsMaxAggregateOutputType {
 
   final String? ip;
 
+  final int? lastMode;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5052,7 +5013,10 @@ class StoredSettingsGroupByOutputType {
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
     this.$count,
+    this.$avg,
+    this.$sum,
     this.$min,
     this.$max,
   });
@@ -5062,9 +5026,16 @@ class StoredSettingsGroupByOutputType {
         id: json['id'],
         ownSource: json['own_source'],
         ip: json['ip'],
+        lastMode: json['lastMode'],
         $count: json['_count'] is Map
             ? _i2.StoredSettingsCountAggregateOutputType.fromJson(
                 json['_count'])
+            : null,
+        $avg: json['_avg'] is Map
+            ? _i2.StoredSettingsAvgAggregateOutputType.fromJson(json['_avg'])
+            : null,
+        $sum: json['_sum'] is Map
+            ? _i2.StoredSettingsSumAggregateOutputType.fromJson(json['_sum'])
             : null,
         $min: json['_min'] is Map
             ? _i2.StoredSettingsMinAggregateOutputType.fromJson(json['_min'])
@@ -5080,7 +5051,13 @@ class StoredSettingsGroupByOutputType {
 
   final String? ip;
 
+  final int? lastMode;
+
   final _i2.StoredSettingsCountAggregateOutputType? $count;
+
+  final _i2.StoredSettingsAvgAggregateOutputType? $avg;
+
+  final _i2.StoredSettingsSumAggregateOutputType? $sum;
 
   final _i2.StoredSettingsMinAggregateOutputType? $min;
 
@@ -5090,7 +5067,10 @@ class StoredSettingsGroupByOutputType {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
         '_count': $count?.toJson(),
+        '_avg': $avg?.toJson(),
+        '_sum': $sum?.toJson(),
         '_min': $min?.toJson(),
         '_max': $max?.toJson(),
       };
@@ -5102,6 +5082,7 @@ class StoredSettingsCountOrderByAggregateInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i2.SortOrder? id;
@@ -5110,12 +5091,25 @@ class StoredSettingsCountOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
+}
+
+class StoredSettingsAvgOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsAvgOrderByAggregateInput({this.lastMode});
+
+  final _i2.SortOrder? lastMode;
+
+  @override
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
 }
 
 class StoredSettingsMaxOrderByAggregateInput
@@ -5124,6 +5118,7 @@ class StoredSettingsMaxOrderByAggregateInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i2.SortOrder? id;
@@ -5132,11 +5127,14 @@ class StoredSettingsMaxOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5146,6 +5144,7 @@ class StoredSettingsMinOrderByAggregateInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i2.SortOrder? id;
@@ -5154,12 +5153,25 @@ class StoredSettingsMinOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
+}
+
+class StoredSettingsSumOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsSumOrderByAggregateInput({this.lastMode});
+
+  final _i2.SortOrder? lastMode;
+
+  @override
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
 }
 
 class StoredSettingsOrderByWithAggregationInput
@@ -5168,9 +5180,12 @@ class StoredSettingsOrderByWithAggregationInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
     this.$count,
+    this.$avg,
     this.$max,
     this.$min,
+    this.$sum,
   });
 
   final _i2.SortOrder? id;
@@ -5179,20 +5194,29 @@ class StoredSettingsOrderByWithAggregationInput
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
+  final _i2.SortOrder? lastMode;
+
   final _i2.StoredSettingsCountOrderByAggregateInput? $count;
+
+  final _i2.StoredSettingsAvgOrderByAggregateInput? $avg;
 
   final _i2.StoredSettingsMaxOrderByAggregateInput? $max;
 
   final _i2.StoredSettingsMinOrderByAggregateInput? $min;
+
+  final _i2.StoredSettingsSumOrderByAggregateInput? $sum;
 
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
         '_count': $count,
+        '_avg': $avg,
         '_max': $max,
         '_min': $min,
+        '_sum': $sum,
       };
 }
 
@@ -5256,6 +5280,146 @@ class BoolWithAggregatesFilter
       };
 }
 
+class NestedStringNullableWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const NestedStringNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NestedStringNullableWithAggregatesFilter,
+          _i1.PrismaNull>>? not;
+
+  final _i2.NestedIntNullableFilter? $count;
+
+  final _i2.NestedStringNullableFilter? $min;
+
+  final _i2.NestedStringNullableFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'in': $in,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
+class StringNullableWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StringNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  final _i1.PrismaUnion<String,
+      _i1.PrismaUnion<_i1.Reference<String>, _i1.PrismaNull>>? equals;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? $in;
+
+  final _i1.PrismaUnion<Iterable<String>, _i1.PrismaNull>? notIn;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? lte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gt;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? gte;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? contains;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? startsWith;
+
+  final _i1.PrismaUnion<String, _i1.Reference<String>>? endsWith;
+
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NestedStringNullableWithAggregatesFilter,
+          _i1.PrismaNull>>? not;
+
+  final _i2.NestedIntNullableFilter? $count;
+
+  final _i2.NestedStringNullableFilter? $min;
+
+  final _i2.NestedStringNullableFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'equals': equals,
+        'in': $in,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max,
+      };
+}
+
 class StoredSettingsScalarWhereWithAggregatesInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsScalarWhereWithAggregatesInput({
@@ -5265,6 +5429,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final _i1.PrismaUnion<_i2.StoredSettingsScalarWhereWithAggregatesInput,
@@ -5282,6 +5447,8 @@ class StoredSettingsScalarWhereWithAggregatesInput
   final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.IntWithAggregatesFilter, int>? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'AND': AND,
@@ -5290,6 +5457,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5299,6 +5467,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
     this.$all,
   });
 
@@ -5308,6 +5477,8 @@ class StoredSettingsCountAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   final bool? $all;
 
   @override
@@ -5315,6 +5486,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
         '_all': $all,
       };
 }
@@ -5329,12 +5501,53 @@ class StoredSettingsGroupByOutputTypeCountArgs
   Map<String, dynamic> toJson() => {'select': select};
 }
 
+class StoredSettingsAvgAggregateOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsAvgAggregateOutputTypeSelect({this.lastMode});
+
+  final bool? lastMode;
+
+  @override
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
+}
+
+class StoredSettingsGroupByOutputTypeAvgArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeAvgArgs({this.select});
+
+  final _i2.StoredSettingsAvgAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class StoredSettingsSumAggregateOutputTypeSelect
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsSumAggregateOutputTypeSelect({this.lastMode});
+
+  final bool? lastMode;
+
+  @override
+  Map<String, dynamic> toJson() => {'lastMode': lastMode};
+}
+
+class StoredSettingsGroupByOutputTypeSumArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const StoredSettingsGroupByOutputTypeSumArgs({this.select});
+
+  final _i2.StoredSettingsSumAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
 class StoredSettingsMinAggregateOutputTypeSelect
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsMinAggregateOutputTypeSelect({
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final bool? id;
@@ -5343,11 +5556,14 @@ class StoredSettingsMinAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5367,6 +5583,7 @@ class StoredSettingsMaxAggregateOutputTypeSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
   });
 
   final bool? id;
@@ -5375,11 +5592,14 @@ class StoredSettingsMaxAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
       };
 }
 
@@ -5399,7 +5619,10 @@ class StoredSettingsGroupByOutputTypeSelect
     this.id,
     this.ownSource,
     this.ip,
+    this.lastMode,
     this.$count,
+    this.$avg,
+    this.$sum,
     this.$min,
     this.$max,
   });
@@ -5410,8 +5633,14 @@ class StoredSettingsGroupByOutputTypeSelect
 
   final bool? ip;
 
+  final bool? lastMode;
+
   final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeCountArgs>?
       $count;
+
+  final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeAvgArgs>? $avg;
+
+  final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeSumArgs>? $sum;
 
   final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeMinArgs>? $min;
 
@@ -5422,7 +5651,10 @@ class StoredSettingsGroupByOutputTypeSelect
         'id': id,
         'own_source': ownSource,
         'ip': ip,
+        'lastMode': lastMode,
         '_count': $count,
+        '_avg': $avg,
+        '_sum': $sum,
         '_min': $min,
         '_max': $max,
       };
@@ -5431,6 +5663,8 @@ class StoredSettingsGroupByOutputTypeSelect
 class AggregateStoredSettings {
   const AggregateStoredSettings({
     this.$count,
+    this.$avg,
+    this.$sum,
     this.$min,
     this.$max,
   });
@@ -5439,6 +5673,12 @@ class AggregateStoredSettings {
         $count: json['_count'] is Map
             ? _i2.StoredSettingsCountAggregateOutputType.fromJson(
                 json['_count'])
+            : null,
+        $avg: json['_avg'] is Map
+            ? _i2.StoredSettingsAvgAggregateOutputType.fromJson(json['_avg'])
+            : null,
+        $sum: json['_sum'] is Map
+            ? _i2.StoredSettingsSumAggregateOutputType.fromJson(json['_sum'])
             : null,
         $min: json['_min'] is Map
             ? _i2.StoredSettingsMinAggregateOutputType.fromJson(json['_min'])
@@ -5450,12 +5690,18 @@ class AggregateStoredSettings {
 
   final _i2.StoredSettingsCountAggregateOutputType? $count;
 
+  final _i2.StoredSettingsAvgAggregateOutputType? $avg;
+
+  final _i2.StoredSettingsSumAggregateOutputType? $sum;
+
   final _i2.StoredSettingsMinAggregateOutputType? $min;
 
   final _i2.StoredSettingsMaxAggregateOutputType? $max;
 
   Map<String, dynamic> toJson() => {
         '_count': $count?.toJson(),
+        '_avg': $avg?.toJson(),
+        '_sum': $sum?.toJson(),
         '_min': $min?.toJson(),
         '_max': $max?.toJson(),
       };
@@ -5466,6 +5712,26 @@ class AggregateStoredSettingsCountArgs
   const AggregateStoredSettingsCountArgs({this.select});
 
   final _i2.StoredSettingsCountAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class AggregateStoredSettingsAvgArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsAvgArgs({this.select});
+
+  final _i2.StoredSettingsAvgAggregateOutputTypeSelect? select;
+
+  @override
+  Map<String, dynamic> toJson() => {'select': select};
+}
+
+class AggregateStoredSettingsSumArgs
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
+  const AggregateStoredSettingsSumArgs({this.select});
+
+  final _i2.StoredSettingsSumAggregateOutputTypeSelect? select;
 
   @override
   Map<String, dynamic> toJson() => {'select': select};
@@ -5495,11 +5761,17 @@ class AggregateStoredSettingsSelect
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const AggregateStoredSettingsSelect({
     this.$count,
+    this.$avg,
+    this.$sum,
     this.$min,
     this.$max,
   });
 
   final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsCountArgs>? $count;
+
+  final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsAvgArgs>? $avg;
+
+  final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsSumArgs>? $sum;
 
   final _i1.PrismaUnion<bool, _i2.AggregateStoredSettingsMinArgs>? $min;
 
@@ -5508,6 +5780,8 @@ class AggregateStoredSettingsSelect
   @override
   Map<String, dynamic> toJson() => {
         '_count': $count,
+        '_avg': $avg,
+        '_sum': $sum,
         '_min': $min,
         '_max': $max,
       };

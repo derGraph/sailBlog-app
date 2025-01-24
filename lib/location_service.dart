@@ -12,6 +12,7 @@ LocationService locationService = LocationService();
 class LocationService {
   Future<void> start() async {
     if (settings.ownSource) {
+      // USE DEVICE GPS
       if (!await _handlePermissionsSelf()) {
         _alert("You have to allow all permissions!");
         return;
@@ -23,7 +24,9 @@ class LocationService {
             "While this Notification is shown, sailBlog can record your position!",
         icon: "@mipmap/ic_launcher",
       );
+
       await BackgroundLocation.setAndroidConfiguration(30000);
+      await BackgroundLocation.stopLocationService();
       await BackgroundLocation.startLocationService(distanceFilter: 5);
       await BackgroundLocation.getLocationUpdates(_gpsListener);
     } else {
@@ -31,26 +34,17 @@ class LocationService {
     }
   }
 
-  void end() {
+  Future<void> end() async {
     if (settings.ownSource) {
+      await BackgroundLocation.stopLocationService();
     } else {
       //disable NMEA STREAM
     }
   }
 
   Future<void> _gpsListener(Location gpsLocation) async {
-    await database.log(
-        "New GPS point: ${gpsLocation.latitude}, ${gpsLocation.longitude}, accuracy: ${gpsLocation.accuracy}m!");
     await database.addDatapoint(gpsLocation.latitude.toString(),
         gpsLocation.longitude.toString(), recorder.mode);
-  }
-
-  Future<void> _gpsListenerStopped() async {
-    await database.log("GPS listener stopped!");
-  }
-
-  Future<void> _gpsListenerError(Object errorMessage) async {
-    await database.log("GPS listener error: ${errorMessage.toString()}!");
   }
 
   Future<bool> _handlePermissionsSelf() async {

@@ -50,10 +50,18 @@ class Database {
     return logs;
   }
 
+  Future<List<DatapointLocal>> getDatapoints() async {
+    List<DatapointLocal> datapoints =
+        (await prisma.datapointLocal.findMany()).toList();
+    return datapoints;
+  }
+
   Future<StoredSettings> getSettings() async {
     StoredSettings? settings;
     try {
-      settings = (await prisma.storedSettings.findFirst());
+      settings = (await prisma.storedSettings.findFirst(orderBy: PrismaUnion.$1([
+        StoredSettingsOrderByWithRelationInput(id: SortOrder.desc)
+      ])));
     } catch (exception) {
       log("getSettings Error: $exception");
     }
@@ -61,28 +69,37 @@ class Database {
       id: "id",
       ownSource: true,
       ip: null,
+      lastMode: 0,
     );
     return settings;
   }
 
-  Future<void> addDatapoint(String latitude, String longitude, Modes mode, {String? hAccuracy, String? vAccuracy, String? heading, String? speed}) async {
+  Future<void> setSettings(bool ownSource, String? ip, int lastMode) async {
+    try {
+      await prisma.storedSettings.create(data: PrismaUnion.$1(StoredSettingsCreateInput(
+        ownSource: ownSource,
+        ip: ip != null ? PrismaUnion.$1(ip) : null,
+        lastMode: lastMode
+      )));
+      log("setSettings: Stored settings!");
+    } catch (exception) {
+      log("setSettings Error: $exception");
+    }
+  }
 
+  Future<void> addDatapoint(String latitude, String longitude, Modes mode, {String? hAccuracy, String? vAccuracy, String? heading, String? speed}) async {
     await prisma.datapointLocal.create(
-          data: PrismaUnion.$1(DatapointLocalCreateInput(
-              lat: Decimal.fromJson(latitude.toString()),
-              long: Decimal.fromJson(longitude.toString()),
-              hAccuracy: PrismaUnion.$1(
-                  Decimal.fromJson(hAccuracy.toString())),
-              vAccuracy: PrismaUnion.$1(Decimal.fromJson(
-                  vAccuracy.toString())),
-              heading: PrismaUnion.$1(
-                  Decimal.fromJson(heading.toString())),
-              speed: PrismaUnion.$1(
-                  Decimal.fromJson(speed.toString())),
-              propulsion: PrismaUnion.$1(
-                  mode.toString(),
-                  ))),
-        );
+      data: PrismaUnion.$1(DatapointLocalCreateInput(
+        lat: Decimal.fromJson(latitude.toString()),
+        long: Decimal.fromJson(longitude.toString()),
+        hAccuracy: hAccuracy != null ? PrismaUnion.$1(Decimal.parse(hAccuracy)) : null,
+        vAccuracy: vAccuracy != null ? PrismaUnion.$1(Decimal.parse(vAccuracy)) : null,
+        heading: heading != null ? PrismaUnion.$1(Decimal.parse(heading)) : null,
+        speed: speed != null ? PrismaUnion.$1(Decimal.parse(speed)) : null,
+        propulsion: mode.index,
+      )),
+    );
+
   }
 }
 
