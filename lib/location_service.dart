@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/main.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sailblog/pages/settings.dart';
+import 'package:sailblog/settings.dart';
 import 'package:sailblog/recorder.dart';
 
 LocationService locationService = LocationService();

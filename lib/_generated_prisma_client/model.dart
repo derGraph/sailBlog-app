@@ -311,6 +311,7 @@ class StoredSettings {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   factory StoredSettings.fromJson(Map json) => StoredSettings(
@@ -318,6 +319,7 @@ class StoredSettings {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
       );
 
   final String? id;
@@ -328,11 +330,14 @@ class StoredSettings {
 
   final int? lastMode;
 
+  final String? cookie;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -342,6 +347,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   factory CreateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
@@ -350,6 +356,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
       );
 
   final String? id;
@@ -360,11 +367,14 @@ class CreateManyStoredSettingsAndReturnOutputType {
 
   final int? lastMode;
 
+  final String? cookie;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -374,6 +384,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   factory UpdateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
@@ -382,6 +393,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
       );
 
   final String? id;
@@ -392,10 +404,13 @@ class UpdateManyStoredSettingsAndReturnOutputType {
 
   final int? lastMode;
 
+  final String? cookie;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }

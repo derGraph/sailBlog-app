@@ -42,4 +42,5 @@ model StoredSettings {
   own_source      Boolean
   ip              String?
   lastMode        Int
+  cookie          String?
 }

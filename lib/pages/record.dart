@@ -12,38 +12,43 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPage extends State<RecordPage> {
-  FlutterMap map = FlutterMap(
-    mapController: MapController(),
-    options: MapOptions(
-        initialCenter: LatLng(43.95, 14.79),
-        initialZoom: 8,
-        keepAlive: true,
-        interactionOptions: InteractionOptions(
-            flags: InteractiveFlag.drag |
-                InteractiveFlag.doubleTapZoom |
-                InteractiveFlag.flingAnimation |
-                InteractiveFlag.pinchMove |
-                InteractiveFlag.pinchZoom |
-                InteractiveFlag.doubleTapDragZoom |
-                InteractiveFlag.scrollWheelZoom)),
-    children: [
-      TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        maxZoom: 19,
-        tileProvider: FMTCStore('mapStore').getTileProvider(),
-      ),
-      TileLayer(
-        urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-        maxZoom: 19,
-        minNativeZoom: 9,
-        tileProvider: FMTCStore('mapStore').getTileProvider(),
-      ),
-      SimpleAttributionWidget(source: Text("OpenStreetMap"))
-    ],
+  final tileProvider = FMTCTileProvider.allStores(
+    allStoresStrategy: BrowseStoreStrategy.readUpdateCreate,
+    loadingStrategy: BrowseLoadingStrategy.onlineFirst,
   );
-
+ 
   @override
   Widget build(BuildContext context) {
+    FlutterMap map = FlutterMap(
+        mapController: MapController(),
+        options: MapOptions(
+            initialCenter: LatLng(43.95, 14.79),
+            initialZoom: 8,
+            keepAlive: true,
+            interactionOptions: InteractionOptions(
+                flags: InteractiveFlag.drag |
+                    InteractiveFlag.doubleTapZoom |
+                    InteractiveFlag.flingAnimation |
+                    InteractiveFlag.pinchMove |
+                    InteractiveFlag.pinchZoom |
+                    InteractiveFlag.doubleTapDragZoom |
+                    InteractiveFlag.scrollWheelZoom)),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            maxZoom: 19,
+            tileProvider: tileProvider,
+          ),
+          TileLayer(
+            urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+            maxZoom: 19,
+            minNativeZoom: 9,
+            tileProvider: tileProvider,
+          ),
+          SimpleAttributionWidget(source: Text("OpenStreetMap"))
+        ],
+      );
+
     recorder.setMode(recorder.mode);
     return Stack(children: [
       map,

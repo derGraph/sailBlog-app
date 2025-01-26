@@ -3,6 +3,7 @@ import 'package:sailblog/pages/alarm.dart';
 import 'package:sailblog/pages/record.dart';
 import 'package:sailblog/pages/settings.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/server.dart';
 
 MainApp mainApp = MainApp();
 

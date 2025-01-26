@@ -1837,6 +1837,20 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
             'isGenerated': false,
             'isUpdatedAt': false,
           },
+          {
+            'name': 'cookie',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': false,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'String',
+            'nativeType': null,
+            'isGenerated': false,
+            'isUpdatedAt': false,
+          },
         ],
         'primaryKey': null,
         'uniqueFields': [],
@@ -1900,7 +1914,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
   @override
   get $engine => _engine ??= _i5.LibraryEngine(
         schema:
-            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion Int\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n\nmodel StoredSettings {\n  id         String  @id @default(cuid())\n  own_source Boolean\n  ip         String?\n  lastMode   Int\n}\n',
+            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion Int\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n\nmodel StoredSettings {\n  id         String  @id @default(cuid())\n  own_source Boolean\n  ip         String?\n  lastMode   Int\n  cookie     String?\n}\n',
         datasources: const {
           'db': _i1.Datasource(
             _i1.DatasourceType.url,

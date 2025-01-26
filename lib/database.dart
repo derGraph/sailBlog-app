@@ -6,8 +6,9 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
-import 'package:sailblog/pages/settings.dart';
 import 'package:sailblog/recorder.dart';
+import 'package:sailblog/server.dart';
+import 'package:sailblog/settings.dart';
 import '_generated_prisma_client/client.dart';
 
 late final PrismaClient prisma;
@@ -70,16 +71,18 @@ class Database {
       ownSource: true,
       ip: null,
       lastMode: 0,
+      cookie: "",
     );
     return settings;
   }
 
-  Future<void> setSettings(bool ownSource, String? ip, int lastMode) async {
+  Future<void> setSettings(bool ownSource, String? ip, int lastMode, String? cookie) async {
     try {
       await prisma.storedSettings.create(data: PrismaUnion.$1(StoredSettingsCreateInput(
         ownSource: ownSource,
         ip: ip != null ? PrismaUnion.$1(ip) : null,
-        lastMode: lastMode
+        lastMode: lastMode,
+        cookie: cookie != null ? PrismaUnion.$1(cookie) : null,
       )));
       log("setSettings: Stored settings!");
     } catch (exception) {
@@ -99,7 +102,7 @@ class Database {
         propulsion: mode.index,
       )),
     );
-
+    server.uploadDatapoints();
   }
 }
 

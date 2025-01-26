@@ -1,6 +1,6 @@
 import 'package:sailblog/database.dart';
 import 'package:sailblog/location_service.dart';
-import 'package:sailblog/pages/settings.dart';
+import 'package:sailblog/settings.dart';
 
 Recorder recorder = Recorder();
 

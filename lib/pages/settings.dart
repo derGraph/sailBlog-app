@@ -110,30 +110,3 @@ class _DatapointsPage extends StatelessWidget {
     return returnWidgets;
   }
 }
-
-Settings settings = Settings();
-
-class Settings {
-  bool ownSource = true;
-  String ip = "127.0.0.1:1000";
-  String id = "";
-  int lastMode = 0;
-
-
-  Future<void> init() async {
-    StoredSettings setting = (await database.getSettings());
-    ownSource = setting.ownSource!;
-    lastMode = setting.lastMode!;
-    if (setting.ip != null) ip = setting.ip!;
-    if (setting.id != null) id = setting.id!;
-  }
-
-  Future<void> changeLastMode(int mode) async {
-    StoredSettings oldSetting = await database.getSettings();
-    lastMode = mode;
-    await database.setSettings(oldSetting.ownSource!, oldSetting.ip, mode);
-    return;
-  }
-
-  Map<String, dynamic> toJson() => {'id': id, 'ownSource': ownSource, 'ip': ip, 'lastMode': lastMode};
-}

@@ -4477,6 +4477,7 @@ class StoredSettingsWhereInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<_i2.StoredSettingsWhereInput,
@@ -4496,6 +4497,9 @@ class StoredSettingsWhereInput
 
   final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
 
+  final _i1.PrismaUnion<_i2.StringNullableFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'AND': AND,
@@ -4505,6 +4509,7 @@ class StoredSettingsWhereInput
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4518,6 +4523,7 @@ class StoredSettingsWhereUniqueInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final String? id;
@@ -4537,6 +4543,9 @@ class StoredSettingsWhereUniqueInput
 
   final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
 
+  final _i1.PrismaUnion<_i2.StringNullableFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -4546,6 +4555,7 @@ class StoredSettingsWhereUniqueInput
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4556,6 +4566,7 @@ class StoredSettingsSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final bool? id;
@@ -4566,12 +4577,15 @@ class StoredSettingsSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4582,6 +4596,7 @@ class StoredSettingsOrderByWithRelationInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i2.SortOrder? id;
@@ -4592,12 +4607,15 @@ class StoredSettingsOrderByWithRelationInput
 
   final _i2.SortOrder? lastMode;
 
+  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4605,7 +4623,8 @@ enum StoredSettingsScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
   id<String>('id', 'StoredSettings'),
   ownSource<bool>('own_source', 'StoredSettings'),
   ip<String>('ip', 'StoredSettings'),
-  lastMode<int>('lastMode', 'StoredSettings');
+  lastMode<int>('lastMode', 'StoredSettings'),
+  cookie<String>('cookie', 'StoredSettings');
 
   const StoredSettingsScalar(
     this.name,
@@ -4626,6 +4645,7 @@ class StoredSettingsCreateInput
     required this.ownSource,
     this.ip,
     required this.lastMode,
+    this.cookie,
   });
 
   final String? id;
@@ -4636,12 +4656,15 @@ class StoredSettingsCreateInput
 
   final int lastMode;
 
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4652,6 +4675,7 @@ class StoredSettingsUncheckedCreateInput
     required this.ownSource,
     this.ip,
     required this.lastMode,
+    this.cookie,
   });
 
   final String? id;
@@ -4662,12 +4686,15 @@ class StoredSettingsUncheckedCreateInput
 
   final int lastMode;
 
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4678,6 +4705,7 @@ class StoredSettingsCreateManyInput
     required this.ownSource,
     this.ip,
     required this.lastMode,
+    this.cookie,
   });
 
   final String? id;
@@ -4688,12 +4716,15 @@ class StoredSettingsCreateManyInput
 
   final int lastMode;
 
+  final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4704,6 +4735,7 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final bool? id;
@@ -4714,12 +4746,15 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4750,6 +4785,7 @@ class StoredSettingsUpdateInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4763,12 +4799,18 @@ class StoredSettingsUpdateInput
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4779,6 +4821,7 @@ class StoredSettingsUncheckedUpdateInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4792,12 +4835,18 @@ class StoredSettingsUncheckedUpdateInput
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4808,6 +4857,7 @@ class StoredSettingsUpdateManyMutationInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4821,12 +4871,18 @@ class StoredSettingsUpdateManyMutationInput
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4837,6 +4893,7 @@ class StoredSettingsUncheckedUpdateManyInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
@@ -4850,12 +4907,18 @@ class StoredSettingsUncheckedUpdateManyInput
 
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
+  final _i1.PrismaUnion<
+      String,
+      _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
+          _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4866,6 +4929,7 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final bool? id;
@@ -4876,12 +4940,15 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4891,6 +4958,7 @@ class StoredSettingsCountAggregateOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
     this.$all,
   });
 
@@ -4900,6 +4968,7 @@ class StoredSettingsCountAggregateOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
         $all: json['_all'],
       );
 
@@ -4911,6 +4980,8 @@ class StoredSettingsCountAggregateOutputType {
 
   final int? lastMode;
 
+  final int? cookie;
+
   final int? $all;
 
   Map<String, dynamic> toJson() => {
@@ -4918,6 +4989,7 @@ class StoredSettingsCountAggregateOutputType {
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
         '_all': $all,
       };
 }
@@ -4950,6 +5022,7 @@ class StoredSettingsMinAggregateOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   factory StoredSettingsMinAggregateOutputType.fromJson(Map json) =>
@@ -4958,6 +5031,7 @@ class StoredSettingsMinAggregateOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
       );
 
   final String? id;
@@ -4968,11 +5042,14 @@ class StoredSettingsMinAggregateOutputType {
 
   final int? lastMode;
 
+  final String? cookie;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -4982,6 +5059,7 @@ class StoredSettingsMaxAggregateOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   factory StoredSettingsMaxAggregateOutputType.fromJson(Map json) =>
@@ -4990,6 +5068,7 @@ class StoredSettingsMaxAggregateOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
       );
 
   final String? id;
@@ -5000,11 +5079,14 @@ class StoredSettingsMaxAggregateOutputType {
 
   final int? lastMode;
 
+  final String? cookie;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5014,6 +5096,7 @@ class StoredSettingsGroupByOutputType {
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
     this.$count,
     this.$avg,
     this.$sum,
@@ -5027,6 +5110,7 @@ class StoredSettingsGroupByOutputType {
         ownSource: json['own_source'],
         ip: json['ip'],
         lastMode: json['lastMode'],
+        cookie: json['cookie'],
         $count: json['_count'] is Map
             ? _i2.StoredSettingsCountAggregateOutputType.fromJson(
                 json['_count'])
@@ -5053,6 +5137,8 @@ class StoredSettingsGroupByOutputType {
 
   final int? lastMode;
 
+  final String? cookie;
+
   final _i2.StoredSettingsCountAggregateOutputType? $count;
 
   final _i2.StoredSettingsAvgAggregateOutputType? $avg;
@@ -5068,6 +5154,7 @@ class StoredSettingsGroupByOutputType {
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
         '_count': $count?.toJson(),
         '_avg': $avg?.toJson(),
         '_sum': $sum?.toJson(),
@@ -5083,6 +5170,7 @@ class StoredSettingsCountOrderByAggregateInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i2.SortOrder? id;
@@ -5093,12 +5181,15 @@ class StoredSettingsCountOrderByAggregateInput
 
   final _i2.SortOrder? lastMode;
 
+  final _i2.SortOrder? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5119,6 +5210,7 @@ class StoredSettingsMaxOrderByAggregateInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i2.SortOrder? id;
@@ -5129,12 +5221,15 @@ class StoredSettingsMaxOrderByAggregateInput
 
   final _i2.SortOrder? lastMode;
 
+  final _i2.SortOrder? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5145,6 +5240,7 @@ class StoredSettingsMinOrderByAggregateInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i2.SortOrder? id;
@@ -5155,12 +5251,15 @@ class StoredSettingsMinOrderByAggregateInput
 
   final _i2.SortOrder? lastMode;
 
+  final _i2.SortOrder? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5181,6 +5280,7 @@ class StoredSettingsOrderByWithAggregationInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
     this.$count,
     this.$avg,
     this.$max,
@@ -5195,6 +5295,8 @@ class StoredSettingsOrderByWithAggregationInput
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
   final _i2.SortOrder? lastMode;
+
+  final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? cookie;
 
   final _i2.StoredSettingsCountOrderByAggregateInput? $count;
 
@@ -5212,6 +5314,7 @@ class StoredSettingsOrderByWithAggregationInput
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
         '_count': $count,
         '_avg': $avg,
         '_max': $max,
@@ -5430,6 +5533,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final _i1.PrismaUnion<_i2.StoredSettingsScalarWhereWithAggregatesInput,
@@ -5449,6 +5553,9 @@ class StoredSettingsScalarWhereWithAggregatesInput
 
   final _i1.PrismaUnion<_i2.IntWithAggregatesFilter, int>? lastMode;
 
+  final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
+      _i1.PrismaUnion<String, _i1.PrismaNull>>? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'AND': AND,
@@ -5458,6 +5565,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5468,6 +5576,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
     this.$all,
   });
 
@@ -5479,6 +5588,8 @@ class StoredSettingsCountAggregateOutputTypeSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   final bool? $all;
 
   @override
@@ -5487,6 +5598,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
         '_all': $all,
       };
 }
@@ -5548,6 +5660,7 @@ class StoredSettingsMinAggregateOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final bool? id;
@@ -5558,12 +5671,15 @@ class StoredSettingsMinAggregateOutputTypeSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5584,6 +5700,7 @@ class StoredSettingsMaxAggregateOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
   });
 
   final bool? id;
@@ -5594,12 +5711,15 @@ class StoredSettingsMaxAggregateOutputTypeSelect
 
   final bool? lastMode;
 
+  final bool? cookie;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
       };
 }
 
@@ -5620,6 +5740,7 @@ class StoredSettingsGroupByOutputTypeSelect
     this.ownSource,
     this.ip,
     this.lastMode,
+    this.cookie,
     this.$count,
     this.$avg,
     this.$sum,
@@ -5634,6 +5755,8 @@ class StoredSettingsGroupByOutputTypeSelect
   final bool? ip;
 
   final bool? lastMode;
+
+  final bool? cookie;
 
   final _i1.PrismaUnion<bool, _i2.StoredSettingsGroupByOutputTypeCountArgs>?
       $count;
@@ -5652,6 +5775,7 @@ class StoredSettingsGroupByOutputTypeSelect
         'own_source': ownSource,
         'ip': ip,
         'lastMode': lastMode,
+        'cookie': cookie,
         '_count': $count,
         '_avg': $avg,
         '_sum': $sum,
