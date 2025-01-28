@@ -26,11 +26,11 @@ class Server {
               datapoint.time?.millisecondsSinceEpoch.toString();
         }
       }
-    await login("derGrapha", "12PbPjSSi16!");
-    if(settings.cookie != ""){
-      
+    //await login("derGrapha", "12PbPjSSi16!");
+    if(settings.cookie == ""){
+      await showDialog(context: NavigationService.navigatorKey.currentContext!, builder: (context)=> const LoginPopup());
     }
-    database.log(jsonData.toString());
+    //database.log(jsonData.toString());
   }
 
   Future<int> login(String username, String password) async {
@@ -40,10 +40,17 @@ class Server {
         Uri.parse("$url/sign_in"),
         body: <String, String>{'identifier': username, 'password': password},
       );
-      if (response.statusCode != 302) {
+      if (response.statusCode != 404) {
+        final body = jsonDecode(response.body);
+        database.log(body["status"]);
+        if(body["status"] != "302"){
+          //settings.setCookie(response.headers)
+          database.log(response.headers.toString());
+          return 302;
+        }
         var errorMessage = response.body.toString();
         database.log("Error whilst logging in: ${response.statusCode} Message: $errorMessage");
-        return response.statusCode;
+        return body["status"];
       } else {
         database.log("Logged in!");
         settings.setCookie(response.headers["set-cookie"]
@@ -77,7 +84,7 @@ class LoginPopup extends StatelessWidget {
         children: [
           TextField(
             controller: emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email/Username'),
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 10),
@@ -96,12 +103,12 @@ class LoginPopup extends StatelessWidget {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             final email = emailController.text;
             final password = passwordController.text;
 
             // Handle the login logic here
-            server.login(email, password);
+            await server.login(email, password);
             Navigator.of(context).pop(); // Close the popup after login
           },
           child: const Text('Login'),
