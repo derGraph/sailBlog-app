@@ -11,60 +11,96 @@ import 'package:http/http.dart' as http;
 Server server = Server();
 
 class Server {
-  static const String url = "https://sailBlog.dergraph.at";
+  //static const String url = "https://sailBlog.dergraph.at";
+  static const String url = "http://192.168.0.7:5173";
+  bool loginUnderway = false;
 
   Future<void> uploadDatapoints() async {
-    List<DatapointLocal> datapoints = (await database.getDatapoints()).where((datapoint) => datapoint.uploaded == 0).toList();
+    List<DatapointLocal> datapoints = (await database.getDatapoints())
+        .where((datapoint) => datapoint.uploaded == 0)
+        .toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
     for (var datapoint in datapoints) {
-        if (datapoint.id != null) {
-          String id = "";
-          id = datapoint.id!;
-          jsonData[id] = datapoint.toJson();
-          jsonData[id]!["time"] =
-              datapoint.time?.millisecondsSinceEpoch.toString();
-        }
+      if (datapoint.id != null) {
+        String id = "";
+        id = datapoint.id!;
+        jsonData[id] = datapoint.toJson();
+        jsonData[id]!["time"] =
+            datapoint.time?.millisecondsSinceEpoch.toString();
       }
-    //await login("derGrapha", "12PbPjSSi16!");
-    if(settings.cookie == ""){
-      await showDialog(context: NavigationService.navigatorKey.currentContext!, builder: (context)=> const LoginPopup());
     }
-    //database.log(jsonData.toString());
+    if (settings.cookie == "") {
+      await showDialog(
+          context: NavigationService.navigatorKey.currentContext!,
+          builder: (context) => const LoginPopup());
+    }
+
+    try {
+      await database.log(jsonEncode(jsonData));
+      var response = await http.post(Uri.parse("$url/api/Datapoints"),
+          body: jsonEncode(jsonData),
+          headers: {
+            "Cookie": 'auth_session=${settings.cookie}',
+            "Content-Type": 'application/json; charset=UTF-8'
+          });
+      switch (response.statusCode) {
+        case 401:
+          database.log("Not logged in or invalid cookie!");
+          settings.setCookie("");
+          return;
+        case 400:
+          //Handle datapoints some are uploaded some not!
+          return;
+        case 200:
+          break;
+        default:
+          database.log(
+            "Upload Datapoint Error: ${response.statusCode}: ${response.body}");
+          return;
+      }
+    } catch (exception) {
+      database.log("Upload Datapoints error: ${exception.toString()}");
+    }
+
+    // mark Datapoints uploaded
   }
 
   Future<int> login(String username, String password) async {
+    if (loginUnderway) {
+      return 302;
+    }
+    loginUnderway = true;
     database.log("Logging in as $username!");
-    try{
+    try {
       var response = await http.post(
         Uri.parse("$url/sign_in"),
         body: <String, String>{'identifier': username, 'password': password},
       );
       if (response.statusCode != 404) {
         final body = jsonDecode(response.body);
-        database.log(body["status"]);
-        if(body["status"] != "302"){
-          //settings.setCookie(response.headers)
-          database.log(response.headers.toString());
+        if (body["status"] == 302) {
+          settings.setCookie(response.headers["set-cookie"]
+              .toString()
+              .split(";")[0]
+              .replaceAll("auth_session=", ""));
+          loginUnderway = false;
           return 302;
         }
         var errorMessage = response.body.toString();
-        database.log("Error whilst logging in: ${response.statusCode} Message: $errorMessage");
+        database.log(
+            "Error whilst logging in: ${response.statusCode.toString()} Message: $errorMessage");
+        loginUnderway = false;
         return body["status"];
       } else {
-        database.log("Logged in!");
-        settings.setCookie(response.headers["set-cookie"]
-                .toString()
-                .split(";")[0]
-                .replaceAll("auth_session=", ""));
-
-        database.log("Cookie Saved!");
-        return 301;
+        database.log("Couldn't find server! 404");
+        loginUnderway = false;
+        return 404;
       }
-    }catch(e){
+    } catch (e) {
       database.log(e.toString());
     }
-
+    loginUnderway = false;
     return 400;
   }
 }
@@ -103,12 +139,14 @@ class LoginPopup extends StatelessWidget {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () async {
+          onPressed: () {
             final email = emailController.text;
             final password = passwordController.text;
 
             // Handle the login logic here
-            await server.login(email, password);
+            server
+                .login(email, password)
+                .then((result) => {database.log("Stored Cookie!")});
             Navigator.of(context).pop(); // Close the popup after login
           },
           child: const Text('Login'),
