@@ -11,13 +11,12 @@ import 'package:http/http.dart' as http;
 Server server = Server();
 
 class Server {
-  //static const String url = "https://sailBlog.dergraph.at";
-  static const String url = "http://192.168.0.7:5173";
+  static const String url = "https://sailBlog.dergraph.at";
+  //static const String url = "http://192.168.0.7:5173";
   bool loginUnderway = false;
 
   Future<void> uploadDatapoints() async {
-    List<DatapointLocal> datapoints = (await database.getDatapoints())
-        .where((datapoint) => datapoint.uploaded == 0)
+    List<DatapointLocal> datapoints = (await database.getUploadableDatapoints())
         .toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
@@ -31,13 +30,19 @@ class Server {
       }
     }
     if (settings.cookie == "") {
+    if (loginUnderway) {
+      return;
+    }
+    loginUnderway = true;
       await showDialog(
           context: NavigationService.navigatorKey.currentContext!,
           builder: (context) => const LoginPopup());
     }
 
+    List<String> acceptedDatapoints = [];
+    List<String> differentDatapoints = [];
+
     try {
-      await database.log(jsonEncode(jsonData));
       var response = await http.post(Uri.parse("$url/api/Datapoints"),
           body: jsonEncode(jsonData),
           headers: {
@@ -50,9 +55,25 @@ class Server {
           settings.setCookie("");
           return;
         case 400:
-          //Handle datapoints some are uploaded some not!
-          return;
+          Map<String, dynamic> results = json.decode(response.body.toString());
+            results.forEach((key, value) async {
+              if (value != "OK") {
+                if (value ==
+                    "Error: This element already exists with the same data!") {
+                  acceptedDatapoints.add(key);
+                } else if (value ==
+                    "Error: This element already exists, with different data! Edit via Datapoint PUT-Request!") {
+                  differentDatapoints.add(key);
+                } else {
+                  await database.log("Unhandled error message!\n $key: $value");
+                }
+              }
+            });
+          break;
         case 200:
+          for(DatapointLocal datapoint in datapoints) {
+            acceptedDatapoints.add(datapoint.id.toString());
+          }
           break;
         default:
           database.log(
@@ -63,14 +84,14 @@ class Server {
       database.log("Upload Datapoints error: ${exception.toString()}");
     }
 
-    // mark Datapoints uploaded
+    await database.setDatapointsUploaded(acceptedDatapoints, 1);
+    if(differentDatapoints.isNotEmpty) await database.setDatapointsUploaded(differentDatapoints, 2);
+
+    database.log("Uploaded datapoints: ${acceptedDatapoints.toString()}");
+    if(differentDatapoints.isNotEmpty) database.log("Different datapoints: ${differentDatapoints.toString()}");
   }
 
   Future<int> login(String username, String password) async {
-    if (loginUnderway) {
-      return 302;
-    }
-    loginUnderway = true;
     database.log("Logging in as $username!");
     try {
       var response = await http.post(
@@ -112,7 +133,6 @@ class LoginPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-
     return AlertDialog(
       title: const Text('Login'),
       content: Column(

@@ -57,6 +57,28 @@ class Database {
     return datapoints;
   }
 
+  Future<List<DatapointLocal>> getUploadableDatapoints() async {
+    List<DatapointLocal> datapoints =
+        (await prisma.datapointLocal.findMany(
+          where: DatapointLocalWhereInput(
+            uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0)))
+          ),
+          take: 500,
+        )).toList();
+    return datapoints;
+  }
+
+  Future<void> setDatapointsUploaded(List<String> datapoints, int mode) async {
+    await prisma.datapointLocal.updateMany(where: DatapointLocalWhereInput(
+      id: PrismaUnion.$1(
+        StringFilter($in: datapoints)
+      )
+    ),
+    data: PrismaUnion.$1(
+      DatapointLocalUpdateManyMutationInput(uploaded: PrismaUnion.$1(mode))
+    ));
+  }
+
   Future<StoredSettings> getSettings() async {
     StoredSettings? settings;
     try {

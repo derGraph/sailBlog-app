@@ -105,7 +105,7 @@ class _DatapointsPage extends StatelessWidget {
     List<DatapointLocal> datapoints = (await database.getDatapoints()).reversed.toList();
     for (DatapointLocal datapoint in datapoints) {
       returnWidgets
-          .add(Text("${datapoint.propulsion} ${datapoint.time!.toIso8601String()}: ${datapoint.lat}, ${datapoint.long}, spd: ${datapoint.speed}, hdg: ${datapoint.heading}"));
+          .add(Text("${datapoint.propulsion} ${datapoint.time!.toIso8601String()}: ${datapoint.lat}, ${datapoint.long}, spd: ${datapoint.speed}, hdg: ${datapoint.heading}, uploaded: ${datapoint.uploaded}"));
     }
     return returnWidgets;
   }
