@@ -19,8 +19,6 @@ BaseOptions dioBaseOptions = BaseOptions(
 Dio dio = Dio(dioBaseOptions);
 
 class Server {
-  static const String url = "";
-  //static const String url = "http://192.168.0.7:5173";
   bool loginUnderway = false;
 
   Future<int> uploadDatapoints() async {
@@ -46,12 +44,12 @@ class Server {
           context: NavigationService.navigatorKey.currentContext!,
           builder: (context) => const LoginPopup());
     }
-
+    return 0;
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
     Response response;
     try {
-      response = await dio.post("$url/api/Datapoints", data: jsonData);
+      response = await dio.post("/api/Datapoints", data: jsonData);
       } on DioException catch (e) {
         if(e.type == DioExceptionType.badResponse){
           response = e.response!;
@@ -120,7 +118,7 @@ class Server {
         'identifier': username,
         'password': password,
       });
-      response = await dio.post('$url/sign_in', data: formData);
+      response = await dio.post('/sign_in', data: formData);
     } on DioException catch (e) {
       response = e.response!;
       database.log(e.toString());
