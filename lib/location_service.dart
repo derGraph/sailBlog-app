@@ -70,8 +70,6 @@ class LocationService {
       PermissionStatus notifcationPermission =
           await Permission.notification.request();
 
-      await Permission.notification.shouldShowRequestRationale;
-
       if (!notifcationPermission.isGranted) {
         await database.log("locationService: Notification permission denied!");
         return false;

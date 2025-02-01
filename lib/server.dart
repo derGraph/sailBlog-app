@@ -15,9 +15,9 @@ class Server {
   //static const String url = "http://192.168.0.7:5173";
   bool loginUnderway = false;
 
-  Future<void> uploadDatapoints() async {
-    List<DatapointLocal> datapoints = (await database.getUploadableDatapoints())
-        .toList();
+  Future<int> uploadDatapoints() async {
+    List<DatapointLocal> datapoints =
+        (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
     for (var datapoint in datapoints) {
@@ -30,10 +30,10 @@ class Server {
       }
     }
     if (settings.cookie == "") {
-    if (loginUnderway) {
-      return;
-    }
-    loginUnderway = true;
+      if (loginUnderway) {
+        return -2;
+      }
+      loginUnderway = true;
       await showDialog(
           context: NavigationService.navigatorKey.currentContext!,
           builder: (context) => const LoginPopup());
@@ -53,42 +53,56 @@ class Server {
         case 401:
           database.log("Not logged in or invalid cookie!");
           settings.setCookie("");
-          return;
+          return -2;
         case 400:
           Map<String, dynamic> results = json.decode(response.body.toString());
-            results.forEach((key, value) async {
-              if (value != "OK") {
-                if (value ==
-                    "Error: This element already exists with the same data!") {
-                  acceptedDatapoints.add(key);
-                } else if (value ==
-                    "Error: This element already exists, with different data! Edit via Datapoint PUT-Request!") {
-                  differentDatapoints.add(key);
-                } else {
-                  await database.log("Unhandled error message!\n $key: $value");
-                }
+          results.forEach((key, value) async {
+            if (value != "OK") {
+              if (value ==
+                  "Error: This element already exists with the same data!") {
+                acceptedDatapoints.add(key);
+              } else if (value ==
+                  "Error: This element already exists, with different data! Edit via Datapoint PUT-Request!") {
+                differentDatapoints.add(key);
+              } else {
+                await database.log("Unhandled error message!\n $key: $value");
               }
-            });
+            }
+          });
           break;
         case 200:
-          for(DatapointLocal datapoint in datapoints) {
+          for (DatapointLocal datapoint in datapoints) {
             acceptedDatapoints.add(datapoint.id.toString());
           }
           break;
         default:
           database.log(
-            "Upload Datapoint Error: ${response.statusCode}: ${response.body}");
-          return;
+              "Upload Datapoint Error: ${response.statusCode}: ${response.body}");
+          return -1;
       }
     } catch (exception) {
       database.log("Upload Datapoints error: ${exception.toString()}");
+      return -1;
     }
 
     await database.setDatapointsUploaded(acceptedDatapoints, 1);
-    if(differentDatapoints.isNotEmpty) await database.setDatapointsUploaded(differentDatapoints, 2);
+    if (differentDatapoints.isNotEmpty) {
+      await database.setDatapointsUploaded(differentDatapoints, 2);
+    }
 
     database.log("Uploaded datapoints: ${acceptedDatapoints.toString()}");
-    if(differentDatapoints.isNotEmpty) database.log("Different datapoints: ${differentDatapoints.toString()}");
+    if (differentDatapoints.isNotEmpty) {
+      database.log("Different datapoints: ${differentDatapoints.toString()}");
+    }
+    return acceptedDatapoints.length;
+  }
+
+  Future<void> uploadAllDatapoints() async {
+    int uploadedDatapoints = -2;
+    while (uploadedDatapoints > 0 || uploadedDatapoints == -2) {
+      uploadedDatapoints = await _uploadDatapoints();
+    }
+    return;
   }
 
   Future<int> login(String username, String password) async {
