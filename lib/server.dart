@@ -6,12 +6,20 @@ import 'package:sailblog/database.dart';
 import 'package:sailblog/main.dart';
 import 'package:sailblog/settings.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 Server server = Server();
+BaseOptions dioBaseOptions = BaseOptions(
+  baseUrl: 'https://sailblog.dergraph.at',
+  headers: {
+      'Host': "sailblog.dergraph.at",
+      'Cookie': 'auth_session=${settings.cookie}',
+    },
+);
+Dio dio = Dio(dioBaseOptions);
 
 class Server {
-  static const String url = "https://sailBlog.dergraph.at";
+  static const String url = "";
   //static const String url = "http://192.168.0.7:5173";
   bool loginUnderway = false;
 
@@ -41,21 +49,24 @@ class Server {
 
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
-
+    Response response;
     try {
-      var response = await http.post(Uri.parse("$url/api/Datapoints"),
-          body: jsonEncode(jsonData),
-          headers: {
-            "Cookie": 'auth_session=${settings.cookie}',
-            "Content-Type": 'application/json; charset=UTF-8'
-          });
+      response = await dio.post("$url/api/Datapoints", data: jsonData);
+      } on DioException catch (e) {
+        if(e.type == DioExceptionType.badResponse){
+          response = e.response!;
+        } else {
+          return -1;
+        }
+        database.log("Upload Datapoints error: ${e.toString()}");
+    }
       switch (response.statusCode) {
         case 401:
           database.log("Not logged in or invalid cookie!");
-          settings.setCookie("");
+          await settings.setCookie("");
           return -2;
         case 400:
-          Map<String, dynamic> results = json.decode(response.body.toString());
+          Map<String, dynamic> results = json.decode(response.data.toString());
           results.forEach((key, value) async {
             if (value != "OK") {
               if (value ==
@@ -77,13 +88,9 @@ class Server {
           break;
         default:
           database.log(
-              "Upload Datapoint Error: ${response.statusCode}: ${response.body}");
+              "Upload Datapoint Error: ${response.statusCode}: ${response.data}");
           return -1;
       }
-    } catch (exception) {
-      database.log("Upload Datapoints error: ${exception.toString()}");
-      return -1;
-    }
 
     await database.setDatapointsUploaded(acceptedDatapoints, 1);
     if (differentDatapoints.isNotEmpty) {
@@ -105,38 +112,56 @@ class Server {
     return;
   }
 
-  Future<int> login(String username, String password) async {
-    database.log("Logging in as $username!");
+  Future<int?> login(String username, String password) async {
+    await database.log("Logging in as $username!");
+    Response response;
     try {
-      var response = await http.post(
-        Uri.parse("$url/sign_in"),
-        body: <String, String>{'identifier': username, 'password': password},
-      );
-      if (response.statusCode != 404) {
-        final body = jsonDecode(response.body);
-        if (body["status"] == 302) {
-          settings.setCookie(response.headers["set-cookie"]
-              .toString()
-              .split(";")[0]
-              .replaceAll("auth_session=", ""));
-          loginUnderway = false;
-          return 302;
-        }
-        var errorMessage = response.body.toString();
-        database.log(
-            "Error whilst logging in: ${response.statusCode.toString()} Message: $errorMessage");
-        loginUnderway = false;
-        return body["status"];
-      } else {
+      FormData formData = FormData.fromMap({
+        'identifier': username,
+        'password': password,
+      });
+      response = await dio.post('$url/sign_in', data: formData);
+    } on DioException catch (e) {
+      response = e.response!;
+      database.log(e.toString());
+    }
+    switch (response.statusCode) {
+      case 404:
         database.log("Couldn't find server! 404");
         loginUnderway = false;
         return 404;
-      }
-    } catch (e) {
-      database.log(e.toString());
+      case 200:
+      case 302:
+        await settings.setCookie(response.headers["set-cookie"]![0]
+            .replaceAll("auth_session=", "").split(";")[0]);
+        loginUnderway = false;
+        await database.log("Logged in!");
+        return 302;
+      default:
+        await database.log(
+          "Error whilst logging in: ${response.statusCode.toString()} Message: ${response.toString()}");
+        loginUnderway = false;
+        return response.statusCode;
     }
-    loginUnderway = false;
-    return 400;
+  }
+  Future<void> sendErrorMsg(String message) async {
+    await showDialog(
+      context: NavigationService.navigatorKey.currentContext!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Server"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
