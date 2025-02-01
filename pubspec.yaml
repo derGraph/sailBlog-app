@@ -81,3 +81,5 @@ flutter:
     - prisma/migrations/20250111192702_/
     - prisma/migrations/20250124122500_/
     - prisma/migrations/20250126143744_/
+    - prisma/migrations/20250201145350_/
+    - prisma/migrations/20250201145934_/

@@ -58,73 +58,81 @@ class Database {
   }
 
   Future<List<DatapointLocal>> getUploadableDatapoints() async {
-    List<DatapointLocal> datapoints =
-        (await prisma.datapointLocal.findMany(
-          where: DatapointLocalWhereInput(
-            uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0)))
-          ),
-          take: 500,
-        )).toList();
+    List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
+      where: DatapointLocalWhereInput(
+          uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0)))),
+      take: 500,
+    ))
+        .toList();
     return datapoints;
   }
 
   Future<void> setDatapointsUploaded(List<String> datapoints, int mode) async {
-    await prisma.datapointLocal.updateMany(where: DatapointLocalWhereInput(
-      id: PrismaUnion.$1(
-        StringFilter($in: datapoints)
-      )
-    ),
-    data: PrismaUnion.$1(
-      DatapointLocalUpdateManyMutationInput(uploaded: PrismaUnion.$1(mode))
-    ));
+    await prisma.datapointLocal.updateMany(
+        where: DatapointLocalWhereInput(
+            id: PrismaUnion.$1(StringFilter($in: datapoints))),
+        data: PrismaUnion.$1(DatapointLocalUpdateManyMutationInput(
+            uploaded: PrismaUnion.$1(mode))));
   }
 
   Future<StoredSettings> getSettings() async {
     StoredSettings? settings;
     try {
-      settings = (await prisma.storedSettings.findFirst(orderBy: PrismaUnion.$1([
-        StoredSettingsOrderByWithRelationInput(id: SortOrder.desc)
-      ])));
+      settings = (await prisma.storedSettings.findFirst(
+          orderBy: PrismaUnion.$1(
+              [StoredSettingsOrderByWithRelationInput(id: SortOrder.desc)])));
     } catch (exception) {
       log("getSettings Error: $exception");
     }
     settings ??= StoredSettings(
-      id: "id",
-      ownSource: true,
-      ip: null,
-      lastMode: 0,
-      cookie: "",
-    );
+        id: "id",
+        ownSource: true,
+        ip: null,
+        lastMode: 0,
+        cookie: "",
+        onlineMode: true);
     return settings;
   }
 
-  Future<void> setSettings(bool ownSource, String? ip, int lastMode, String? cookie) async {
+  Future<void> setSettings(bool ownSource, bool onlineMode, String? ip,
+      int lastMode, String? cookie) async {
     try {
-      await prisma.storedSettings.create(data: PrismaUnion.$1(StoredSettingsCreateInput(
+      await prisma.storedSettings.create(
+          data: PrismaUnion.$1(StoredSettingsCreateInput(
         ownSource: ownSource,
+        onlineMode: onlineMode,
         ip: ip != null ? PrismaUnion.$1(ip) : null,
         lastMode: lastMode,
         cookie: cookie != null ? PrismaUnion.$1(cookie) : null,
       )));
-      log("setSettings: Stored settings!");
+      log("setSettings: Stored settings: ${settings.toJson()}");
     } catch (exception) {
       log("setSettings Error: $exception");
     }
   }
 
-  Future<void> addDatapoint(String latitude, String longitude, Modes mode, {String? hAccuracy, String? vAccuracy, String? heading, String? speed}) async {
+  Future<void> addDatapoint(String latitude, String longitude, Modes mode,
+      {String? hAccuracy,
+      String? vAccuracy,
+      String? heading,
+      String? speed}) async {
     await prisma.datapointLocal.create(
       data: PrismaUnion.$1(DatapointLocalCreateInput(
         lat: Decimal.fromJson(latitude.toString()),
         long: Decimal.fromJson(longitude.toString()),
-        hAccuracy: hAccuracy != null ? PrismaUnion.$1(Decimal.parse(hAccuracy)) : null,
-        vAccuracy: vAccuracy != null ? PrismaUnion.$1(Decimal.parse(vAccuracy)) : null,
-        heading: heading != null ? PrismaUnion.$1(Decimal.parse(heading)) : null,
+        hAccuracy:
+            hAccuracy != null ? PrismaUnion.$1(Decimal.parse(hAccuracy)) : null,
+        vAccuracy:
+            vAccuracy != null ? PrismaUnion.$1(Decimal.parse(vAccuracy)) : null,
+        heading:
+            heading != null ? PrismaUnion.$1(Decimal.parse(heading)) : null,
         speed: speed != null ? PrismaUnion.$1(Decimal.parse(speed)) : null,
         propulsion: mode.index,
       )),
     );
-    server.uploadDatapoints();
+    if (recorder.online) {
+      server.uploadDatapoints();
+    }
   }
 }
 

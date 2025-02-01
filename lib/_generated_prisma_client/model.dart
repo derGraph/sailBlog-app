@@ -309,6 +309,7 @@ class StoredSettings {
   const StoredSettings({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -316,7 +317,8 @@ class StoredSettings {
 
   factory StoredSettings.fromJson(Map json) => StoredSettings(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -326,6 +328,8 @@ class StoredSettings {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -334,7 +338,8 @@ class StoredSettings {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -345,6 +350,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
   const CreateManyStoredSettingsAndReturnOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -353,7 +359,8 @@ class CreateManyStoredSettingsAndReturnOutputType {
   factory CreateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
       CreateManyStoredSettingsAndReturnOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -363,6 +370,8 @@ class CreateManyStoredSettingsAndReturnOutputType {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -371,7 +380,8 @@ class CreateManyStoredSettingsAndReturnOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -382,6 +392,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
   const UpdateManyStoredSettingsAndReturnOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -390,7 +401,8 @@ class UpdateManyStoredSettingsAndReturnOutputType {
   factory UpdateManyStoredSettingsAndReturnOutputType.fromJson(Map json) =>
       UpdateManyStoredSettingsAndReturnOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -400,6 +412,8 @@ class UpdateManyStoredSettingsAndReturnOutputType {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -408,7 +422,8 @@ class UpdateManyStoredSettingsAndReturnOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,

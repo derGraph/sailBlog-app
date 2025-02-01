@@ -34,6 +34,15 @@ class LocationService {
     }
   }
 
+  Future<bool> isRunning() async {
+    if (settings.ownSource) {
+      return await BackgroundLocation.isServiceRunning();
+    } else {
+      //handle NMEA isRunning
+      return false;
+    }
+  }
+
   Future<void> end() async {
     if (settings.ownSource) {
       await BackgroundLocation.stopLocationService();

@@ -39,7 +39,8 @@ model LogMessage {
 
 model StoredSettings {
   id              String   @id @default(cuid())
-  own_source      Boolean
+  ownSource       Boolean  @default(true)
+  onlineMode      Boolean  @default(true)
   ip              String?
   lastMode        Int
   cookie          String?

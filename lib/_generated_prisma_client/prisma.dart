@@ -4475,6 +4475,7 @@ class StoredSettingsWhereInput
     this.NOT,
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4492,6 +4493,8 @@ class StoredSettingsWhereInput
 
   final _i1.PrismaUnion<_i2.BoolFilter, bool>? ownSource;
 
+  final _i1.PrismaUnion<_i2.BoolFilter, bool>? onlineMode;
+
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
@@ -4506,7 +4509,8 @@ class StoredSettingsWhereInput
         'OR': OR,
         'NOT': NOT,
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4521,6 +4525,7 @@ class StoredSettingsWhereUniqueInput
     this.OR,
     this.NOT,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4538,6 +4543,8 @@ class StoredSettingsWhereUniqueInput
 
   final _i1.PrismaUnion<_i2.BoolFilter, bool>? ownSource;
 
+  final _i1.PrismaUnion<_i2.BoolFilter, bool>? onlineMode;
+
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
@@ -4552,7 +4559,8 @@ class StoredSettingsWhereUniqueInput
         'AND': AND,
         'OR': OR,
         'NOT': NOT,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4564,6 +4572,7 @@ class StoredSettingsSelect
   const StoredSettingsSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4572,6 +4581,8 @@ class StoredSettingsSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -4582,7 +4593,8 @@ class StoredSettingsSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4594,6 +4606,7 @@ class StoredSettingsOrderByWithRelationInput
   const StoredSettingsOrderByWithRelationInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4602,6 +4615,8 @@ class StoredSettingsOrderByWithRelationInput
   final _i2.SortOrder? id;
 
   final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? onlineMode;
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
@@ -4612,7 +4627,8 @@ class StoredSettingsOrderByWithRelationInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4621,7 +4637,8 @@ class StoredSettingsOrderByWithRelationInput
 
 enum StoredSettingsScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
   id<String>('id', 'StoredSettings'),
-  ownSource<bool>('own_source', 'StoredSettings'),
+  ownSource<bool>('ownSource', 'StoredSettings'),
+  onlineMode<bool>('onlineMode', 'StoredSettings'),
   ip<String>('ip', 'StoredSettings'),
   lastMode<int>('lastMode', 'StoredSettings'),
   cookie<String>('cookie', 'StoredSettings');
@@ -4642,7 +4659,8 @@ class StoredSettingsCreateInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsCreateInput({
     this.id,
-    required this.ownSource,
+    this.ownSource,
+    this.onlineMode,
     this.ip,
     required this.lastMode,
     this.cookie,
@@ -4650,7 +4668,9 @@ class StoredSettingsCreateInput
 
   final String? id;
 
-  final bool ownSource;
+  final bool? ownSource;
+
+  final bool? onlineMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
@@ -4661,7 +4681,8 @@ class StoredSettingsCreateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4672,7 +4693,8 @@ class StoredSettingsUncheckedCreateInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsUncheckedCreateInput({
     this.id,
-    required this.ownSource,
+    this.ownSource,
+    this.onlineMode,
     this.ip,
     required this.lastMode,
     this.cookie,
@@ -4680,7 +4702,9 @@ class StoredSettingsUncheckedCreateInput
 
   final String? id;
 
-  final bool ownSource;
+  final bool? ownSource;
+
+  final bool? onlineMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
@@ -4691,7 +4715,8 @@ class StoredSettingsUncheckedCreateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4702,7 +4727,8 @@ class StoredSettingsCreateManyInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StoredSettingsCreateManyInput({
     this.id,
-    required this.ownSource,
+    this.ownSource,
+    this.onlineMode,
     this.ip,
     required this.lastMode,
     this.cookie,
@@ -4710,7 +4736,9 @@ class StoredSettingsCreateManyInput
 
   final String? id;
 
-  final bool ownSource;
+  final bool? ownSource;
+
+  final bool? onlineMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
@@ -4721,7 +4749,8 @@ class StoredSettingsCreateManyInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4733,6 +4762,7 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
   const CreateManyStoredSettingsAndReturnOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4741,6 +4771,8 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -4751,7 +4783,8 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4783,6 +4816,7 @@ class StoredSettingsUpdateInput
   const StoredSettingsUpdateInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4791,6 +4825,8 @@ class StoredSettingsUpdateInput
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? onlineMode;
 
   final _i1.PrismaUnion<
       String,
@@ -4807,7 +4843,8 @@ class StoredSettingsUpdateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4819,6 +4856,7 @@ class StoredSettingsUncheckedUpdateInput
   const StoredSettingsUncheckedUpdateInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4827,6 +4865,8 @@ class StoredSettingsUncheckedUpdateInput
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? onlineMode;
 
   final _i1.PrismaUnion<
       String,
@@ -4843,7 +4883,8 @@ class StoredSettingsUncheckedUpdateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4855,6 +4896,7 @@ class StoredSettingsUpdateManyMutationInput
   const StoredSettingsUpdateManyMutationInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4863,6 +4905,8 @@ class StoredSettingsUpdateManyMutationInput
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? onlineMode;
 
   final _i1.PrismaUnion<
       String,
@@ -4879,7 +4923,8 @@ class StoredSettingsUpdateManyMutationInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4891,6 +4936,7 @@ class StoredSettingsUncheckedUpdateManyInput
   const StoredSettingsUncheckedUpdateManyInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4899,6 +4945,8 @@ class StoredSettingsUncheckedUpdateManyInput
   final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? ownSource;
+
+  final _i1.PrismaUnion<bool, _i2.BoolFieldUpdateOperationsInput>? onlineMode;
 
   final _i1.PrismaUnion<
       String,
@@ -4915,7 +4963,8 @@ class StoredSettingsUncheckedUpdateManyInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4927,6 +4976,7 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
   const UpdateManyStoredSettingsAndReturnOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4935,6 +4985,8 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -4945,7 +4997,8 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -4956,6 +5009,7 @@ class StoredSettingsCountAggregateOutputType {
   const StoredSettingsCountAggregateOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -4965,7 +5019,8 @@ class StoredSettingsCountAggregateOutputType {
   factory StoredSettingsCountAggregateOutputType.fromJson(Map json) =>
       StoredSettingsCountAggregateOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -4975,6 +5030,8 @@ class StoredSettingsCountAggregateOutputType {
   final int? id;
 
   final int? ownSource;
+
+  final int? onlineMode;
 
   final int? ip;
 
@@ -4986,7 +5043,8 @@ class StoredSettingsCountAggregateOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5020,6 +5078,7 @@ class StoredSettingsMinAggregateOutputType {
   const StoredSettingsMinAggregateOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5028,7 +5087,8 @@ class StoredSettingsMinAggregateOutputType {
   factory StoredSettingsMinAggregateOutputType.fromJson(Map json) =>
       StoredSettingsMinAggregateOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -5038,6 +5098,8 @@ class StoredSettingsMinAggregateOutputType {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -5046,7 +5108,8 @@ class StoredSettingsMinAggregateOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5057,6 +5120,7 @@ class StoredSettingsMaxAggregateOutputType {
   const StoredSettingsMaxAggregateOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5065,7 +5129,8 @@ class StoredSettingsMaxAggregateOutputType {
   factory StoredSettingsMaxAggregateOutputType.fromJson(Map json) =>
       StoredSettingsMaxAggregateOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -5075,6 +5140,8 @@ class StoredSettingsMaxAggregateOutputType {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -5083,7 +5150,8 @@ class StoredSettingsMaxAggregateOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5094,6 +5162,7 @@ class StoredSettingsGroupByOutputType {
   const StoredSettingsGroupByOutputType({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5107,7 +5176,8 @@ class StoredSettingsGroupByOutputType {
   factory StoredSettingsGroupByOutputType.fromJson(Map json) =>
       StoredSettingsGroupByOutputType(
         id: json['id'],
-        ownSource: json['own_source'],
+        ownSource: json['ownSource'],
+        onlineMode: json['onlineMode'],
         ip: json['ip'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
@@ -5133,6 +5203,8 @@ class StoredSettingsGroupByOutputType {
 
   final bool? ownSource;
 
+  final bool? onlineMode;
+
   final String? ip;
 
   final int? lastMode;
@@ -5151,7 +5223,8 @@ class StoredSettingsGroupByOutputType {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5168,6 +5241,7 @@ class StoredSettingsCountOrderByAggregateInput
   const StoredSettingsCountOrderByAggregateInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5176,6 +5250,8 @@ class StoredSettingsCountOrderByAggregateInput
   final _i2.SortOrder? id;
 
   final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? onlineMode;
 
   final _i2.SortOrder? ip;
 
@@ -5186,7 +5262,8 @@ class StoredSettingsCountOrderByAggregateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5208,6 +5285,7 @@ class StoredSettingsMaxOrderByAggregateInput
   const StoredSettingsMaxOrderByAggregateInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5216,6 +5294,8 @@ class StoredSettingsMaxOrderByAggregateInput
   final _i2.SortOrder? id;
 
   final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? onlineMode;
 
   final _i2.SortOrder? ip;
 
@@ -5226,7 +5306,8 @@ class StoredSettingsMaxOrderByAggregateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5238,6 +5319,7 @@ class StoredSettingsMinOrderByAggregateInput
   const StoredSettingsMinOrderByAggregateInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5246,6 +5328,8 @@ class StoredSettingsMinOrderByAggregateInput
   final _i2.SortOrder? id;
 
   final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? onlineMode;
 
   final _i2.SortOrder? ip;
 
@@ -5256,7 +5340,8 @@ class StoredSettingsMinOrderByAggregateInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5278,6 +5363,7 @@ class StoredSettingsOrderByWithAggregationInput
   const StoredSettingsOrderByWithAggregationInput({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5291,6 +5377,8 @@ class StoredSettingsOrderByWithAggregationInput
   final _i2.SortOrder? id;
 
   final _i2.SortOrder? ownSource;
+
+  final _i2.SortOrder? onlineMode;
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
@@ -5311,7 +5399,8 @@ class StoredSettingsOrderByWithAggregationInput
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5531,6 +5620,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
     this.NOT,
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5548,6 +5638,8 @@ class StoredSettingsScalarWhereWithAggregatesInput
 
   final _i1.PrismaUnion<_i2.BoolWithAggregatesFilter, bool>? ownSource;
 
+  final _i1.PrismaUnion<_i2.BoolWithAggregatesFilter, bool>? onlineMode;
+
   final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
@@ -5562,7 +5654,8 @@ class StoredSettingsScalarWhereWithAggregatesInput
         'OR': OR,
         'NOT': NOT,
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5574,6 +5667,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
   const StoredSettingsCountAggregateOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5583,6 +5677,8 @@ class StoredSettingsCountAggregateOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -5595,7 +5691,8 @@ class StoredSettingsCountAggregateOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5658,6 +5755,7 @@ class StoredSettingsMinAggregateOutputTypeSelect
   const StoredSettingsMinAggregateOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5666,6 +5764,8 @@ class StoredSettingsMinAggregateOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -5676,7 +5776,8 @@ class StoredSettingsMinAggregateOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5698,6 +5799,7 @@ class StoredSettingsMaxAggregateOutputTypeSelect
   const StoredSettingsMaxAggregateOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5706,6 +5808,8 @@ class StoredSettingsMaxAggregateOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -5716,7 +5820,8 @@ class StoredSettingsMaxAggregateOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,
@@ -5738,6 +5843,7 @@ class StoredSettingsGroupByOutputTypeSelect
   const StoredSettingsGroupByOutputTypeSelect({
     this.id,
     this.ownSource,
+    this.onlineMode,
     this.ip,
     this.lastMode,
     this.cookie,
@@ -5751,6 +5857,8 @@ class StoredSettingsGroupByOutputTypeSelect
   final bool? id;
 
   final bool? ownSource;
+
+  final bool? onlineMode;
 
   final bool? ip;
 
@@ -5772,7 +5880,8 @@ class StoredSettingsGroupByOutputTypeSelect
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
-        'own_source': ownSource,
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
         'ip': ip,
         'lastMode': lastMode,
         'cookie': cookie,

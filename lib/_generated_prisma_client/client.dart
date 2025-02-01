@@ -301,10 +301,12 @@ class DatapointLocalDelegate {
             _i3.DatapointLocalUncheckedUpdateManyInput>
         data,
     _i3.DatapointLocalWhereInput? where,
+    int? limit,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
     };
     final query = _i1.serializeJsonQuery(
       args: args,
@@ -330,11 +332,13 @@ class DatapointLocalDelegate {
             _i3.DatapointLocalUncheckedUpdateManyInput>
         data,
     _i3.DatapointLocalWhereInput? where,
+    int? limit,
     _i3.UpdateManyDatapointLocalAndReturnOutputTypeSelect? select,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
       'select': select,
     };
     final query = _i1.serializeJsonQuery(
@@ -417,9 +421,14 @@ class DatapointLocalDelegate {
     );
   }
 
-  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany(
-      {_i3.DatapointLocalWhereInput? where}) {
-    final args = {'where': where};
+  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany({
+    _i3.DatapointLocalWhereInput? where,
+    int? limit,
+  }) {
+    final args = {
+      'where': where,
+      'limit': limit,
+    };
     final query = _i1.serializeJsonQuery(
       args: args,
       modelName: 'Datapoint_local',
@@ -808,10 +817,12 @@ class LogMessageDelegate {
             _i3.LogMessageUncheckedUpdateManyInput>
         data,
     _i3.LogMessageWhereInput? where,
+    int? limit,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
     };
     final query = _i1.serializeJsonQuery(
       args: args,
@@ -837,11 +848,13 @@ class LogMessageDelegate {
             _i3.LogMessageUncheckedUpdateManyInput>
         data,
     _i3.LogMessageWhereInput? where,
+    int? limit,
     _i3.UpdateManyLogMessageAndReturnOutputTypeSelect? select,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
       'select': select,
     };
     final query = _i1.serializeJsonQuery(
@@ -924,9 +937,14 @@ class LogMessageDelegate {
     );
   }
 
-  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany(
-      {_i3.LogMessageWhereInput? where}) {
-    final args = {'where': where};
+  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany({
+    _i3.LogMessageWhereInput? where,
+    int? limit,
+  }) {
+    final args = {
+      'where': where,
+      'limit': limit,
+    };
     final query = _i1.serializeJsonQuery(
       args: args,
       modelName: 'LogMessage',
@@ -1318,10 +1336,12 @@ class StoredSettingsDelegate {
             _i3.StoredSettingsUncheckedUpdateManyInput>
         data,
     _i3.StoredSettingsWhereInput? where,
+    int? limit,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
     };
     final query = _i1.serializeJsonQuery(
       args: args,
@@ -1347,11 +1367,13 @@ class StoredSettingsDelegate {
             _i3.StoredSettingsUncheckedUpdateManyInput>
         data,
     _i3.StoredSettingsWhereInput? where,
+    int? limit,
     _i3.UpdateManyStoredSettingsAndReturnOutputTypeSelect? select,
   }) {
     final args = {
       'data': data,
       'where': where,
+      'limit': limit,
       'select': select,
     };
     final query = _i1.serializeJsonQuery(
@@ -1434,9 +1456,14 @@ class StoredSettingsDelegate {
     );
   }
 
-  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany(
-      {_i3.StoredSettingsWhereInput? where}) {
-    final args = {'where': where};
+  _i1.ActionClient<_i3.AffectedRowsOutput> deleteMany({
+    _i3.StoredSettingsWhereInput? where,
+    int? limit,
+  }) {
+    final args = {
+      'where': where,
+      'limit': limit,
+    };
     final query = _i1.serializeJsonQuery(
       args: args,
       modelName: 'StoredSettings',
@@ -1796,16 +1823,32 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
             'isUpdatedAt': false,
           },
           {
-            'name': 'own_source',
+            'name': 'ownSource',
             'kind': 'scalar',
             'isList': false,
             'isRequired': true,
             'isUnique': false,
             'isId': false,
             'isReadOnly': false,
-            'hasDefaultValue': false,
+            'hasDefaultValue': true,
             'type': 'Boolean',
             'nativeType': null,
+            'default': true,
+            'isGenerated': false,
+            'isUpdatedAt': false,
+          },
+          {
+            'name': 'onlineMode',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'Boolean',
+            'nativeType': null,
+            'default': true,
             'isGenerated': false,
             'isUpdatedAt': false,
           },
@@ -1914,7 +1957,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
   @override
   get $engine => _engine ??= _i5.LibraryEngine(
         schema:
-            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion Int\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n\nmodel StoredSettings {\n  id         String  @id @default(cuid())\n  own_source Boolean\n  ip         String?\n  lastMode   Int\n  cookie     String?\n}\n',
+            '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = "dart run orm"\n  output     = "../lib/_generated_prisma_client"\n  engineType = "flutter"\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = "file:sailBlog.db"\n}\n\nmodel Datapoint_local {\n  id         String   @id @default(cuid())\n  time       DateTime @updatedAt\n  lat        Decimal\n  long       Decimal\n  speed      Decimal?\n  heading    Decimal?\n  depth      Decimal?\n  h_accuracy Decimal?\n  v_accuracy Decimal?\n  propulsion Int\n  uploaded   Int      @default(0) // 0 local, \n  // 1 uploaded,\n  // 2 different data\n}\n\nmodel LogMessage {\n  id      String   @id @default(cuid())\n  time    DateTime @updatedAt\n  message String\n}\n\nmodel StoredSettings {\n  id         String  @id @default(cuid())\n  ownSource  Boolean @default(true)\n  onlineMode Boolean @default(true)\n  ip         String?\n  lastMode   Int\n  cookie     String?\n}\n',
         datasources: const {
           'db': _i1.Datasource(
             _i1.DatasourceType.url,

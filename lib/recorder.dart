@@ -8,14 +8,20 @@ enum Modes { off, anchor, sailing, motor }
 
 class Recorder {
   Modes mode = Modes.values[settings.lastMode];
-  bool online = false;
+  bool online = settings.onlineMode;
 
   void setOnline(bool newOnline) {
     database.log("Online mode $newOnline!");
+    settings.changeOnlineMode(newOnline);
     online = newOnline;
   }
 
-  void setMode(Modes newMode) {
+  Future<void> setMode(Modes newMode) async {
+    if (newMode == mode) {
+      if (await locationService.isRunning()) {
+        return;
+      }
+    }
     settings.changeLastMode(newMode.index);
     database.log("Selected transportation ${newMode.name}!");
     if (newMode.name == "off") {
