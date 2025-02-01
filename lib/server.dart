@@ -100,7 +100,7 @@ class Server {
   Future<void> uploadAllDatapoints() async {
     int uploadedDatapoints = -2;
     while (uploadedDatapoints > 0 || uploadedDatapoints == -2) {
-      uploadedDatapoints = await _uploadDatapoints();
+      uploadedDatapoints = await uploadDatapoints();
     }
     return;
   }
