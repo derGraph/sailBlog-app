@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:location/location.dart' as location;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sailblog/database.dart';
@@ -45,8 +46,28 @@ class LocationService {
       _startRunning = false;
     } else {
       // Enable NMEA stream implementation
+      if (!await _handlePermissionsNMEA()) {
+        _alert("You have to allow all permissions!");
+        _startRunning = false;
+        return;
+      }
+      FlutterForegroundTask.init(
+          androidNotificationOptions: AndroidNotificationOptions(
+              channelId: "sailBlogNMEA", channelName: "sailBlogNMEA"),
+          iosNotificationOptions: IOSNotificationOptions(),
+          foregroundTaskOptions: ForegroundTaskOptions(
+              eventAction: ForegroundTaskEventAction.once(),
+              allowWakeLock: true,
+              allowWifiLock: true));
+
+      await FlutterForegroundTask.startService(
+          notificationTitle: "sailBlog", notificationText: "notificationText");
+      _startRunning = false;
+      _isRunning = true;
     }
   }
+
+  Future<void> onStart() async {}
 
   Future<bool> isRunning() async => _isRunning;
 
@@ -59,6 +80,8 @@ class LocationService {
       _isRunning = false;
     } else {
       // Disable NMEA stream
+      await FlutterForegroundTask.stopService();
+      _isRunning = false;
     }
   }
 
@@ -125,6 +148,10 @@ class LocationService {
     return true;
   }
 
+  Future<bool> _handlePermissionsNMEA() async {
+    return true;
+  }
+
   Future<void> _alert(String message) async {
     // Alert dialog function
     await showDialog(
@@ -144,3 +171,56 @@ class LocationService {
 }
 
 LocationService locationService = LocationService();
+
+@pragma('vm:entry-point')
+void startCallback() {
+  FlutterForegroundTask.setTaskHandler(NMEAHandler());
+}
+
+class NMEAHandler extends TaskHandler {
+  // Called when the task is started.
+  @override
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
+    await database.log('onStart(starter: ${starter.name})');
+  }
+
+  // Called based on the eventAction set in ForegroundTaskOptions.
+  @override
+  void onRepeatEvent(DateTime timestamp) {
+    // Send data to main isolate.
+    final Map<String, dynamic> data = {
+      "timestampMillis": timestamp.millisecondsSinceEpoch,
+    };
+    FlutterForegroundTask.sendDataToMain(data);
+  }
+
+  // Called when the task is destroyed.
+  @override
+  Future<void> onDestroy(DateTime timestamp) async {
+    await database.log('onDestroy');
+  }
+
+  // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
+  @override
+  Future<void> onReceiveData(Object data) async {
+    await database.log('onReceiveData: $data');
+  }
+
+  // Called when the notification button is pressed.
+  @override
+  Future<void> onNotificationButtonPressed(String id) async {
+    await database.log('onNotificationButtonPressed: $id');
+  }
+
+  // Called when the notification itself is pressed.
+  @override
+  Future<void> onNotificationPressed() async {
+    await database.log('onNotificationPressed');
+  }
+
+  // Called when the notification itself is dismissed.
+  @override
+  Future<void> onNotificationDismissed() async {
+    await database.log('onNotificationDismissed');
+  }
+}

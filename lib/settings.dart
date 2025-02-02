@@ -30,6 +30,15 @@ class Settings {
     return;
   }
 
+  Future<void> changeOwnSource(bool value) async {
+    await recorder.setMode(Modes.off);
+    StoredSettings oldSetting = await database.getSettings();
+    ownSource = value;
+    await database.setSettings(ownSource, oldSetting.onlineMode!, oldSetting.ip,
+        oldSetting.lastMode!, oldSetting.cookie);
+    return;
+  }
+
   Future<void> changeOnlineMode(bool mode) async {
     StoredSettings oldSetting = await database.getSettings();
     onlineMode = mode;

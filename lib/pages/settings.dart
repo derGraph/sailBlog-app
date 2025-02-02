@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/settings.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -24,10 +25,18 @@ class _SettingsPage extends State<SettingsPage> {
         ElevatedButton(
           child: const Text("Datapoints"),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => _DatapointsPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => _DatapointsPage()));
           },
         ),
+        SwitchListTile(
+            value: !settings.ownSource,
+            title: const Text("Use boat NMEA"),
+            onChanged: (value) => {
+                  setState(() {
+                    settings.changeOwnSource(!value);
+                  })
+                }),
       ],
     );
   }
@@ -102,10 +111,11 @@ class _DatapointsPage extends StatelessWidget {
 
   Future<List<Widget>> _getDatapointsObjects() async {
     List<Widget> returnWidgets = [];
-    List<DatapointLocal> datapoints = (await database.getDatapoints()).reversed.toList();
+    List<DatapointLocal> datapoints =
+        (await database.getDatapoints()).reversed.toList();
     for (DatapointLocal datapoint in datapoints) {
-      returnWidgets
-          .add(Text("${datapoint.propulsion} ${datapoint.time!.toIso8601String()}: ${datapoint.lat}, ${datapoint.long}, spd: ${datapoint.speed}, hdg: ${datapoint.heading}, uploaded: ${datapoint.uploaded}"));
+      returnWidgets.add(Text(
+          "${datapoint.propulsion} ${datapoint.time!.toIso8601String()}: ${datapoint.lat}, ${datapoint.long}, spd: ${datapoint.speed}, hdg: ${datapoint.heading}, uploaded: ${datapoint.uploaded}"));
     }
     return returnWidgets;
   }

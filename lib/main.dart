@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:sailblog/pages/alarm.dart';
 import 'package:sailblog/pages/record.dart';
 import 'package:sailblog/pages/settings.dart';
@@ -8,6 +9,7 @@ MainApp mainApp = MainApp();
 
 void main() async {
   await database.init();
+  FlutterForegroundTask.initCommunicationPort();
   runApp(MaterialApp(home: mainApp));
 }
 
