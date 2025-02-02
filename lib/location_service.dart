@@ -14,6 +14,7 @@ class LocationService {
   bool _startRunning = false;
 
   Future<void> start() async {
+    if (_isRunning) return;
     if (_startRunning) return;
     _startRunning = true;
 
