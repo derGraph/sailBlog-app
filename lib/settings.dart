@@ -1,5 +1,6 @@
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/recorder.dart';
 
 Settings settings = Settings();
 
@@ -9,7 +10,7 @@ class Settings {
   String ip = "127.0.0.1:1000";
   String id = "";
   String cookie = "";
-  int lastMode = 0;
+  int lastMode = Modes.off.index;
 
   Future<void> init() async {
     StoredSettings setting = (await database.getSettings());
