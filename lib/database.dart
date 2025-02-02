@@ -34,8 +34,13 @@ class Database {
       await settings.init();
       log("Settings loaded: ${settings.toJson()}");
       connected = true;
-      await FMTCObjectBoxBackend().initialise();
-      await FMTCStore('mapStore').manage.create();
+      try {
+        await FMTCObjectBoxBackend().initialise();
+        await FMTCStore('mapStore').manage.create();
+      } catch (error, stackTrace) {
+        await log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
+      }
+
       await log("Map storage Initialized!");
     }
   }

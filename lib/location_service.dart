@@ -1,59 +1,76 @@
 import 'dart:async';
-import 'package:background_location/background_location.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart' as location;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/main.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sailblog/settings.dart';
 import 'package:sailblog/recorder.dart';
 
-LocationService locationService = LocationService();
-
 class LocationService {
+  final location.Location _location = location.Location();
+  StreamSubscription<location.LocationData>? _locationSubscription;
+  bool _isRunning = false;
+  bool _startRunning = false;
+
   Future<void> start() async {
+    if (_startRunning) return;
+    _startRunning = true;
+
     if (settings.ownSource) {
-      // USE DEVICE GPS
       if (!await _handlePermissionsSelf()) {
         _alert("You have to allow all permissions!");
+        _startRunning = false;
         return;
       }
 
-      await BackgroundLocation.setAndroidNotification(
-        title: "sailBlog GPS recorder",
-        message:
-            "While this Notification is shown, sailBlog can record your position!",
-        icon: "@mipmap/ic_launcher",
-      );
+      await _location.changeSettings(
+          interval: 30000,
+          distanceFilter: 0,
+          accuracy: location.LocationAccuracy.high);
 
-      await BackgroundLocation.setAndroidConfiguration(30000);
-      await BackgroundLocation.stopLocationService();
-      await BackgroundLocation.startLocationService(distanceFilter: 5);
-      await BackgroundLocation.getLocationUpdates(_gpsListener);
+      await _location.enableBackgroundMode(enable: true);
+
+      await _location.changeNotificationOptions(
+          channelName: "GPS Notification",
+          title: "sailBlog GPS",
+          subtitle:
+              "While this Notification is shown, sailBlog can record your position!",
+          onTapBringToFront: true);
+
+      _locationSubscription = _location.onLocationChanged.listen(_gpsListener);
+      await database.log("locationService: Enabled own GPS logging!");
+      _isRunning = true;
+      _startRunning = false;
     } else {
-      //enabe NMEA STREAM
+      // Enable NMEA stream implementation
     }
   }
 
-  Future<bool> isRunning() async {
-    if (settings.ownSource) {
-      return await BackgroundLocation.isServiceRunning();
-    } else {
-      //handle NMEA isRunning
-      return false;
-    }
-  }
+  Future<bool> isRunning() async => _isRunning;
 
   Future<void> end() async {
     if (settings.ownSource) {
-      await BackgroundLocation.stopLocationService();
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+      await _location.enableBackgroundMode(enable: false);
+      await database.log("locationService: Disabled own GPS logging!");
+      _isRunning = false;
     } else {
-      //disable NMEA STREAM
+      // Disable NMEA stream
     }
   }
 
-  Future<void> _gpsListener(Location gpsLocation) async {
-    await database.addDatapoint(gpsLocation.latitude.toString(),
-        gpsLocation.longitude.toString(), recorder.mode);
+  Future<void> _gpsListener(location.LocationData locationData) async {
+    await database.addDatapoint(
+      locationData.latitude.toString(),
+      locationData.longitude.toString(),
+      hAccuracy: locationData.accuracy.toString(),
+      vAccuracy: locationData.verticalAccuracy.toString(),
+      heading: locationData.heading.toString(),
+      speed: locationData.speed.toString(),
+      recorder.mode,
+    );
   }
 
   Future<bool> _handlePermissionsSelf() async {
@@ -111,20 +128,18 @@ class LocationService {
     // Alert dialog function
     await showDialog(
       context: NavigationService.navigatorKey.currentContext!,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Location Service"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              child: const Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Location Service"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: const Text("OK"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
     );
   }
 }
+
+LocationService locationService = LocationService();

@@ -11,9 +11,9 @@ class Recorder {
   Modes mode = Modes.values[settings.lastMode];
   bool online = settings.onlineMode;
 
-  void setOnline(bool newOnline) {
-    database.log("Online mode $newOnline!");
-    settings.changeOnlineMode(newOnline);
+  Future<void> setOnline(bool newOnline) async {
+    await database.log("Online mode $newOnline!");
+    await settings.changeOnlineMode(newOnline);
     online = newOnline;
     if (online) {
       server.uploadAllDatapoints();
@@ -29,8 +29,8 @@ class Recorder {
         return;
       }
     }
-    settings.changeLastMode(newMode.index);
-    database.log("Selected transportation ${newMode.name}!");
+    await settings.changeLastMode(newMode.index);
+    await database.log("Selected transportation ${newMode.name}!");
     if (newMode.name == "off") {
       //disable logger
       locationService.end();

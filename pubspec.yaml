@@ -36,11 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   intl: ^0.20.1
-  background_location: 
-    git:
-      url: https://github.com/dharmik-dalwadi-seaflux/background_location.git
-      ref: master
-
+  location: ^8.0.0
   orm: ^5.3.1
   orm_flutter: ^0.5.0
   permission_handler: ^11.3.1
