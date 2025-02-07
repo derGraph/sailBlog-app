@@ -43,6 +43,8 @@ class _HomePageState extends State<HomePage> {
     const SettingsPage()
   ];
 
+  // add init state here
+
   void _pageSelected(int i) {
     setState(() {
       _selectedPage = i;

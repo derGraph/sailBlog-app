@@ -46,8 +46,10 @@ class Database {
   }
 
   Future<void> log(String logMessage) async {
-    await prisma.logMessage.create(
+    if(connected){
+      await prisma.logMessage.create(
         data: PrismaUnion.$1(LogMessageCreateInput(message: logMessage)));
+    }
   }
 
   Future<List<LogMessage>> getLogs() async {
