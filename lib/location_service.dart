@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:location/location.dart' as location;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/location_service_background.dart';
 import 'package:sailblog/main.dart';
@@ -16,7 +17,7 @@ class LocationService {
   bool _startRunning = false;
 
   Future<void> start() async {
-    if (_isRunning) return;
+    if (await isRunning()) return;
     if (_startRunning) return;
     _startRunning = true;
 
@@ -62,18 +63,23 @@ class LocationService {
               allowWifiLock: true));
 
       await FlutterForegroundTask.startService(
-          notificationTitle: "sailBlog",
-          notificationText: "notificationText",
+          notificationTitle: "sailBlog NMEA recording...",
+          notificationText: "Click to stop recording!",
           callback: startCallback,
           );
       _startRunning = false;
-      _isRunning = true;
     }
   }
 
   Future<void> onStart() async {}
 
-  Future<bool> isRunning() async => _isRunning;
+  Future<bool> isRunning() async {
+    if(settings.ownSource){
+      return _isRunning;
+    }else {
+      return await FlutterForegroundTask.isRunningService;
+    }
+  }
 
   Future<void> end() async {
     if (settings.ownSource) {
@@ -99,6 +105,25 @@ class LocationService {
       speed: locationData.speed.toString(),
       recorder.mode,
     );
+  }
+
+  Future<void> nmeaReciever(Object data) async {
+    if(data is Map<String, dynamic>){
+      switch(data["command"]){
+        case "log":
+          await database.log("nmeaReciever: ${data["message"]}");
+          break;
+        case "end":
+          end();
+          recorder.setMode(Modes.off);
+          break;                                                                                                      
+        default:
+          await database.log("nmeaReciever: wrong command: ${data.toString()}");
+          break;
+      }
+    } else {
+      await database.log("nmeaReciever: wrong message: ${data.toString()}");
+    }
   }
 
   Future<bool> _handlePermissionsSelf() async {

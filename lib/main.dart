@@ -4,6 +4,7 @@ import 'package:sailblog/pages/alarm.dart';
 import 'package:sailblog/pages/record.dart';
 import 'package:sailblog/pages/settings.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/location_service.dart';
 
 MainApp mainApp = MainApp();
 
@@ -44,6 +45,12 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // add init state here
+  @override
+  void initState() {
+    super.initState();
+    // Add a callback to receive data sent from the TaskHandler.
+    FlutterForegroundTask.addTaskDataCallback(locationService.nmeaReciever);
+  }
 
   void _pageSelected(int i) {
     setState(() {
