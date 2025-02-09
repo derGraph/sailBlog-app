@@ -12,6 +12,8 @@ jobs:  # Telling what jobs we need to happen
   build:      # Specify the building name and machine
     name: Build & Release  # you can name the build whatever you want
     runs-on: macos-latest # here we selected macos-latest to be able to get ios build
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
@@ -74,8 +76,6 @@ jobs:  # Telling what jobs we need to happen
 
       - name: Create Release
         uses: ncipollo/release-action@v1.15.0
-        permissions:
-          contents: write
         with:
           artifacts: "build/app/outputs/flutter-apk/app-release.apk,build/ios_build.tar.gz"
           tag: v${{ env.VERSION }}
