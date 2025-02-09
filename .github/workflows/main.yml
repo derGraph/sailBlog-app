@@ -74,7 +74,8 @@ jobs:  # Telling what jobs we need to happen
 
       - name: Create Release
         uses: ncipollo/release-action@v1.15.0
+        permissions:
+          contents: write
         with:
           artifacts: "build/app/outputs/flutter-apk/app-release.apk,build/ios_build.tar.gz"
           tag: v${{ env.VERSION }}
-          token: ${{ secrets.TOKEN }}
