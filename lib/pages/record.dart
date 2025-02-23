@@ -57,11 +57,6 @@ class _RecordPage extends State<RecordPage> {
       gpsStatus = "GPS: Waiting for GPS!";
     }
 
-    database.log(DateTime.now()
-        .difference(allDatapoints.last.time!)
-        .inSeconds
-        .toString());
-
     setState(() {
       _card1 =
           "uploaded ${allDatapoints.length - uploadableDatapoints}/${allDatapoints.length} $gpsStatus";

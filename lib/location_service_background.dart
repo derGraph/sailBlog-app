@@ -1,6 +1,4 @@
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:sailblog/database.dart';
-
 
 @pragma('vm:entry-point')
 void startCallback() {
