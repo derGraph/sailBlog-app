@@ -1,76 +1,88 @@
-name: "Build & Release"
-on:
-  push:
+name: "Build & Release" # Name of the workflow
+on: # Trigger for the workflow
+  push: # Trigger on push events
     branches:
-      - main
+      - main # Only for the main branch
 jobs:  # Telling what jobs we need to happen
   build:      # Specify the building name and machine
     name: Build & Release  # you can name the build whatever you want
     runs-on: macos-latest # here we selected macos-latest to be able to get ios build
-    permissions:
+    permissions: # Grant write permissions for creating releases and uploading artifacts
       contents: write
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository # Check out the code
         uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0 # Needed for git tag check. Fetches all history and tags.
 
-      - name: Set Up Java
+      - name: Set Up Java # Set up Java for Android builds
         uses: actions/setup-java@v4.7.0
         with:
           distribution: 'oracle'
           java-version: '21'
 
-      - name: Set Up Flutter
+      - name: Set Up Flutter # Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
           channel: 'stable'
 
-      - name: Install Flutter dependencies
+      - name: Install Flutter dependencies # Install Flutter packages
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build APK # Build the Android APK
         run: flutter build apk --release
-      
-      - name: Build IPA
+
+      - name: Build IPA # Build the iOS IPA (without code signing)
         run: flutter build ipa --no-codesign
 
-      - name: Compress Archives and IPAs
+      - name: Compress Archives and IPAs # Compress the iOS build directory
         run: |
           cd build
           tar -czf ios_build.tar.gz ios
 
-      - name: Upload Artifacts
+      - name: Extract version from pubspec.yaml # Extract the version number from the pubspec.yaml file
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV # Set the VERSION environment variable
+
+      - name: Check if Tag Exists # Check if a Git tag with the current version exists
+        id: check_tag
+        run: |
+          if git tag -l "v${{ env.VERSION }}" | grep -q "v${{ env.VERSION }}"; then # Check if tag exists
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV # Set TAG_EXISTS to true
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV # Set TAG_EXISTS to false
+          fi
+
+      - name: Modify Tag (Tag Exists)
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          date_time=$(date +'%Y%m%d%H%M%S')
+          new_version="${{ env.VERSION }}+${date_time}"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+          echo "NEW_TAG_VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: Set Default Tag (Tag Does Not Exist)
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          echo "NEW_TAG_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
+
+      - name: Rename APK # Rename the APK file to include the version
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/sailBlog_${{ env.NEW_TAG_VERSION }}.apk
+
+      - name: Upload Artifacts # Upload the APK and iOS build as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Releases
           path: |
-            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/sailBlog_${{ env.NEW_TAG_VERSION }}.apk # Upload the renamed APK
             build/ios_build.tar.gz
 
-      - name: Extract version from pubspec.yaml
-        id: extract_version
-        run: |
-          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
-          echo "VERSION=$version" >> $GITHUB_ENV
-
-      - name: Check if Tag Exists
-        id: check_tag
-        run: |
-          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
-            echo "TAG_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "TAG_EXISTS=false" >> $GITHUB_ENV
-          fi
-
-      - name: Modify Tag
-        if: env.TAG_EXISTS == 'true'
-        id: modify_tag
-        run: |
-          new_version="${{ env.VERSION }}-build-${{ github.run_number }}"
-          echo "VERSION=$new_version" >> $GITHUB_ENV
-
-      - name: Create Release
+      - name: Create Release # Create a GitHub release
         uses: ncipollo/release-action@v1.15.0
         with:
-          artifacts: "build/app/outputs/flutter-apk/app-release.apk,build/ios_build.tar.gz"
-          tag: v${{ env.VERSION }}
+          artifacts: "build/app/outputs/flutter-apk/sailBlog_${{ env.NEW_TAG_VERSION }}.apk,build/ios_build.tar.gz" # Include the renamed APK in the release
+          tag: v${{ env.NEW_TAG_VERSION }} # Use the version as the tag name
