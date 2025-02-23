@@ -27,11 +27,11 @@ jobs:  # Telling what jobs we need to happen
           flutter-version: '3.27.0'
           channel: 'stable'
       
-      - name: Decode keystore.jks
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /keystore.jks
+      - name: Decode android/keystore.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/keystore.jks
 
       - name: Decode android/key.properties
-        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > android/key.properties
+        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/key.properties
 
       - name: Install Flutter dependencies # Install Flutter packages
         run: flutter pub get
