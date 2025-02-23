@@ -17,7 +17,7 @@ datasource db {
 
 model Datapoint_local {
   id                String    @id @default(cuid())
-  time              DateTime  @updatedAt
+  time              DateTime  @default(now())
   lat               Decimal
   long              Decimal
   speed             Decimal?
