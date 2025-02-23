@@ -32,7 +32,7 @@ jobs:  # Telling what jobs we need to happen
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/keystore.jks
 
       - name: Decode android/key.properties
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/key.properties
+        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > android/key.properties
 
       - name: Install Flutter dependencies
         run: flutter pub get
