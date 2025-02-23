@@ -45,5 +45,22 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Location Tracking -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need access to your location while using the app.</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need background access to your location for GPS tracking.</string>
+
+    <!-- Notifications -->
+    <key>NSUserNotificationUsageDescription</key>
+    <string>We use notifications to inform you when GPS tracking is active.</string>
+
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>fetch</string>
+    </array>
 </dict>
 </plist>
