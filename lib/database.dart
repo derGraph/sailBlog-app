@@ -46,9 +46,9 @@ class Database {
   }
 
   Future<void> log(String logMessage) async {
-    if(connected){
+    if (connected) {
       await prisma.logMessage.create(
-        data: PrismaUnion.$1(LogMessageCreateInput(message: logMessage)));
+          data: PrismaUnion.$1(LogMessageCreateInput(message: logMessage)));
     }
   }
 
@@ -59,9 +59,28 @@ class Database {
   }
 
   Future<List<DatapointLocal>> getDatapoints() async {
-    List<DatapointLocal> datapoints =
-        (await prisma.datapointLocal.findMany()).toList();
+    List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
+            orderBy: PrismaUnion.$1([
+      DatapointLocalOrderByWithRelationInput(time: SortOrder.asc),
+    ])))
+        .toList();
     return datapoints;
+  }
+
+  Future<int> countUploadableDatapoints() async {
+    AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
+        where: DatapointLocalWhereInput(
+          uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0))),
+        ),
+        select: AggregateDatapointLocalSelect(
+            $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
+                select: DatapointLocalCountAggregateOutputTypeSelect(
+                    uploaded: true))))));
+    if (result.$count?.uploaded == null) {
+      return 0;
+    } else {
+      return result.$count!.uploaded!;
+    }
   }
 
   Future<List<DatapointLocal>> getUploadableDatapoints() async {
