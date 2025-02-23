@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:location/location.dart' as location;
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/location_service_background.dart';
 import 'package:sailblog/main.dart';
@@ -11,8 +11,9 @@ import 'package:sailblog/settings.dart';
 import 'package:sailblog/recorder.dart';
 
 class LocationService {
-  final location.Location _location = location.Location();
-  StreamSubscription<location.LocationData>? _locationSubscription;
+  StreamSubscription<Position>? _locationSubscription;
+  LocationSettings? locationSettings =
+      LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 0);
   bool _isRunning = false;
   bool _startRunning = false;
 
@@ -28,64 +29,68 @@ class LocationService {
         return;
       }
 
-      await _location.changeSettings(
-          interval: 30000,
-          distanceFilter: 0,
-          accuracy: location.LocationAccuracy.high);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        locationSettings = AndroidSettings(
+            forceLocationManager: true,
+            accuracy: LocationAccuracy.best,
+            intervalDuration: const Duration(seconds: 5),
+            distanceFilter: 0,
+            foregroundNotificationConfig: const ForegroundNotificationConfig(
+                notificationTitle: "sailBlog recording GPS",
+                notificationText:
+                    "As long as this notification is shown sailBlog can record your Track!"));
+      } else {
+        locationSettings = AppleSettings(
+            accuracy: LocationAccuracy.best,
+            activityType: ActivityType.fitness,
+            distanceFilter: 0,
+            pauseLocationUpdatesAutomatically: false);
+      }
 
-      await _location.enableBackgroundMode(enable: true);
+      _locationSubscription =
+          Geolocator.getPositionStream(locationSettings: locationSettings)
+              .listen(_gpsListener);
 
-      await _location.changeNotificationOptions(
-          channelName: "GPS Notification",
-          title: "sailBlog GPS",
-          subtitle:
-              "While this Notification is shown, sailBlog can record your position!",
-          onTapBringToFront: true);
-
-      _locationSubscription = _location.onLocationChanged.listen(_gpsListener);
       await database.log("locationService: Enabled own GPS logging!");
       _isRunning = true;
       _startRunning = false;
     } else {
-      // Enable NMEA stream implementation
       if (!await _handlePermissionsNMEA()) {
         _alert("You have to allow all permissions!");
         _startRunning = false;
         return;
       }
       FlutterForegroundTask.init(
-          androidNotificationOptions: AndroidNotificationOptions(
-              channelId: "sailBlogNMEA", channelName: "sailBlogNMEA"),
-          iosNotificationOptions: IOSNotificationOptions(),
-          foregroundTaskOptions: ForegroundTaskOptions(
-              eventAction: ForegroundTaskEventAction.once(),
-              allowWakeLock: true,
-              allowWifiLock: true));
-
+        androidNotificationOptions: AndroidNotificationOptions(
+          channelId: "sailBlogNMEA",
+          channelName: "sailBlogNMEA",
+        ),
+        iosNotificationOptions: IOSNotificationOptions(),
+        foregroundTaskOptions: ForegroundTaskOptions(
+          eventAction: ForegroundTaskEventAction.once(),
+          allowWakeLock: true,
+          allowWifiLock: true,
+        ),
+      );
       await FlutterForegroundTask.startService(
-          notificationTitle: "sailBlog NMEA recording...",
-          notificationText: "Click to stop recording!",
-          callback: startCallback,
-          );
+        notificationTitle: "sailBlog NMEA recording...",
+        notificationText: "Click to stop recording!",
+        callback: startCallback,
+      );
       _startRunning = false;
     }
   }
 
-  Future<void> onStart() async {}
-
   Future<bool> isRunning() async {
-    if(settings.ownSource){
-      return _isRunning;
-    }else {
-      return await FlutterForegroundTask.isRunningService;
-    }
+    return settings.ownSource
+        ? _isRunning
+        : await FlutterForegroundTask.isRunningService;
   }
 
   Future<void> end() async {
     if (settings.ownSource) {
       _locationSubscription?.cancel();
       _locationSubscription = null;
-      await _location.enableBackgroundMode(enable: false);
       await database.log("locationService: Disabled own GPS logging!");
       _isRunning = false;
     } else {
@@ -95,12 +100,12 @@ class LocationService {
     }
   }
 
-  Future<void> _gpsListener(location.LocationData locationData) async {
+  Future<void> _gpsListener(Position locationData) async {
     await database.addDatapoint(
       locationData.latitude.toString(),
       locationData.longitude.toString(),
       hAccuracy: locationData.accuracy.toString(),
-      vAccuracy: locationData.verticalAccuracy.toString(),
+      vAccuracy: locationData.altitudeAccuracy.toString(),
       heading: locationData.heading.toString(),
       speed: locationData.speed.toString(),
       recorder.mode,
@@ -108,15 +113,15 @@ class LocationService {
   }
 
   Future<void> nmeaReciever(Object data) async {
-    if(data is Map<String, dynamic>){
-      switch(data["command"]){
+    if (data is Map<String, dynamic>) {
+      switch (data["command"]) {
         case "log":
           await database.log("nmeaReciever: ${data["message"]}");
           break;
         case "end":
           end();
           recorder.setMode(Modes.off);
-          break;                                                                                                      
+          break;
         default:
           await database.log("nmeaReciever: wrong command: ${data.toString()}");
           break;

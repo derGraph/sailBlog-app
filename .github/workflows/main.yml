@@ -2,11 +2,9 @@ name: "Build & Release"
 on:
   pull_request:
     branches:
-      - development
       - main
   push:
     branches:
-      - development
       - main
 jobs:  # Telling what jobs we need to happen
   build:      # Specify the building name and machine
