@@ -33,6 +33,9 @@ jobs:  # Telling what jobs we need to happen
       - name: Decode android/key.properties
         run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/key.properties
 
+      - name: Decode android/local.properties
+        run: echo "${{ secrets.LOCAL_PROPERTIES }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/local.properties
+
       - name: Install Flutter dependencies # Install Flutter packages
         run: flutter pub get
 
