@@ -48,22 +48,26 @@ class _RecordPage extends State<RecordPage> {
       server.uploadDatapoints();
     }
     String gpsStatus = "waiting for GPS!";
-
-    if (DateTime.now().difference(allDatapoints.last.time!).inSeconds < 30) {
-      gpsStatus = "GPS: ok!";
-    } else if (recorder.mode == Modes.off) {
-      gpsStatus = "GPS: not recording!";
-    } else {
-      gpsStatus = "GPS: Waiting for GPS!";
+    if(allDatapoints.isNotEmpty){
+      if (DateTime.now().difference(allDatapoints.last.time!).inSeconds < 30) {
+          gpsStatus = "GPS: ok!";
+        } else if (recorder.mode == Modes.off) {
+          gpsStatus = "GPS: not recording!";
+        } else {
+          gpsStatus = "GPS: Waiting for GPS!";
+        }
     }
+    
 
     setState(() {
       _card1 =
           "uploaded ${allDatapoints.length - uploadableDatapoints}/${allDatapoints.length} $gpsStatus";
       "";
-      _card2 = "last Datapoint "
+      if(allDatapoints.isNotEmpty){
+        _card2 = "last Datapoint "
           "${format.format(allDatapoints.last.time!.toLocal())} "
           "accuracy: ${allDatapoints.last.hAccuracy?.truncate(scale: 2)}m";
+      }
     });
   }
 
