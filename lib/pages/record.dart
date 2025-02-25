@@ -22,51 +22,6 @@ class _RecordPage extends State<RecordPage> {
     loadingStrategy: BrowseLoadingStrategy.onlineFirst,
   );
 
-  Timer? _timer;
-  String _card1 = "";
-  String _card2 = "";
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), _timerFunction);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer?.cancel();
-  }
-
-  Future<void> _timerFunction(Timer timer) async {
-    int uploadableDatapoints = (await database.countUploadableDatapoints());
-    List<DatapointLocal> allDatapoints = (await database.getDatapoints());
-
-    DateFormat format = DateFormat('HH:mm:ss');
-
-    if (recorder.online) {
-      server.uploadDatapoints();
-    }
-    String gpsStatus = "waiting for GPS!";
-
-    if (DateTime.now().difference(allDatapoints.last.time!).inSeconds < 30) {
-      gpsStatus = "GPS: ok!";
-    } else if (recorder.mode == Modes.off) {
-      gpsStatus = "GPS: not recording!";
-    } else {
-      gpsStatus = "GPS: Waiting for GPS!";
-    }
-
-    setState(() {
-      _card1 =
-          "uploaded ${allDatapoints.length - uploadableDatapoints}/${allDatapoints.length} $gpsStatus";
-      "";
-      _card2 = "last Datapoint "
-          "${format.format(allDatapoints.last.time!.toLocal())} "
-          "accuracy: ${allDatapoints.last.hAccuracy?.truncate(scale: 2)}m";
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     FlutterMap map = FlutterMap(
@@ -105,61 +60,133 @@ class _RecordPage extends State<RecordPage> {
       Container(
         margin: EdgeInsets.only(top: 5),
         alignment: Alignment.topCenter,
-        child: Column(children: [
-          SegmentedButton(
-            showSelectedIcon: false,
-            style: SegmentedButton.styleFrom(
-              backgroundColor: Colors.grey[200],
-            ),
-            segments: const <ButtonSegment>[
-              ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
-              ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
-              ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
-              ButtonSegment(
-                  value: Modes.motor, label: Icon(Icons.directions_boat))
-            ],
-            selected: {recorder.mode},
-            onSelectionChanged: (selectedState) {
-              setState(() {
-                recorder.setMode(selectedState.first);
-              });
-            },
-          ),
-          SegmentedButton(
-            showSelectedIcon: false,
-            style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
-            segments: const <ButtonSegment>[
-              ButtonSegment(value: false, label: Icon(Icons.wifi_off)),
-              ButtonSegment(value: true, label: Icon(Icons.wifi))
-            ],
-            selected: {recorder.online},
-            onSelectionChanged: (selectedOnline) {
-              setState(() {
-                recorder.setOnline(selectedOnline.first);
-              });
-            },
-          ),
-        ]),
+        child: ModeAndOnlineButtons(),
       ),
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: Card(
-          margin: const EdgeInsets.all(32.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize:
-                  MainAxisSize.min, // Ensure Column takes minimal space
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Align text to the left
-              children: [
-                Text(_card1),
-                Text(_card2),
-              ],
-            ),
+      StatusCard(),
+    ]);
+  }
+}
+
+class ModeAndOnlineButtons extends StatefulWidget {
+  const ModeAndOnlineButtons({super.key});
+
+  @override
+  State<ModeAndOnlineButtons> createState() => _ModeAndOnlineButtonsState();
+}
+
+class _ModeAndOnlineButtonsState extends State<ModeAndOnlineButtons> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      SegmentedButton(
+        showSelectedIcon: false,
+        style: SegmentedButton.styleFrom(
+          backgroundColor: Colors.grey[200],
+        ),
+        segments: const <ButtonSegment>[
+          ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
+          ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
+          ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
+          ButtonSegment(value: Modes.motor, label: Icon(Icons.directions_boat))
+        ],
+        selected: {recorder.mode},
+        onSelectionChanged: (selectedMode) {
+          setState(() {
+            recorder.setMode(selectedMode.first);
+          });
+        },
+      ),
+      SegmentedButton(
+        showSelectedIcon: false,
+        style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
+        segments: const <ButtonSegment>[
+          ButtonSegment(value: false, label: Icon(Icons.wifi_off)),
+          ButtonSegment(value: true, label: Icon(Icons.wifi))
+        ],
+        selected: {recorder.online},
+        onSelectionChanged: (selectedOnline) {
+          setState(() {
+            recorder.setOnline(selectedOnline.first);
+          });
+        },
+      ),
+    ]);
+  }
+}
+
+class StatusCard extends StatefulWidget {
+  const StatusCard({super.key});
+
+  @override
+  State<StatusCard> createState() => _StatusCardState();
+}
+
+class _StatusCardState extends State<StatusCard> {
+  late Timer _timer;
+  List<DatapointLocal> _datapoints = [];
+  int _uploadableCount = 0;
+  final DateFormat _timeFormat = DateFormat('HH:mm:ss');
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), _updateData);
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  Future<void> _updateData(Timer timer) async {
+    final newDatapoints = await database.getDatapoints();
+    final newUploadable = await database.countUploadableDatapoints();
+
+    if (recorder.online) {
+      server.uploadDatapoints();
+    }
+
+    if (mounted) {
+      setState(() {
+        _datapoints = newDatapoints;
+        _uploadableCount = newUploadable;
+      });
+    }
+  }
+
+  String _getGpsStatus() {
+    if (_datapoints.isEmpty) return "waiting for GPS!";
+
+    final timeDiff = DateTime.now().difference(_datapoints.last.time!);
+    if (timeDiff.inSeconds < 30) return "GPS: ok!";
+    if (recorder.mode == Modes.off) return "GPS: not recording!";
+    return "GPS: Waiting for GPS!";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gpsStatus = _getGpsStatus();
+    final uploadedCount = _datapoints.length - _uploadableCount;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Card(
+        margin: const EdgeInsets.all(32.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('uploaded $uploadedCount/${_datapoints.length} $gpsStatus'),
+              if (_datapoints.isNotEmpty)
+                Text(
+                    'last Datapoint ${_timeFormat.format(_datapoints.last.time!.toLocal())} '
+                    'accuracy: ${_datapoints.last.hAccuracy?.truncate(scale: 2)}m'),
+            ],
           ),
         ),
       ),
-    ]);
+    );
   }
 }
