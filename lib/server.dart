@@ -68,6 +68,11 @@ class Server {
         await settings.setCookie("");
         return -2;
       case 400:
+        if (response.data is! Map<String, dynamic>) {
+          database.log(
+              "Unexpected Server answer retrying: ${response.data.toString()}");
+          break;
+        }
         Map<String, dynamic> results = response.data;
         results.forEach((key, value) async {
           if (value != "OK") {
