@@ -49,7 +49,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Add a callback to receive data sent from the TaskHandler.
-    FlutterForegroundTask.addTaskDataCallback(locationService.nmeaReciever);
+    FlutterForegroundTask.addTaskDataCallback(
+        locationService.backgroundReciever);
   }
 
   void _pageSelected(int i) {
