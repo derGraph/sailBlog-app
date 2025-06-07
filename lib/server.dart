@@ -19,7 +19,21 @@ Dio dio = Dio(dioBaseOptions);
 class Server {
   bool loginUnderway = false;
 
-  Future<int> uploadDatapoints() async {
+  Future<int> login() async {
+    if (loginUnderway) {
+      return -2;
+    }
+    loginUnderway = true;
+    await showDialog(
+        context: NavigationService.navigatorKey.currentContext!,
+        builder: (context) => const LoginPopup());
+    if (settings.cookie == "") {
+      return -2;
+    }
+    return 0;
+  }
+
+  Future<int> uploadDatapoints({bool allowLogin = false}) async {
     List<DatapointLocal> datapoints =
         (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
@@ -37,22 +51,21 @@ class Server {
             datapoint.time?.millisecondsSinceEpoch.toString();
       }
     }
-    if (settings.cookie == "") {
-      if (loginUnderway) {
-        return -2;
-      }
-      loginUnderway = true;
-      await showDialog(
-          context: NavigationService.navigatorKey.currentContext!,
-          builder: (context) => const LoginPopup());
-      if (settings.cookie == "") {
-        return -2;
-      }
+    if (settings.cookie == "" && allowLogin && database.connected) {
+      return await login();
     }
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
     Response response;
     try {
+      dioBaseOptions = BaseOptions(
+          baseUrl: 'https://sailblog.dergraph.at',
+          headers: {
+            'Host': "sailblog.dergraph.at",
+            'Cookie': 'auth_session=${settings.cookie}',
+          },
+        );
+        dio = Dio(dioBaseOptions);
       response = await dio.post("/api/Datapoints", data: jsonData);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
@@ -60,12 +73,11 @@ class Server {
       } else {
         return -1;
       }
-      database.log("Upload Datapoints error: ${e.toString()}");
     }
     switch (response.statusCode) {
       case 401:
         database.log("Not logged in or invalid cookie!");
-        await settings.setCookie("");
+        //await settings.setCookie("");
         return -2;
       case 400:
         if (response.data is! Map<String, dynamic>) {
@@ -114,12 +126,12 @@ class Server {
   Future<void> uploadAllDatapoints() async {
     int uploadedDatapoints = 1;
     while (uploadedDatapoints > 0) {
-      uploadedDatapoints = await uploadDatapoints();
+      uploadedDatapoints = await uploadDatapoints(allowLogin: true);
     }
     return;
   }
 
-  Future<int?> login(String username, String password) async {
+  Future<int?> loginRequest(String username, String password) async {
     await database.log("Logging in as $username!");
     Response response;
     try {
@@ -142,7 +154,6 @@ class Server {
         await settings.setCookie(response.headers["set-cookie"]![0]
             .replaceAll("auth_session=", "")
             .split(";")[0]);
-        loginUnderway = false;
         dioBaseOptions = BaseOptions(
           baseUrl: 'https://sailblog.dergraph.at',
           headers: {
@@ -152,6 +163,7 @@ class Server {
         );
         dio = Dio(dioBaseOptions);
         await database.log("Logged in!");
+        loginUnderway = false;
         return 302;
       default:
         await database.log(
@@ -221,7 +233,7 @@ class LoginPopup extends StatelessWidget {
 
             // Handle the login logic here
             server
-                .login(email, password)
+                .loginRequest(email, password)
                 .then((result) => {database.log("Stored Cookie!")});
             Navigator.of(context).pop(); // Close the popup after login
           },

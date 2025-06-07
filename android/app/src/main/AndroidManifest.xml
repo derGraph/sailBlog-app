@@ -34,9 +34,9 @@
         <!-- Warning: Do not change service name. -->
         <service 
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
-            android:foregroundServiceType="dataSync"
+            android:foregroundServiceType="location"
             android:exported="false"
-            android:stopWithTask="true" />
+            android:stopWithTask="false" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
