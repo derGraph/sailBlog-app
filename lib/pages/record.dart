@@ -11,7 +11,7 @@ import 'package:sailblog/server.dart';
 
 final tileProvider = FMTCTileProvider.allStores(
   allStoresStrategy: BrowseStoreStrategy.readUpdateCreate,
-  loadingStrategy: BrowseLoadingStrategy.onlineFirst,
+  loadingStrategy: BrowseLoadingStrategy.cacheFirst,
 );
 
 final mapController = MapController();
@@ -25,10 +25,11 @@ class RecordPage extends StatefulWidget {
 }
 
 class RecordPageBGTask extends ChangeNotifier {
-  List<LatLng> points = [];
+  List<Polyline> polylines = [];
   List<DatapointLocal> newDatapoints = [];
   int uploadedCount = 0;
   int newUploadable = 0;
+  int oldPoints = 0;
 
   void scaleMap() {
     if (mapReady && points.length > 1) {
@@ -36,6 +37,32 @@ class RecordPageBGTask extends ChangeNotifier {
           bounds: LatLngBounds.fromPoints(points), padding: EdgeInsets.all(50));
       mapController.fitCamera(bounds);
     }
+    List<LatLng> points = [];
+    for(Polyline polyline in polylines){
+      if(polyline.points.isNotEmpty){
+        points.addAll(polyline.points);
+      }
+    }
+    if(mapReady && points.isNotEmpty){
+      mapController.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(points), maxZoom: 19, padding: EdgeInsets.all(50)));
+    }
+  }
+
+  Color _getColorFromPropulsion(int propulsion) {
+    switch(propulsion) {
+      case 0:
+        //anchor
+        return Color.fromARGB(255, 70, 130, 180);
+      case 1:
+        //motor
+        return Color.fromARGB(255, 255, 102, 0);
+      case 2:
+        //sailing
+        return Color.fromARGB(255, 46, 139, 87);
+      default:
+        //if not specified
+        return Color.fromARGB(255, 255, 0, 0);
+    } 
   }
 
   Future<void> updateData(Timer timer) async {
@@ -51,7 +78,31 @@ class RecordPageBGTask extends ChangeNotifier {
       }
       if (recorder.online) {
         await server.uploadAllDatapoints();
+    if(newDatapoints.length > oldPoints){
+      oldPoints = newDatapoints.length;
+
+      int lastPropulsion = newDatapoints[0].propulsion!;
+      List<LatLng> points = [];
+      for(DatapointLocal datapoint in newDatapoints){
+        if(datapoint.propulsion == lastPropulsion){
+          points.add(LatLng(datapoint.lat!.toDouble(), datapoint.long!.toDouble()));
+        }else {
+          polylines.add(Polyline(
+            points: points,
+            strokeWidth: 5,
+            useStrokeWidthInMeter: true,
+            color: _getColorFromPropulsion(lastPropulsion),
+          ));
+          points = [points.last];
+          lastPropulsion = datapoint.propulsion!;
+        }
       }
+      polylines.add(Polyline(
+        points: points,
+        strokeWidth: 5,
+        useStrokeWidthInMeter: true,
+        color: _getColorFromPropulsion(lastPropulsion)
+      ));
       scaleMap();
     }
     notifyListeners();
@@ -125,14 +176,7 @@ class _TrackOverlayState extends State<TrackOverlay> {
       listenable: bgTask,
       builder: (BuildContext context, Widget? child) {
         return PolylineLayer(
-          polylines: [
-            Polyline(
-              points: bgTask.points,
-              strokeWidth: 5,
-              useStrokeWidthInMeter: true,
-              color: Colors.blue,
-            ),
-          ],
+          polylines: bgTask.polylines
         );
       },
     );
