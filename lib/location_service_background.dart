@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/recorder.dart';
-
-Database test = Database();
+import 'package:sailblog/server.dart';
 
 @pragma('vm:entry-point')
 void startCallbackSelf() {
@@ -53,14 +55,28 @@ class SelfHandler extends TaskHandler {
   // Called when the task is started.
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    await test.init();
-    if (test.connected) {
-      await test.log(
-          "database connected, starting Self Background Task at $timestamp");
-    } else {
-      await test.log(
-          "database not connected, starting Self Background Task at $timestamp");
-    }
+    await database.init();
+    final LocationSettings locationSettings =
+        LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 0);
+
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) async {
+      await database.addDatapoint(position!.latitude.toString(),
+          position.longitude.toString(), Recorder().mode,
+          hAccuracy: position.accuracy.toString(),
+          vAccuracy: position.accuracy.toString(),
+          heading: position.heading.toString(),
+          speed: position.speed.toString());
+      await server.uploadDatapoints();
+      int datapointsCount = (await database.getDatapoints()).length;
+      int uploadableCount = await database.countUploadableDatapoints();
+
+      int uploadedCount = datapointsCount - uploadableCount;
+      FlutterForegroundTask.updateService(
+        notificationText:
+            "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
+      );
+    });
     defaultOnStart(timestamp, "Self", starter);
   }
 
@@ -88,6 +104,11 @@ class SelfHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
+    /*Position position = await Geolocator.getCurrentPosition(
+        locationSettings: AndroidSettings(
+            forceLocationManager: true, accuracy: LocationAccuracy.best));
+
+    );*/
     await defaultOnRepeatEvent(timestamp);
   }
 }
@@ -125,15 +146,6 @@ void defaultOnStart(DateTime timestamp, String source, TaskStarter starter) {
 Future<void> defaultOnRepeatEvent(DateTime timestamp) async {
   // This method is called periodically based on the repeat interval set in the task options.
   // You can perform periodic tasks here, such as logging or updating the UI.
-  final Map<String, dynamic> data = {
-    "command": "log",
-    "message": "NMEA Background Task repeated at $timestamp"
-  };
-  FlutterForegroundTask.sendDataToMain(data);
-  FlutterForegroundTask.updateService(
-    notificationText: "last update at $timestamp",
-  );
-  await test.addDatapoint("3.3", "4.4", Modes.motor);
 }
 
 void log(String message) {
