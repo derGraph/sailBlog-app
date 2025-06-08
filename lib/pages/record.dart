@@ -27,13 +27,14 @@ class RecordPage extends StatefulWidget {
 class RecordPageBGTask extends ChangeNotifier {
   List<Polyline> polylines = [];
   List<DatapointLocal> newDatapoints = [];
+  int uploadedCount = 0;
   int newUploadable = 0;
   int oldPoints = 0;
 
   void scaleMap() {
     List<LatLng> points = [];
-    for(Polyline polyline in polylines){
-      if(polyline.points.isNotEmpty){
+    for (Polyline polyline in polylines) {
+      if (polyline.points.isNotEmpty) {
         points.addAll(polyline.points);
       }
     }
@@ -45,7 +46,7 @@ class RecordPageBGTask extends ChangeNotifier {
   }
 
   Color _getColorFromPropulsion(int propulsion) {
-    switch(propulsion) {
+    switch (propulsion) {
       case 0:
         //anchor
         return Color.fromARGB(255, 70, 130, 180);
@@ -58,24 +59,25 @@ class RecordPageBGTask extends ChangeNotifier {
       default:
         //if not specified
         return Color.fromARGB(255, 255, 0, 0);
-    } 
+    }
   }
 
   Future<void> updateData(Timer timer) async {
     newDatapoints = await database.getDatapoints();
     newUploadable = await database.countUploadableDatapoints();
 
-
     uploadedCount = newDatapoints.length - newUploadable;
-    if(newDatapoints.length > oldPoints){
+
+    if (newDatapoints.length > oldPoints) {
       oldPoints = newDatapoints.length;
 
       int lastPropulsion = newDatapoints[0].propulsion!;
       List<LatLng> points = [];
-      for(DatapointLocal datapoint in newDatapoints){
-        if(datapoint.propulsion == lastPropulsion){
-          points.add(LatLng(datapoint.lat!.toDouble(), datapoint.long!.toDouble()));
-        }else {
+      for (DatapointLocal datapoint in newDatapoints) {
+        if (datapoint.propulsion == lastPropulsion) {
+          points.add(
+              LatLng(datapoint.lat!.toDouble(), datapoint.long!.toDouble()));
+        } else {
           polylines.add(Polyline(
             points: points,
             strokeWidth: 5,
@@ -87,11 +89,10 @@ class RecordPageBGTask extends ChangeNotifier {
         }
       }
       polylines.add(Polyline(
-        points: points,
-        strokeWidth: 5,
-        useStrokeWidthInMeter: true,
-        color: _getColorFromPropulsion(lastPropulsion)
-      ));
+          points: points,
+          strokeWidth: 5,
+          useStrokeWidthInMeter: true,
+          color: _getColorFromPropulsion(lastPropulsion)));
       scaleMap();
     }
 
@@ -141,7 +142,7 @@ class _RecordPage extends State<RecordPage> {
   );
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     recorder.setMode(recorder.mode);
     return Stack(children: [
       map,
@@ -168,10 +169,8 @@ class _TrackOverlayState extends State<TrackOverlay> {
     return ListenableBuilder(
       listenable: bgTask,
       builder: (BuildContext context, Widget? child) {
-        return PolylineLayer(
-          polylines: bgTask.polylines
-        );
-      }, 
+        return PolylineLayer(polylines: bgTask.polylines);
+      },
     );
   }
 }
@@ -237,7 +236,8 @@ class _StatusCardState extends State<StatusCard> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), bgTask.updateData);
+    _timer =
+        Timer.periodic(const Duration(milliseconds: 100), bgTask.updateData);
   }
 
   @override
@@ -257,7 +257,6 @@ class _StatusCardState extends State<StatusCard> {
 
   @override
   Widget build(BuildContext context) {
-    final uploadedCount = bgTask.newDatapoints.length - bgTask.newUploadable;
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -265,21 +264,21 @@ class _StatusCardState extends State<StatusCard> {
         margin: const EdgeInsets.all(32.0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child:
-              ListenableBuilder(
-                listenable: bgTask,
-                builder: (BuildContext context, Widget? child) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('uploaded $uploadedCount/${bgTask.newDatapoints.length} ${_getGpsStatus()}'),
-                      if (bgTask.newDatapoints.isNotEmpty)
-                        Text(
-                            'last Datapoint ${_timeFormat.format(bgTask.newDatapoints.last.time!.toLocal())} '
-                            'accuracy: ${bgTask.newDatapoints.last.hAccuracy?.truncate(scale: 2)}m'),
-                    ],
-                  );
-          }),
+          child: ListenableBuilder(
+              listenable: bgTask,
+              builder: (BuildContext context, Widget? child) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        'uploaded ${bgTask.uploadedCount}/${bgTask.newDatapoints.length} ${_getGpsStatus()}'),
+                    if (bgTask.newDatapoints.isNotEmpty)
+                      Text(
+                          'last Datapoint ${_timeFormat.format(bgTask.newDatapoints.last.time!.toLocal())} '
+                          'accuracy: ${bgTask.newDatapoints.last.hAccuracy?.truncate(scale: 2)}m'),
+                  ],
+                );
+              }),
         ),
       ),
     );
