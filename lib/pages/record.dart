@@ -37,8 +37,10 @@ class RecordPageBGTask extends ChangeNotifier {
         points.addAll(polyline.points);
       }
     }
-    if(mapReady && points.isNotEmpty){
-      mapController.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(points), maxZoom: 19, padding: EdgeInsets.all(50)));
+    if (mapReady && points.length > 1) {
+      CameraFit bounds = CameraFit.bounds(
+          bounds: LatLngBounds.fromPoints(points), padding: EdgeInsets.all(50));
+      mapController.fitCamera(bounds);
     }
   }
 
@@ -63,6 +65,8 @@ class RecordPageBGTask extends ChangeNotifier {
     newDatapoints = await database.getDatapoints();
     newUploadable = await database.countUploadableDatapoints();
 
+
+    uploadedCount = newDatapoints.length - newUploadable;
     if(newDatapoints.length > oldPoints){
       oldPoints = newDatapoints.length;
 
@@ -92,7 +96,7 @@ class RecordPageBGTask extends ChangeNotifier {
     }
 
     if (recorder.online) {
-      server.uploadDatapoints();
+      await server.uploadAllDatapoints();
     }
     notifyListeners();
   }
