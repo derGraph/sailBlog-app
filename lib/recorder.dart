@@ -16,7 +16,7 @@ class Recorder {
     await settings.changeOnlineMode(newOnline);
     online = newOnline;
     if (online) {
-      server.uploadAllDatapoints();
+      await server.uploadAllDatapoints();
     }
   }
 
