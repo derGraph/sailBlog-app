@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/location_service_background.dart';
@@ -9,6 +11,10 @@ import 'package:sailblog/settings.dart';
 import 'package:sailblog/recorder.dart';
 
 class LocationService {
+  StreamSubscription<Position>? _locationSubscription;
+  LocationSettings? locationSettings =
+      LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 0);
+  bool _isRunning = false;
   bool _startRunning = false;
 
   Future<void> start() async {
@@ -22,55 +28,79 @@ class LocationService {
         _startRunning = false;
         return;
       }
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        locationSettings = AndroidSettings(
+            forceLocationManager: true,
+            accuracy: LocationAccuracy.best,
+            intervalDuration: const Duration(seconds: 5),
+            distanceFilter: 0,
+            foregroundNotificationConfig: const ForegroundNotificationConfig(
+                notificationTitle: "sailBlog recording GPS",
+                notificationText:
+                    "As long as this notification is shown sailBlog can record your Track!"));
+      } else {
+        locationSettings = AppleSettings(
+            accuracy: LocationAccuracy.best,
+            activityType: ActivityType.fitness,
+            distanceFilter: 0,
+            pauseLocationUpdatesAutomatically: false);
+      }
+
+      _locationSubscription =
+          Geolocator.getPositionStream(locationSettings: locationSettings)
+              .listen(_gpsListener);
+
+      await database.log("locationService: Enabled own GPS logging!");
+      _isRunning = true;
+      _startRunning = false;
     } else {
       if (!await _handlePermissionsNMEA()) {
         _alert("You have to allow all permissions!");
         _startRunning = false;
         return;
       }
-    }
-
-    FlutterForegroundTask.init(
-      androidNotificationOptions: AndroidNotificationOptions(
-        channelId: "sailBlogBackground",
-        channelName: "sailBlogBackground",
-      ),
-      iosNotificationOptions: IOSNotificationOptions(),
-      foregroundTaskOptions: ForegroundTaskOptions(
-          eventAction: ForegroundTaskEventAction.repeat(1000),
+      FlutterForegroundTask.init(
+        androidNotificationOptions: AndroidNotificationOptions(
+          channelId: "sailBlogNMEA",
+          channelName: "sailBlogNMEA",
+        ),
+        iosNotificationOptions: IOSNotificationOptions(),
+        foregroundTaskOptions: ForegroundTaskOptions(
+          eventAction: ForegroundTaskEventAction.once(),
           allowWakeLock: true,
           allowWifiLock: true,
-          autoRunOnBoot: true),
-    );
-
-    if (settings.ownSource) {
-      await FlutterForegroundTask.startService(
-        notificationTitle: "sailBlog Location recording...",
-        notificationText: "Click to return!",
-        callback: startCallbackSelf,
+        ),
       );
-    } else {
       await FlutterForegroundTask.startService(
         notificationTitle: "sailBlog NMEA recording...",
         notificationText: "Click to stop recording!",
-        callback: startCallbackNMEA,
+        callback: startCallback,
       );
+      _startRunning = false;
     }
-
-    _startRunning = false;
   }
 
   Future<bool> isRunning() async {
-    return await FlutterForegroundTask.isRunningService;
+    return settings.ownSource
+        ? _isRunning
+        : await FlutterForegroundTask.isRunningService;
   }
 
   Future<void> end() async {
-    // Disable NMEA stream
-    await FlutterForegroundTask.stopService();
-    await database.log("Location Service stopped!");
+    if (settings.ownSource) {
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+      await database.log("locationService: Disabled own GPS logging!");
+      _isRunning = false;
+    } else {
+      // Disable NMEA stream
+      await FlutterForegroundTask.stopService();
+      _isRunning = false;
+    }
   }
 
-  /*Future<void> _gpsListener(Position locationData) async {
+  Future<void> _gpsListener(Position locationData) async {
     await database.addDatapoint(
       locationData.latitude.toString(),
       locationData.longitude.toString(),
@@ -80,26 +110,24 @@ class LocationService {
       speed: locationData.speed.toString(),
       recorder.mode,
     );
-  }*/
+  }
 
-  Future<void> backgroundReciever(Object data) async {
+  Future<void> nmeaReciever(Object data) async {
     if (data is Map<String, dynamic>) {
       switch (data["command"]) {
         case "log":
-          await database.log("backgroundReciever: ${data["message"]}");
+          await database.log("nmeaReciever: ${data["message"]}");
           break;
         case "end":
           end();
           recorder.setMode(Modes.off);
           break;
         default:
-          await database
-              .log("backgroundReciever: wrong command: ${data.toString()}");
+          await database.log("nmeaReciever: wrong command: ${data.toString()}");
           break;
       }
     } else {
-      await database
-          .log("backgroundReciever: wrong message: ${data.toString()}");
+      await database.log("nmeaReciever: wrong message: ${data.toString()}");
     }
   }
 

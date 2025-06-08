@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:orm/orm.dart';
 import 'package:orm_flutter/orm_flutter.dart';
 import 'package:path/path.dart';
@@ -6,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/recorder.dart';
+import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
 import '_generated_prisma_client/client.dart';
 
@@ -32,6 +34,14 @@ class Database {
       await settings.init();
       log("Settings loaded: ${settings.toJson()}");
       connected = true;
+      try {
+        await FMTCObjectBoxBackend().initialise();
+        await FMTCStore('mapStore').manage.create();
+      } catch (error, stackTrace) {
+        await log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
+      }
+
+      await log("Map storage Initialized!");
     }
   }
 
@@ -58,23 +68,18 @@ class Database {
   }
 
   Future<int> countUploadableDatapoints() async {
-    try {
-      AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
-          where: DatapointLocalWhereInput(
-            uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0))),
-          ),
-          select: AggregateDatapointLocalSelect(
-              $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
-                  select: DatapointLocalCountAggregateOutputTypeSelect(
-                      uploaded: true))))));
-      if (result.$count?.uploaded == null) {
-        return 0;
-      } else {
-        return result.$count!.uploaded!;
-      }
-    } catch (exception) {
-      log("countUploadableDatapoints Error: $exception");
+    AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
+        where: DatapointLocalWhereInput(
+          uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0))),
+        ),
+        select: AggregateDatapointLocalSelect(
+            $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
+                select: DatapointLocalCountAggregateOutputTypeSelect(
+                    uploaded: true))))));
+    if (result.$count?.uploaded == null) {
       return 0;
+    } else {
+      return result.$count!.uploaded!;
     }
   }
 
@@ -151,6 +156,9 @@ class Database {
         propulsion: mode.index,
       )),
     );
+    if (recorder.online) {
+      server.uploadDatapoints();
+    }
   }
 }
 
