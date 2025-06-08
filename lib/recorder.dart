@@ -5,7 +5,7 @@ import 'package:sailblog/settings.dart';
 
 Recorder recorder = Recorder();
 
-enum Modes { anchor, motor, sailing, off }
+enum Modes { anchor,motor, sailing, off }
 
 class Recorder {
   Modes mode = Modes.values[settings.lastMode];
@@ -36,6 +36,7 @@ class Recorder {
       locationService.end();
     } else {
       //enable logger
+      
       locationService.start();
     }
     mode = newMode;
