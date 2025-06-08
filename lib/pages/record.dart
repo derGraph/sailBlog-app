@@ -68,6 +68,7 @@ class RecordPageBGTask extends ChangeNotifier {
 
     uploadedCount = newDatapoints.length - newUploadable;
 
+
     if(newDatapoints.length > oldPoints){
       oldPoints = newDatapoints.length;
 
@@ -87,6 +88,12 @@ class RecordPageBGTask extends ChangeNotifier {
           lastPropulsion = datapoint.propulsion!;
         }
       }
+      polylines.add(Polyline(
+        points: points,
+        strokeWidth: 5,
+        useStrokeWidthInMeter: true,
+        color: _getColorFromPropulsion(lastPropulsion)
+      ));
       scaleMap();
     }
 
