@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:sailblog/pages/alarm.dart';
 import 'package:sailblog/pages/record.dart';
 import 'package:sailblog/pages/settings.dart';
@@ -11,7 +12,21 @@ MainApp mainApp = MainApp();
 void main() async {
   await database.init();
   FlutterForegroundTask.initCommunicationPort();
+  await initializeMap();
   runApp(MaterialApp(home: mainApp));
+}
+
+Future<void> initializeMap() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await FMTCObjectBoxBackend().initialise();
+    await FMTCStore('mapStore').manage.create();
+  } catch (error, stackTrace) {
+    await database.log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
+  }
+
+  await database.log("Map storage Initialized!");
 }
 
 class NavigationService {
@@ -49,7 +64,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Add a callback to receive data sent from the TaskHandler.
-    FlutterForegroundTask.addTaskDataCallback(locationService.nmeaReciever);
+    FlutterForegroundTask.addTaskDataCallback(
+        locationService.backgroundReciever);
   }
 
   void _pageSelected(int i) {
@@ -60,6 +76,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    
     return Scaffold(
         appBar: AppBar(title: const Text('sailBlog')),
         drawer: Drawer(
