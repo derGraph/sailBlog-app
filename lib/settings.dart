@@ -2,8 +2,6 @@ import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/recorder.dart';
 
-Settings settings = Settings();
-
 class Settings {
   bool ownSource = true;
   bool onlineMode = true;
@@ -39,6 +37,11 @@ class Settings {
     return;
   }
 
+  Future<bool> getOwnSource() async {
+    await init();
+    return ownSource;
+  }
+
   Future<void> changeOnlineMode(bool mode) async {
     StoredSettings oldSetting = await database.getSettings();
     onlineMode = mode;
@@ -48,10 +51,13 @@ class Settings {
   }
 
   Future<void> setCookie(String newcookie) async {
+    database.log("Set cookie to $newcookie");
     StoredSettings oldSetting = await database.getSettings();
     cookie = newcookie;
     await database.setSettings(oldSetting.ownSource!, oldSetting.onlineMode!,
         oldSetting.ip, oldSetting.lastMode!, cookie);
+
+    init();
     return;
   }
 

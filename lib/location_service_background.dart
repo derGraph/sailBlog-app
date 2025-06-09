@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/recorder.dart';
 import 'package:sailblog/server.dart';
+import 'package:sailblog/settings.dart';
 
 @pragma('vm:entry-point')
 void startCallbackSelf() {
@@ -90,8 +91,9 @@ class SelfHandler extends TaskHandler {
           vAccuracy: position.accuracy.toString(),
           heading: position.heading.toString(),
           speed: position.speed.toString());
-
-      if (recorder.online) {
+      Settings settings = Settings();
+      await settings.init();
+      if (settings.onlineMode) {
         await server.uploadDatapoints();
       }
       int datapointsCount = (await database.getDatapoints()).length;

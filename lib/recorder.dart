@@ -8,11 +8,24 @@ Recorder recorder = Recorder();
 enum Modes { anchor, motor, sailing, off }
 
 class Recorder {
-  Modes mode = Modes.values[settings.lastMode];
-  bool online = settings.onlineMode;
+  Modes mode = Modes.values[Settings().lastMode];
+  bool online = Settings().onlineMode;
+
+  Recorder() {
+    init();
+  }
+
+  Future<void> init() async {
+    Settings settings = Settings();
+    await settings.init();
+    online = settings.onlineMode;
+    mode = Modes.values[settings.lastMode];
+  }
 
   Future<void> setOnline(bool newOnline) async {
     await database.log("Online mode $newOnline!");
+    Settings settings = Settings();
+    await settings.init();
     await settings.changeOnlineMode(newOnline);
     online = newOnline;
     if (online) {
@@ -29,6 +42,8 @@ class Recorder {
         return;
       }
     }
+    Settings settings = Settings();
+    await settings.init();
     await settings.changeLastMode(newMode.index);
     await database.log("Selected transportation ${newMode.name}!");
     if (newMode == Modes.off) {

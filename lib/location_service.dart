@@ -28,6 +28,8 @@ class LocationService {
           allowWifiLock: true,
           autoRunOnBoot: true),
     );
+    Settings settings = Settings();
+    await settings.init();
     if (settings.ownSource) {
       if (!await _handlePermissionsSelf()) {
         _alert("You have to allow all permissions!");

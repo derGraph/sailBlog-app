@@ -23,7 +23,8 @@ Future<void> initializeMap() async {
     await FMTCObjectBoxBackend().initialise();
     await FMTCStore('mapStore').manage.create();
   } catch (error, stackTrace) {
-    await database.log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
+    await database
+        .log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
   }
 
   await database.log("Map storage Initialized!");
@@ -76,8 +77,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Scaffold(
         appBar: AppBar(title: const Text('sailBlog')),
         drawer: Drawer(
