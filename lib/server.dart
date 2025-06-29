@@ -41,11 +41,13 @@ class Server {
 
     for (var datapoint in datapoints) {
       if (datapoint.id != null) {
-        String id = "";
-        id = datapoint.id!;
-        jsonData[id] = datapoint.toJson();
-        jsonData[id]!["time"] =
+        if(datapoint.propulsion! < 3) {
+          String id = "";
+          id = datapoint.id!;
+          jsonData[id] = datapoint.toJson();
+          jsonData[id]!["time"] =
             datapoint.time?.millisecondsSinceEpoch.toString();
+        }
       }
     }
     if (settings.cookie == "" && allowLogin && database.connected) {
