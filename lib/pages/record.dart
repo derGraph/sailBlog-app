@@ -33,18 +33,21 @@ class RecordPageBGTask extends ChangeNotifier {
 
   void scaleMap() {
     List<LatLng> points = [];
-    for(Polyline polyline in polylines){
-      if(polyline.points.isNotEmpty){
+    for (Polyline polyline in polylines) {
+      if (polyline.points.isNotEmpty) {
         points.addAll(polyline.points);
       }
     }
-    if(mapReady && points.length > 1){
-      mapController.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(points), maxZoom: 19, padding: EdgeInsets.all(50)));
+    if (mapReady && points.length > 1) {
+      mapController.fitCamera(CameraFit.bounds(
+          bounds: LatLngBounds.fromPoints(points),
+          maxZoom: 19,
+          padding: EdgeInsets.all(50)));
     }
   }
 
   Color _getColorFromPropulsion(int propulsion) {
-    switch(propulsion) {
+    switch (propulsion) {
       case 0:
         //anchor
         return Color.fromARGB(255, 70, 130, 180);
@@ -57,7 +60,7 @@ class RecordPageBGTask extends ChangeNotifier {
       default:
         //if not specified
         return Color.fromARGB(255, 255, 0, 0);
-    } 
+    }
   }
 
   Future<void> updateData(Timer timer) async {
@@ -65,15 +68,21 @@ class RecordPageBGTask extends ChangeNotifier {
     newUploadable = await database.countUploadableDatapoints();
     uploadedCount = newDatapoints.length - newUploadable;
 
-    if(newDatapoints.length > oldPoints){
+    if (newDatapoints.length > oldPoints) {
       oldPoints = newDatapoints.length;
+
+      if (newDatapoints.length > 200) {
+        newDatapoints = newDatapoints.sublist(
+            newDatapoints.length - 200, newDatapoints.length);
+      }
 
       int lastPropulsion = newDatapoints[0].propulsion!;
       List<LatLng> points = [];
-      for(DatapointLocal datapoint in newDatapoints){
-        if(datapoint.propulsion == lastPropulsion){
-          points.add(LatLng(datapoint.lat!.toDouble(), datapoint.long!.toDouble()));
-        }else {
+      for (DatapointLocal datapoint in newDatapoints) {
+        if (datapoint.propulsion == lastPropulsion) {
+          points.add(
+              LatLng(datapoint.lat!.toDouble(), datapoint.long!.toDouble()));
+        } else {
           polylines.add(Polyline(
             points: points,
             strokeWidth: 5,
@@ -85,14 +94,13 @@ class RecordPageBGTask extends ChangeNotifier {
         }
       }
       polylines.add(Polyline(
-        points: points,
-        strokeWidth: 5,
-        useStrokeWidthInMeter: true,
-        color: _getColorFromPropulsion(lastPropulsion)
-      ));
+          points: points,
+          strokeWidth: 5,
+          useStrokeWidthInMeter: true,
+          color: _getColorFromPropulsion(lastPropulsion)));
       scaleMap();
     }
-    
+
     if (recorder.online) {
       server.uploadDatapoints();
     }
@@ -166,9 +174,7 @@ class _TrackOverlayState extends State<TrackOverlay> {
     return ListenableBuilder(
       listenable: bgTask,
       builder: (BuildContext context, Widget? child) {
-        return PolylineLayer(
-          polylines: bgTask.polylines
-        );
+        return PolylineLayer(polylines: bgTask.polylines);
       },
     );
   }

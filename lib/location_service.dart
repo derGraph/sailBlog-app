@@ -16,20 +16,6 @@ class LocationService {
     if (_startRunning) return;
     _startRunning = true;
 
-    if (settings.ownSource) {
-      if (!await _handlePermissionsSelf()) {
-        _alert("You have to allow all permissions!");
-        _startRunning = false;
-        return;
-      }
-    } else {
-      if (!await _handlePermissionsNMEA()) {
-        _alert("You have to allow all permissions!");
-        _startRunning = false;
-        return;
-      }
-    }
-
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: "sailBlogBackground",
@@ -42,21 +28,31 @@ class LocationService {
           allowWifiLock: true,
           autoRunOnBoot: true),
     );
-
+    Settings settings = Settings();
+    await settings.init();
     if (settings.ownSource) {
+      if (!await _handlePermissionsSelf()) {
+        _alert("You have to allow all permissions!");
+        _startRunning = false;
+        return;
+      }
       await FlutterForegroundTask.startService(
         notificationTitle: "sailBlog Location recording...",
         notificationText: "Click to return!",
         callback: startCallbackSelf,
       );
     } else {
+      if (!await _handlePermissionsNMEA()) {
+        _alert("You have to allow all permissions!");
+        _startRunning = false;
+        return;
+      }
       await FlutterForegroundTask.startService(
         notificationTitle: "sailBlog NMEA recording...",
         notificationText: "Click to stop recording!",
         callback: startCallbackNMEA,
       );
     }
-
     _startRunning = false;
   }
 
@@ -65,28 +61,23 @@ class LocationService {
   }
 
   Future<void> end() async {
-    // Disable NMEA stream
+    // Disable Foreground Task
     await FlutterForegroundTask.stopService();
     await database.log("Location Service stopped!");
   }
-
-  /*Future<void> _gpsListener(Position locationData) async {
-    await database.addDatapoint(
-      locationData.latitude.toString(),
-      locationData.longitude.toString(),
-      hAccuracy: locationData.accuracy.toString(),
-      vAccuracy: locationData.altitudeAccuracy.toString(),
-      heading: locationData.heading.toString(),
-      speed: locationData.speed.toString(),
-      recorder.mode,
-    );
-  }*/
 
   Future<void> backgroundReciever(Object data) async {
     if (data is Map<String, dynamic>) {
       switch (data["command"]) {
         case "log":
           await database.log("backgroundReciever: ${data["message"]}");
+          break;
+        case "getMode":
+          Map<String, dynamic> data = {
+            "command": "setMode",
+            "mode": recorder.mode.index.toString()
+          };
+          FlutterForegroundTask.sendDataToTask(data);
           break;
         case "end":
           end();
