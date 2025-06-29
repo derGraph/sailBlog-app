@@ -61,7 +61,8 @@ class SelfHandler extends TaskHandler {
 
     Geolocator.getPositionStream(locationSettings: locationSettings)
         .listen((Position? position) async {
-      await database.addDatapoint(position!.latitude.toString(),
+      await database.addDatapoint(
+          position!.latitude.toString(),
           position.longitude.toString(), Recorder().mode,
           hAccuracy: position.accuracy.toString(),
           vAccuracy: position.accuracy.toString(),
