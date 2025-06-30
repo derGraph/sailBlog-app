@@ -5,11 +5,12 @@ import 'package:sailblog/recorder.dart';
 class Settings {
   bool ownSource = true;
   bool onlineMode = true;
+  bool gotSettings = false;
+
   String ip = "127.0.0.1:1000";
   String id = "";
   String cookie = "";
   int lastMode = Modes.off.index;
-  bool gotSettings = false;
 
   Settings() {
     init();
@@ -25,7 +26,7 @@ class Settings {
     if (setting.ip != null) ip = setting.ip!;
     if (setting.id != null) id = setting.id!;
     if (setting.cookie != null) cookie = setting.cookie!;
-    gotSetting = true;
+    gotSettings = true;
   }
 
   Future<void> changeLastMode(int mode) async {
