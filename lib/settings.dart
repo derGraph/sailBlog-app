@@ -14,7 +14,6 @@ class Settings {
 
   Settings() {
     init();
-    while(!gotSettings) {}
     return;
   }
 
