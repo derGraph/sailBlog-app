@@ -6,20 +6,20 @@ import 'package:sailblog/settings.dart';
 Recorder recorder = Recorder();
 
 enum Modes { anchor, motor, sailing, off }
+Settings mySettings = Settings();
 
 class Recorder {
-  Modes mode = Modes.values[Settings().lastMode];
-  bool online = Settings().onlineMode;
+  Modes mode = Modes.values[mySettings.lastMode];
+  bool online = mySettings.onlineMode;
 
   Recorder() {
     init();
   }
 
   Future<void> init() async {
-    Settings settings = Settings();
-    await settings.init();
-    online = settings.onlineMode;
-    mode = Modes.values[settings.lastMode];
+    await mySettings.init();
+    online = mySettings.onlineMode;
+    mode = Modes.values[mySettings.lastMode];
   }
 
   Future<void> setOnline(bool newOnline) async {

@@ -9,6 +9,13 @@ class Settings {
   String id = "";
   String cookie = "";
   int lastMode = Modes.off.index;
+  bool gotSettings = false;
+
+  Settings() {
+    init();
+    while(!gotSettings) {}
+    return;
+  }
 
   Future<void> init() async {
     StoredSettings setting = (await database.getSettings());
