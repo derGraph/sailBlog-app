@@ -25,6 +25,7 @@ class Settings {
     if (setting.ip != null) ip = setting.ip!;
     if (setting.id != null) id = setting.id!;
     if (setting.cookie != null) cookie = setting.cookie!;
+    gotSetting = true;
   }
 
   Future<void> changeLastMode(int mode) async {
