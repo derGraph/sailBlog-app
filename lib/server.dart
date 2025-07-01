@@ -32,7 +32,10 @@ class Server {
         (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
+    database.log("Uploading Datapoints!");
+
     if (datapoints.isEmpty) {
+      database.log("No Datapoints to upload!");
       return 0;
     }
 
@@ -50,9 +53,16 @@ class Server {
         }
       }
     }
+
+    if(settings.cookie == "") {
+      database.log("Not Cookie found!");
+    }
+
     if (settings.cookie == "" && allowLogin && database.connected) {
       return await login();
     }
+
+    database.log("Sending request!");
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
     Response response;
@@ -75,7 +85,7 @@ class Server {
     }
     switch (response.statusCode) {
       case 401:
-        //await settings.setCookie("");
+        database.log("Not logged in!");
         return -2;
       case 400:
         if (response.data is! Map<String, dynamic>) {
@@ -102,6 +112,7 @@ class Server {
         for (DatapointLocal datapoint in datapoints) {
           acceptedDatapoints.add(datapoint.id.toString());
         }
+        database.log("Uploaded!");
         break;
       default:
         database.log(
@@ -122,6 +133,7 @@ class Server {
   }
 
   Future<void> uploadAllDatapoints() async {
+    database.log("Uploading all Datapoints!");
     int uploadedDatapoints = 1;
     while (uploadedDatapoints > 0) {
       uploadedDatapoints = await uploadDatapoints(allowLogin: true);
