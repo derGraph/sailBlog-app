@@ -71,7 +71,7 @@ class Server {
         baseUrl: 'https://sailblog.dergraph.at',
         headers: {
           'Host': "sailblog.dergraph.at",
-          'Cookie': 'auth_session=${settings.cookie}',
+          'Cookie': 'session_token=${settings.cookie}',
         },
       );
       Dio dio = Dio(dioBaseOptions);
@@ -169,7 +169,7 @@ class Server {
       case 200:
       case 302:
         await settings.setCookie(response.headers["set-cookie"]![0]
-            .replaceAll("auth_session=", "")
+            .replaceAll("session_token=", "")
             .split(";")[0]);
         await database.log("Logged in!");
         loginUnderway = false;
