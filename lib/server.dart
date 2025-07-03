@@ -75,6 +75,7 @@ class Server {
         },
       );
       Dio dio = Dio(dioBaseOptions);
+      await database.log(jsonData);
       response = await dio.post("/api/Datapoints", data: jsonData);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
