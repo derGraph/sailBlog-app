@@ -32,10 +32,10 @@ class Server {
         (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
-    database.log("Uploading Datapoints!");
+    //database.log("Uploading Datapoints!");
 
     if (datapoints.isEmpty) {
-      database.log("No Datapoints to upload!");
+      //database.log("No Datapoints to upload!");
       return 0;
     }
 

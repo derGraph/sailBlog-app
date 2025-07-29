@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
         locationService.backgroundReciever);
   }
 
-  void _pageSelected(int i) {
+  void pageSelected(int i) {
     setState(() {
       _selectedPage = i;
     });
@@ -92,21 +92,21 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: const Text('Record'),
                 onTap: () {
-                  _pageSelected(0);
+                  pageSelected(0);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text('Alarm'),
                 onTap: () {
-                  _pageSelected(1);
+                  pageSelected(1);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text('Settings'),
                 onTap: () {
-                  _pageSelected(2);
+                  pageSelected(2);
                   Navigator.pop(context);
                 },
               )

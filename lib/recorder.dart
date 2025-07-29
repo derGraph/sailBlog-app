@@ -6,6 +6,7 @@ import 'package:sailblog/settings.dart';
 Recorder recorder = Recorder();
 
 enum Modes { anchor, motor, sailing, off }
+
 Settings mySettings = Settings();
 
 class Recorder {
@@ -20,6 +21,7 @@ class Recorder {
     await mySettings.init();
     online = mySettings.onlineMode;
     mode = Modes.values[mySettings.lastMode];
+    await database.log("Init with ${mode.name}!");
   }
 
   Future<void> setOnline(bool newOnline) async {
@@ -45,13 +47,14 @@ class Recorder {
     Settings settings = Settings();
     await settings.init();
     await settings.changeLastMode(newMode.index);
-    await database.log("Selected transportation ${newMode.name}!");
     if (newMode == Modes.off) {
       //disable logger
       locationService.end();
     } else {
       //enable logger
-      locationService.start();
+      if (!(await locationService.isRunning())) {
+        locationService.start();
+      }
     }
     mode = newMode;
   }
