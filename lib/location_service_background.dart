@@ -85,6 +85,10 @@ class SelfHandler extends TaskHandler {
         log("Got new Mode: $mode");
       }
 
+      if (mode == Modes.off) {
+        return;
+      }
+
       await database.addDatapoint(
           position!.latitude.toString(), position.longitude.toString(), mode,
           hAccuracy: position.accuracy.toString(),

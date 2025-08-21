@@ -131,16 +131,16 @@ class _RecordPage extends State<RecordPage> {
                 InteractiveFlag.scrollWheelZoom)),
     children: [
       TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        maxZoom: 19,
-        tileProvider: tileProvider,
-      ),
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          maxZoom: 19,
+          tileProvider: tileProvider,
+          userAgentPackageName: "com.derGraph.sailblog"),
       TileLayer(
-        urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-        maxZoom: 19,
-        minNativeZoom: 9,
-        tileProvider: tileProvider,
-      ),
+          urlTemplate: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+          maxZoom: 19,
+          minNativeZoom: 9,
+          tileProvider: tileProvider,
+          userAgentPackageName: "com.derGraph.sailblog"),
       SimpleAttributionWidget(source: Text("OpenStreetMap")),
       TrackOverlay()
     ],
@@ -190,40 +190,46 @@ class ModeAndOnlineButtons extends StatefulWidget {
 class _ModeAndOnlineButtonsState extends State<ModeAndOnlineButtons> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      SegmentedButton(
-        showSelectedIcon: false,
-        style: SegmentedButton.styleFrom(
-          backgroundColor: Colors.grey[200],
-        ),
-        segments: const <ButtonSegment>[
-          ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
-          ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
-          ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
-          ButtonSegment(value: Modes.motor, label: Icon(Icons.directions_boat))
-        ],
-        selected: {recorder.mode},
-        onSelectionChanged: (selectedMode) {
-          setState(() {
-            recorder.setMode(selectedMode.first);
-          });
-        },
-      ),
-      SegmentedButton(
-        showSelectedIcon: false,
-        style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
-        segments: const <ButtonSegment>[
-          ButtonSegment(value: false, label: Icon(Icons.wifi_off)),
-          ButtonSegment(value: true, label: Icon(Icons.wifi))
-        ],
-        selected: {recorder.online},
-        onSelectionChanged: (selectedOnline) {
-          setState(() {
-            recorder.setOnline(selectedOnline.first);
-          });
-        },
-      ),
-    ]);
+    return ListenableBuilder(
+      listenable: bgTask,
+      builder: (BuildContext context, Widget? child) {
+        return Column(children: [
+          SegmentedButton(
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              backgroundColor: Colors.grey[200],
+            ),
+            segments: const <ButtonSegment>[
+              ButtonSegment(value: Modes.off, label: Icon(Icons.close)),
+              ButtonSegment(value: Modes.anchor, label: Icon(Icons.anchor)),
+              ButtonSegment(value: Modes.sailing, label: Icon(Icons.sailing)),
+              ButtonSegment(
+                  value: Modes.motor, label: Icon(Icons.directions_boat))
+            ],
+            selected: {recorder.mode},
+            onSelectionChanged: (selectedMode) {
+              setState(() {
+                recorder.setMode(selectedMode.first);
+              });
+            },
+          ),
+          SegmentedButton(
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(backgroundColor: Colors.grey[200]),
+            segments: const <ButtonSegment>[
+              ButtonSegment(value: false, label: Icon(Icons.wifi_off)),
+              ButtonSegment(value: true, label: Icon(Icons.wifi))
+            ],
+            selected: {recorder.online},
+            onSelectionChanged: (selectedOnline) {
+              setState(() {
+                recorder.setOnline(selectedOnline.first);
+              });
+            },
+          ),
+        ]);
+      },
+    );
   }
 }
 

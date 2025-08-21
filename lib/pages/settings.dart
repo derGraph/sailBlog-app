@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -67,6 +70,18 @@ class _SettingsPage extends State<SettingsPage> {
             server.login();
           },
         ),
+        ElevatedButton(
+          child: const Text("Export Database!"),
+          onPressed: () async {
+            final supportDir = await getApplicationSupportDirectory();
+            final database = join(supportDir.path, 'database.sqlite.db');
+            final params = ShareParams(
+              text: 'sailBlog Database',
+              files: [XFile(database)],
+            );
+            final result = await SharePlus.instance.share(params);
+          }
+        )
       ],
     );
   }
