@@ -56,7 +56,7 @@ class SelfHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await database.init();
-    final LocationSettings locationSettings =
+    /*final LocationSettings locationSettings =
         LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 0);
 
     Geolocator.getPositionStream(locationSettings: locationSettings)
@@ -78,6 +78,7 @@ class SelfHandler extends TaskHandler {
             "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
       );
     });
+    */
     defaultOnStart(timestamp, "Self", starter);
   }
 
@@ -105,11 +106,52 @@ class SelfHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-    /*Position position = await Geolocator.getCurrentPosition(
-        locationSettings: AndroidSettings(
-            forceLocationManager: true, accuracy: LocationAccuracy.best));
+    Position position = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 0
+    ));
+    Modes oldMode = mode;
+    DateTime endTime =
+        DateTime.now().add(Duration(seconds: 1)); // Timeout for mode change
 
-    );*/
+    Map<String, dynamic> data = {
+      "command": "getMode",
+    };
+    FlutterForegroundTask.sendDataToMain(data);
+
+    while (mode == oldMode && endTime.isAfter(DateTime.now())) {
+      // Wait for mode to be set
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+    if (endTime.isBefore(DateTime.now())) {
+      log("Mode switch timed out!");
+    } else {
+      log("Got new Mode: $mode");
+    }
+
+    if (mode == Modes.off) {
+      return;
+    }
+
+    await database.addDatapoint(
+        position.latitude.toString(), position.longitude.toString(), mode,
+        hAccuracy: position.accuracy.toString(),
+        vAccuracy: position.accuracy.toString(),
+        heading: position.heading.toString(),
+        speed: position.speed.toString());
+    Settings settings = Settings();
+    await settings.init();
+    if (settings.onlineMode) {
+      await server.uploadDatapoints();
+    }
+    int datapointsCount = (await database.getDatapoints()).length;
+    int uploadableCount = await database.countUploadableDatapoints();
+
+    int uploadedCount = datapointsCount - uploadableCount;
+    FlutterForegroundTask.updateService(
+      notificationText:
+          "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
+    );
     await defaultOnRepeatEvent(timestamp);
   }
 }

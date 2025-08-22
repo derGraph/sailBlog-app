@@ -24,7 +24,7 @@ jobs:  # Telling what jobs we need to happen
       - name: Set Up Flutter # Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
+          flutter-version: '3.27.3'
           channel: 'stable'
       
       - name: Decode android/keystore.jks
