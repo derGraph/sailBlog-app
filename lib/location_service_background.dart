@@ -139,7 +139,6 @@ class SelfHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-<<<<<<< HEAD
     Position position = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(
       accuracy: LocationAccuracy.best,
       distanceFilter: 0
@@ -186,8 +185,6 @@ class SelfHandler extends TaskHandler {
       notificationText:
           "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
     );
-=======
->>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
     await defaultOnRepeatEvent(timestamp);
   }
 }

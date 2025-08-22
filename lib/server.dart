@@ -67,36 +67,15 @@ class Server {
     List<String> differentDatapoints = [];
     Response response;
     try {
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-      dioBaseOptions = BaseOptions(
-          baseUrl: 'https://sailblog.dergraph.at',
-          headers: {
-            'Host': "sailblog.dergraph.at",
-            'Cookie': 'auth_session=${settings.cookie}',
-          },
-        );
-        dio = Dio(dioBaseOptions);
-=======
       BaseOptions dioBaseOptions = BaseOptions(
         baseUrl: 'https://sailblog.dergraph.at',
         headers: {
           'Host': "https://sailblog.dergraph.at",
-=======
-      BaseOptions dioBaseOptions = BaseOptions(
-        baseUrl: 'https://sailblog.dergraph.at',
-        headers: {
-          'Host': "sailblog.dergraph.at",
->>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
           'Cookie': 'session_token=${settings.cookie}',
         },
       );
       Dio dio = Dio(dioBaseOptions);
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
       await database.log(jsonData.toString());
->>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
       response = await dio.post("/api/Datapoints", data: jsonData);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
