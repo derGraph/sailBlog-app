@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -11,6 +15,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPage extends State<SettingsPage> {
+  Future<bool> _ownSource = Settings().getOwnSource();
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -29,14 +34,54 @@ class _SettingsPage extends State<SettingsPage> {
                 MaterialPageRoute(builder: (context) => _DatapointsPage()));
           },
         ),
-        SwitchListTile(
-            value: !settings.ownSource,
-            title: const Text("Use boat NMEA"),
-            onChanged: (value) => {
-                  setState(() {
-                    settings.changeOwnSource(!value);
-                  })
-                }),
+        FutureBuilder(
+            future: _ownSource,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SwitchListTile(
+                  value: false,
+                  title: const Text("Use boat NMEA"),
+                  onChanged: null,
+                );
+              } else if (snapshot.hasError) {
+                return SwitchListTile(
+                  value: false, // Default to false on error
+                  onChanged: null, // Disable interactions on error
+                  title: const Text("Use boat NMEA"),
+                  subtitle: Text("Error loading setting: ${snapshot.error}"),
+                  tileColor: Colors.red,
+                );
+              } else {
+                return SwitchListTile(
+                  value: !snapshot.data!,
+                  title: const Text("Use boat NMEA"),
+                  onChanged: (value) => {
+                    setState(() {
+                      Settings().changeOwnSource(!value).then(
+                          (value) => {_ownSource = Settings().getOwnSource()});
+                    })
+                  },
+                );
+              }
+            }),
+        ElevatedButton(
+          child: const Text("Login"),
+          onPressed: () {
+            server.login();
+          },
+        ),
+        ElevatedButton(
+          child: const Text("Export Database!"),
+          onPressed: () async {
+            final supportDir = await getApplicationSupportDirectory();
+            final database = join(supportDir.path, 'database.sqlite.db');
+            final params = ShareParams(
+              text: 'sailBlog Database',
+              files: [XFile(database)],
+            );
+            final result = await SharePlus.instance.share(params);
+          }
+        )
       ],
     );
   }

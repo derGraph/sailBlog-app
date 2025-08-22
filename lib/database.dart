@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/recorder.dart';
-import 'package:sailblog/settings.dart';
 import '_generated_prisma_client/client.dart';
 
 late final PrismaClient prisma;
@@ -25,12 +24,9 @@ class Database {
         LibraryEngine engine => engine,
         _ => null,
       };
-
       await prisma.$connect();
       await engine?.applyMigrations(path: 'prisma/migrations');
       log("Connected to DB");
-      await settings.init();
-      log("Settings loaded: ${settings.toJson()}");
       connected = true;
     }
   }
@@ -126,7 +122,6 @@ class Database {
         lastMode: lastMode,
         cookie: cookie != null ? PrismaUnion.$1(cookie) : null,
       )));
-      log("setSettings: Stored settings: ${settings.toJson()}");
     } catch (exception) {
       log("setSettings Error: $exception");
     }

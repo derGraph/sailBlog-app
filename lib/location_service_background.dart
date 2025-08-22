@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/recorder.dart';
 import 'package:sailblog/server.dart';
+import 'package:sailblog/settings.dart';
 
 @pragma('vm:entry-point')
 void startCallbackSelf() {
@@ -15,6 +16,8 @@ void startCallbackSelf() {
 void startCallbackNMEA() {
   FlutterForegroundTask.setTaskHandler(NMEAHandler());
 }
+
+Modes mode = Modes.off;
 
 class NMEAHandler extends TaskHandler {
   // Called when the task is started.
@@ -31,7 +34,9 @@ class NMEAHandler extends TaskHandler {
 
   // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
   @override
-  Future<void> onReceiveData(Object data) async {}
+  Future<void> onReceiveData(Object data) async {
+    defaultOnRecieveData(data);
+  }
 
   // Called when the notification itself is pressed.
   @override
@@ -61,14 +66,40 @@ class SelfHandler extends TaskHandler {
 
     Geolocator.getPositionStream(locationSettings: locationSettings)
         .listen((Position? position) async {
+      Modes oldMode = mode;
+      DateTime endTime =
+          DateTime.now().add(Duration(seconds: 1)); // Timeout for mode change
+
+      Map<String, dynamic> data = {
+        "command": "getMode",
+      };
+      FlutterForegroundTask.sendDataToMain(data);
+
+      while (mode == oldMode && endTime.isAfter(DateTime.now())) {
+        // Wait for mode to be set
+        await Future.delayed(const Duration(milliseconds: 10));
+      }
+      if (endTime.isBefore(DateTime.now())) {
+        log("Mode switch timed out!");
+      } else {
+        log("Got new Mode: $mode");
+      }
+
+      if (mode == Modes.off) {
+        return;
+      }
+
       await database.addDatapoint(
-          position!.latitude.toString(),
-          position.longitude.toString(), Recorder().mode,
+          position!.latitude.toString(), position.longitude.toString(), mode,
           hAccuracy: position.accuracy.toString(),
           vAccuracy: position.accuracy.toString(),
           heading: position.heading.toString(),
           speed: position.speed.toString());
-      await server.uploadDatapoints();
+      Settings settings = Settings();
+      await settings.init();
+      if (settings.onlineMode) {
+        await server.uploadDatapoints();
+      }
       int datapointsCount = (await database.getDatapoints()).length;
       int uploadableCount = await database.countUploadableDatapoints();
 
@@ -90,7 +121,9 @@ class SelfHandler extends TaskHandler {
 
   // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
   @override
-  Future<void> onReceiveData(Object data) async {}
+  Future<void> onReceiveData(Object data) async {
+    defaultOnRecieveData(data);
+  }
 
   // Called when the notification itself is pressed.
   @override
@@ -106,6 +139,7 @@ class SelfHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
+<<<<<<< HEAD
     Position position = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(
       accuracy: LocationAccuracy.best,
       distanceFilter: 0
@@ -152,6 +186,8 @@ class SelfHandler extends TaskHandler {
       notificationText:
           "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
     );
+=======
+>>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
     await defaultOnRepeatEvent(timestamp);
   }
 }
@@ -189,6 +225,21 @@ void defaultOnStart(DateTime timestamp, String source, TaskStarter starter) {
 Future<void> defaultOnRepeatEvent(DateTime timestamp) async {
   // This method is called periodically based on the repeat interval set in the task options.
   // You can perform periodic tasks here, such as logging or updating the UI.
+}
+
+Future<void> defaultOnRecieveData(Object data) async {
+  if (data is Map<String, dynamic>) {
+    switch (data["command"]) {
+      case "setMode":
+        mode = Modes.values[int.parse(data["mode"].toString())];
+        break;
+      default:
+        log("backgroundReciever: wrong command: ${data.toString()}");
+        break;
+    }
+  } else {
+    log("backgroundReciever: wrong message: ${data.toString()}");
+  }
 }
 
 void log(String message) {

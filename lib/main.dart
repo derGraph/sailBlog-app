@@ -23,7 +23,8 @@ Future<void> initializeMap() async {
     await FMTCObjectBoxBackend().initialise();
     await FMTCStore('mapStore').manage.create();
   } catch (error, stackTrace) {
-    await database.log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
+    await database
+        .log("FTMC Error: ${error.toString()}, ${stackTrace.toString()}");
   }
 
   await database.log("Map storage Initialized!");
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
         locationService.backgroundReciever);
   }
 
-  void _pageSelected(int i) {
+  void pageSelected(int i) {
     setState(() {
       _selectedPage = i;
     });
@@ -76,8 +77,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Scaffold(
         appBar: AppBar(title: const Text('sailBlog')),
         drawer: Drawer(
@@ -93,21 +92,21 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: const Text('Record'),
                 onTap: () {
-                  _pageSelected(0);
+                  pageSelected(0);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text('Alarm'),
                 onTap: () {
-                  _pageSelected(1);
+                  pageSelected(1);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text('Settings'),
                 onTap: () {
-                  _pageSelected(2);
+                  pageSelected(2);
                   Navigator.pop(context);
                 },
               )

@@ -7,14 +7,6 @@ import 'package:sailblog/settings.dart';
 import 'package:dio/dio.dart';
 
 Server server = Server();
-BaseOptions dioBaseOptions = BaseOptions(
-  baseUrl: 'https://sailblog.dergraph.at',
-  headers: {
-    'Host': "sailblog.dergraph.at",
-    'Cookie': 'auth_session=${settings.cookie}',
-  },
-);
-Dio dio = Dio(dioBaseOptions);
 
 class Server {
   bool loginUnderway = false;
@@ -27,6 +19,8 @@ class Server {
     await showDialog(
         context: NavigationService.navigatorKey.currentContext!,
         builder: (context) => const LoginPopup());
+    Settings settings = Settings();
+    settings.init();
     if (settings.cookie == "") {
       return -2;
     }
@@ -38,9 +32,15 @@ class Server {
         (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
+    //database.log("Uploading Datapoints!");
+
     if (datapoints.isEmpty) {
+      //database.log("No Datapoints to upload!");
       return 0;
     }
+
+    Settings settings = Settings();
+    await settings.init();
 
     for (var datapoint in datapoints) {
       if (datapoint.id != null) {
@@ -53,13 +53,21 @@ class Server {
         }
       }
     }
+
+    if(settings.cookie == "") {
+      database.log("Not Cookie found!");
+    }
+
     if (settings.cookie == "" && allowLogin && database.connected) {
       return await login();
     }
+
+    database.log("Sending request!");
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
     Response response;
     try {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       dioBaseOptions = BaseOptions(
           baseUrl: 'https://sailblog.dergraph.at',
@@ -74,11 +82,21 @@ class Server {
         baseUrl: 'https://sailblog.dergraph.at',
         headers: {
           'Host': "https://sailblog.dergraph.at",
+=======
+      BaseOptions dioBaseOptions = BaseOptions(
+        baseUrl: 'https://sailblog.dergraph.at',
+        headers: {
+          'Host': "sailblog.dergraph.at",
+>>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
           'Cookie': 'session_token=${settings.cookie}',
         },
       );
       Dio dio = Dio(dioBaseOptions);
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+      await database.log(jsonData.toString());
+>>>>>>> 7bea4136e609cd41c9c7b5509c75a52c4d4eb614
       response = await dio.post("/api/Datapoints", data: jsonData);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
@@ -89,8 +107,7 @@ class Server {
     }
     switch (response.statusCode) {
       case 401:
-        database.log("Not logged in or invalid cookie!");
-        //await settings.setCookie("");
+        database.log("Not logged in!");
         return -2;
       case 400:
         if (response.data is! Map<String, dynamic>) {
@@ -117,6 +134,7 @@ class Server {
         for (DatapointLocal datapoint in datapoints) {
           acceptedDatapoints.add(datapoint.id.toString());
         }
+        database.log("Uploaded!");
         break;
       default:
         database.log(
@@ -137,6 +155,7 @@ class Server {
   }
 
   Future<void> uploadAllDatapoints() async {
+    database.log("Uploading all Datapoints!");
     int uploadedDatapoints = 1;
     while (uploadedDatapoints > 0) {
       uploadedDatapoints = await uploadDatapoints(allowLogin: true);
@@ -146,12 +165,19 @@ class Server {
 
   Future<int?> loginRequest(String username, String password) async {
     await database.log("Logging in as $username!");
+    Settings settings = Settings();
+    await settings.init();
     Response response;
     try {
       FormData formData = FormData.fromMap({
         'identifier': username,
         'password': password,
       });
+      BaseOptions dioBaseOptions = BaseOptions(
+        baseUrl: 'https://sailblog.dergraph.at',
+        headers: {'Host': "sailblog.dergraph.at"},
+      );
+      Dio dio = Dio(dioBaseOptions);
       response = await dio.post('/sign_in', data: formData);
     } on DioException catch (e) {
       response = e.response!;
@@ -165,16 +191,8 @@ class Server {
       case 200:
       case 302:
         await settings.setCookie(response.headers["set-cookie"]![0]
-            .replaceAll("auth_session=", "")
+            .replaceAll("session_token=", "")
             .split(";")[0]);
-        dioBaseOptions = BaseOptions(
-          baseUrl: 'https://sailblog.dergraph.at',
-          headers: {
-            'Host': "sailblog.dergraph.at",
-            'Cookie': 'auth_session=${settings.cookie}',
-          },
-        );
-        dio = Dio(dioBaseOptions);
         await database.log("Logged in!");
         loginUnderway = false;
         return 302;
@@ -235,6 +253,7 @@ class LoginPopup extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
+            server.loginUnderway = false;
             Navigator.of(context).pop(); // Close the popup
           },
           child: const Text('Cancel'),
