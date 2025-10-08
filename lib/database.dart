@@ -3,6 +3,7 @@ import 'package:orm/orm.dart';
 import 'package:orm_flutter/orm_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/recorder.dart';
@@ -12,12 +13,19 @@ late final PrismaClient prisma;
 
 class Database {
   bool connected = false;
+  String database = "";
   Future<void> init() async {
     if (!connected) {
-      WidgetsFlutterBinding.ensureInitialized();
+      //
 
-      final supportDir = await getApplicationSupportDirectory();
-      final database = join(supportDir.path, 'database.sqlite.db');
+      // if(kDebugMode) {
+        await Permission.manageExternalStorage.request();
+        final supportDir = await getExternalStorageDirectory();
+        database = join(supportDir!.path, 'database.sqlite.db'); 
+      // } else {
+      //   final supportDir = await getApplicationSupportDirectory();
+      //   database = join(supportDir.path, 'database.sqlite.db');
+      // }
 
       prisma = PrismaClient(datasourceUrl: 'file:$database');
       final engine = switch (prisma.$engine) {
@@ -44,7 +52,16 @@ class Database {
     return logs;
   }
 
-  Future<List<DatapointLocal>> getDatapoints() async {
+  Future<List<DatapointLocal>> getDatapoints([int? val]) async {
+    if (val != null) {
+      List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
+            orderBy: PrismaUnion.$1([
+              DatapointLocalOrderByWithRelationInput(time: SortOrder.desc),
+            ]),
+            take: val
+        )).toList();
+      return datapoints;
+    }
     List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
             orderBy: PrismaUnion.$1([
       DatapointLocalOrderByWithRelationInput(time: SortOrder.asc),
@@ -74,6 +91,24 @@ class Database {
     }
   }
 
+  Future<int> countDatapoints() async {
+    try {
+      AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
+          select: AggregateDatapointLocalSelect(
+              $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
+                  select: DatapointLocalCountAggregateOutputTypeSelect(
+                      uploaded: true))))));
+      if (result.$count?.uploaded == null) {
+        return 0;
+      } else {
+        return result.$count!.uploaded!;
+      }
+    } catch (exception) {
+      log("countDatapoints Error: $exception");
+      return 0;
+    }
+  }
+
   Future<List<DatapointLocal>> getUploadableDatapoints() async {
     List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
       where: DatapointLocalWhereInput(
@@ -85,7 +120,7 @@ class Database {
   }
 
   Future<void> setDatapointsUploaded(List<String> datapoints, int mode) async {
-    await prisma.datapointLocal.updateMany(
+    var result = await prisma.datapointLocal.updateMany(
         where: DatapointLocalWhereInput(
             id: PrismaUnion.$1(StringFilter($in: datapoints))),
         data: PrismaUnion.$1(DatapointLocalUpdateManyMutationInput(
@@ -105,13 +140,14 @@ class Database {
         id: "id",
         ownSource: true,
         ip: null,
+        serverIp: "https://sailblog.dergraph.at",
         lastMode: 0,
         cookie: "",
         onlineMode: true);
     return settings;
   }
 
-  Future<void> setSettings(bool ownSource, bool onlineMode, String? ip,
+  Future<void> setSettings(bool ownSource, bool onlineMode, String? ip, String serverIp,
       int lastMode, String? cookie) async {
     try {
       await prisma.storedSettings.create(
@@ -119,6 +155,7 @@ class Database {
         ownSource: ownSource,
         onlineMode: onlineMode,
         ip: ip != null ? PrismaUnion.$1(ip) : null,
+        serverIp: serverIp,
         lastMode: lastMode,
         cookie: cookie != null ? PrismaUnion.$1(cookie) : null,
       )));

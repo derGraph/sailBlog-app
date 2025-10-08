@@ -14,8 +14,10 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPage();
 }
 
+
 class _SettingsPage extends State<SettingsPage> {
-  Future<bool> _ownSource = Settings().getOwnSource();
+  Future<bool> _ownSource = appSettings.getOwnSource();
+  Future<String> _serverIp = appSettings.getServerIp();
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -57,8 +59,8 @@ class _SettingsPage extends State<SettingsPage> {
                   title: const Text("Use boat NMEA"),
                   onChanged: (value) => {
                     setState(() {
-                      Settings().changeOwnSource(!value).then(
-                          (value) => {_ownSource = Settings().getOwnSource()});
+                      appSettings.changeOwnSource(!value).then(
+                          (value) => {_ownSource = appSettings.getOwnSource()});
                     })
                   },
                 );
@@ -79,7 +81,28 @@ class _SettingsPage extends State<SettingsPage> {
               text: 'sailBlog Database',
               files: [XFile(database)],
             );
-            final result = await SharePlus.instance.share(params);
+            await SharePlus.instance.share(params);
+          }
+        ),
+        FutureBuilder(
+          future: _serverIp,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            final TextEditingController urlController = TextEditingController();
+            if(snapshot.hasData) {
+              urlController.text = snapshot.data!;
+            } else if (snapshot.hasError) {
+              urlController.text = "Error loading snapshot!";
+            } else {
+              urlController.text = "Waiting!";
+            }
+            return TextField(
+              controller: urlController,
+              decoration: const InputDecoration(labelText: 'Server IP Address'),
+              keyboardType: TextInputType.url,
+              onEditingComplete: () async {
+                await appSettings.setServerIp(urlController.text);
+              },
+            );
           }
         )
       ],

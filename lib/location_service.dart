@@ -23,14 +23,14 @@ class LocationService {
       ),
       iosNotificationOptions: IOSNotificationOptions(),
       foregroundTaskOptions: ForegroundTaskOptions(
-          eventAction: ForegroundTaskEventAction.repeat(1000),
+          eventAction: ForegroundTaskEventAction.repeat(10000),
           allowWakeLock: true,
           allowWifiLock: true,
           autoRunOnBoot: true),
     );
-    Settings settings = Settings();
-    await settings.init();
-    if (settings.ownSource) {
+
+    await appSettings.init();
+    if (appSettings.ownSource) {
       if (!await _handlePermissionsSelf()) {
         _alert("You have to allow all permissions!");
         _startRunning = false;

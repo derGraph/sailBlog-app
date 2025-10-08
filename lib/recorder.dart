@@ -7,26 +7,24 @@ Recorder recorder = Recorder();
 
 enum Modes { anchor, motor, sailing, off }
 
-Settings mySettings = Settings();
-
 class Recorder {
-  Modes mode = Modes.values[mySettings.lastMode];
-  bool online = mySettings.onlineMode;
+  Modes mode = Modes.values[appSettings.lastMode];
+  bool online = appSettings.onlineMode;
 
   Recorder() {
     init();
   }
 
   Future<void> init() async {
-    await mySettings.init();
-    online = mySettings.onlineMode;
-    mode = Modes.values[mySettings.lastMode];
+    await appSettings.init();
+    online = appSettings.onlineMode;
+    mode = Modes.values[appSettings.lastMode];
     await database.log("Init with ${mode.name}!");
   }
 
   Future<void> setOnline(bool newOnline) async {
     await database.log("Online mode $newOnline!");
-    Settings settings = Settings();
+    Settings settings = Settings(database);
     await settings.init();
     await settings.changeOnlineMode(newOnline);
     online = newOnline;
@@ -44,9 +42,9 @@ class Recorder {
         return;
       }
     }
-    Settings settings = Settings();
-    await settings.init();
-    await settings.changeLastMode(newMode.index);
+
+    await appSettings.init();
+    await appSettings.changeLastMode(newMode.index);
     if (newMode == Modes.off) {
       //disable logger
       locationService.end();

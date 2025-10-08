@@ -311,6 +311,7 @@ class StoredSettings {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -320,6 +321,7 @@ class StoredSettings {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
       );
@@ -332,6 +334,8 @@ class StoredSettings {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -341,6 +345,7 @@ class StoredSettings {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -352,6 +357,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -362,6 +368,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
       );
@@ -374,6 +381,8 @@ class CreateManyStoredSettingsAndReturnOutputType {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -383,6 +392,7 @@ class CreateManyStoredSettingsAndReturnOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -394,6 +404,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -404,6 +415,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
       );
@@ -416,6 +428,8 @@ class UpdateManyStoredSettingsAndReturnOutputType {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -425,6 +439,7 @@ class UpdateManyStoredSettingsAndReturnOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };

@@ -4477,6 +4477,7 @@ class StoredSettingsWhereInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4498,6 +4499,8 @@ class StoredSettingsWhereInput
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.StringFilter, String>? serverIp;
+
   final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
 
   final _i1.PrismaUnion<_i2.StringNullableFilter,
@@ -4512,6 +4515,7 @@ class StoredSettingsWhereInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4527,6 +4531,7 @@ class StoredSettingsWhereUniqueInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4548,6 +4553,8 @@ class StoredSettingsWhereUniqueInput
   final _i1.PrismaUnion<_i2.StringNullableFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.StringFilter, String>? serverIp;
+
   final _i1.PrismaUnion<_i2.IntFilter, int>? lastMode;
 
   final _i1.PrismaUnion<_i2.StringNullableFilter,
@@ -4562,6 +4569,7 @@ class StoredSettingsWhereUniqueInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4574,6 +4582,7 @@ class StoredSettingsSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4586,6 +4595,8 @@ class StoredSettingsSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -4596,6 +4607,7 @@ class StoredSettingsSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4608,6 +4620,7 @@ class StoredSettingsOrderByWithRelationInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4620,6 +4633,8 @@ class StoredSettingsOrderByWithRelationInput
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
 
+  final _i2.SortOrder? serverIp;
+
   final _i2.SortOrder? lastMode;
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? cookie;
@@ -4630,6 +4645,7 @@ class StoredSettingsOrderByWithRelationInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4640,6 +4656,7 @@ enum StoredSettingsScalar<T> implements _i1.PrismaEnum, _i1.Reference<T> {
   ownSource<bool>('ownSource', 'StoredSettings'),
   onlineMode<bool>('onlineMode', 'StoredSettings'),
   ip<String>('ip', 'StoredSettings'),
+  serverIp<String>('serverIp', 'StoredSettings'),
   lastMode<int>('lastMode', 'StoredSettings'),
   cookie<String>('cookie', 'StoredSettings');
 
@@ -4662,6 +4679,7 @@ class StoredSettingsCreateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     required this.lastMode,
     this.cookie,
   });
@@ -4674,6 +4692,8 @@ class StoredSettingsCreateInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final String? serverIp;
+
   final int lastMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
@@ -4684,6 +4704,7 @@ class StoredSettingsCreateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4696,6 +4717,7 @@ class StoredSettingsUncheckedCreateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     required this.lastMode,
     this.cookie,
   });
@@ -4708,6 +4730,8 @@ class StoredSettingsUncheckedCreateInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final String? serverIp;
+
   final int lastMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
@@ -4718,6 +4742,7 @@ class StoredSettingsUncheckedCreateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4730,6 +4755,7 @@ class StoredSettingsCreateManyInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     required this.lastMode,
     this.cookie,
   });
@@ -4742,6 +4768,8 @@ class StoredSettingsCreateManyInput
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? ip;
 
+  final String? serverIp;
+
   final int lastMode;
 
   final _i1.PrismaUnion<String, _i1.PrismaNull>? cookie;
@@ -4752,6 +4780,7 @@ class StoredSettingsCreateManyInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4764,6 +4793,7 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4776,6 +4806,8 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -4786,6 +4818,7 @@ class CreateManyStoredSettingsAndReturnOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4818,6 +4851,7 @@ class StoredSettingsUpdateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4833,6 +4867,8 @@ class StoredSettingsUpdateInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? serverIp;
+
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
   final _i1.PrismaUnion<
@@ -4846,6 +4882,7 @@ class StoredSettingsUpdateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4858,6 +4895,7 @@ class StoredSettingsUncheckedUpdateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4873,6 +4911,8 @@ class StoredSettingsUncheckedUpdateInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? serverIp;
+
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
   final _i1.PrismaUnion<
@@ -4886,6 +4926,7 @@ class StoredSettingsUncheckedUpdateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4898,6 +4939,7 @@ class StoredSettingsUpdateManyMutationInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4913,6 +4955,8 @@ class StoredSettingsUpdateManyMutationInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? serverIp;
+
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
   final _i1.PrismaUnion<
@@ -4926,6 +4970,7 @@ class StoredSettingsUpdateManyMutationInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4938,6 +4983,7 @@ class StoredSettingsUncheckedUpdateManyInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4953,6 +4999,8 @@ class StoredSettingsUncheckedUpdateManyInput
       _i1.PrismaUnion<_i2.NullableStringFieldUpdateOperationsInput,
           _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<String, _i2.StringFieldUpdateOperationsInput>? serverIp;
+
   final _i1.PrismaUnion<int, _i2.IntFieldUpdateOperationsInput>? lastMode;
 
   final _i1.PrismaUnion<
@@ -4966,6 +5014,7 @@ class StoredSettingsUncheckedUpdateManyInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -4978,6 +5027,7 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -4990,6 +5040,8 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -5000,6 +5052,7 @@ class UpdateManyStoredSettingsAndReturnOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5011,6 +5064,7 @@ class StoredSettingsCountAggregateOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
     this.$all,
@@ -5022,6 +5076,7 @@ class StoredSettingsCountAggregateOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
         $all: json['_all'],
@@ -5035,6 +5090,8 @@ class StoredSettingsCountAggregateOutputType {
 
   final int? ip;
 
+  final int? serverIp;
+
   final int? lastMode;
 
   final int? cookie;
@@ -5046,6 +5103,7 @@ class StoredSettingsCountAggregateOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
         '_all': $all,
@@ -5080,6 +5138,7 @@ class StoredSettingsMinAggregateOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5090,6 +5149,7 @@ class StoredSettingsMinAggregateOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
       );
@@ -5102,6 +5162,8 @@ class StoredSettingsMinAggregateOutputType {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -5111,6 +5173,7 @@ class StoredSettingsMinAggregateOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5122,6 +5185,7 @@ class StoredSettingsMaxAggregateOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5132,6 +5196,7 @@ class StoredSettingsMaxAggregateOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
       );
@@ -5144,6 +5209,8 @@ class StoredSettingsMaxAggregateOutputType {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -5153,6 +5220,7 @@ class StoredSettingsMaxAggregateOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5164,6 +5232,7 @@ class StoredSettingsGroupByOutputType {
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
     this.$count,
@@ -5179,6 +5248,7 @@ class StoredSettingsGroupByOutputType {
         ownSource: json['ownSource'],
         onlineMode: json['onlineMode'],
         ip: json['ip'],
+        serverIp: json['serverIp'],
         lastMode: json['lastMode'],
         cookie: json['cookie'],
         $count: json['_count'] is Map
@@ -5207,6 +5277,8 @@ class StoredSettingsGroupByOutputType {
 
   final String? ip;
 
+  final String? serverIp;
+
   final int? lastMode;
 
   final String? cookie;
@@ -5226,6 +5298,7 @@ class StoredSettingsGroupByOutputType {
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
         '_count': $count?.toJson(),
@@ -5243,6 +5316,7 @@ class StoredSettingsCountOrderByAggregateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5255,6 +5329,8 @@ class StoredSettingsCountOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? serverIp;
+
   final _i2.SortOrder? lastMode;
 
   final _i2.SortOrder? cookie;
@@ -5265,6 +5341,7 @@ class StoredSettingsCountOrderByAggregateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5287,6 +5364,7 @@ class StoredSettingsMaxOrderByAggregateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5299,6 +5377,8 @@ class StoredSettingsMaxOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? serverIp;
+
   final _i2.SortOrder? lastMode;
 
   final _i2.SortOrder? cookie;
@@ -5309,6 +5389,7 @@ class StoredSettingsMaxOrderByAggregateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5321,6 +5402,7 @@ class StoredSettingsMinOrderByAggregateInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5333,6 +5415,8 @@ class StoredSettingsMinOrderByAggregateInput
 
   final _i2.SortOrder? ip;
 
+  final _i2.SortOrder? serverIp;
+
   final _i2.SortOrder? lastMode;
 
   final _i2.SortOrder? cookie;
@@ -5343,6 +5427,7 @@ class StoredSettingsMinOrderByAggregateInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5365,6 +5450,7 @@ class StoredSettingsOrderByWithAggregationInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
     this.$count,
@@ -5381,6 +5467,8 @@ class StoredSettingsOrderByWithAggregationInput
   final _i2.SortOrder? onlineMode;
 
   final _i1.PrismaUnion<_i2.SortOrder, _i2.SortOrderInput>? ip;
+
+  final _i2.SortOrder? serverIp;
 
   final _i2.SortOrder? lastMode;
 
@@ -5402,6 +5490,7 @@ class StoredSettingsOrderByWithAggregationInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
         '_count': $count,
@@ -5622,6 +5711,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5643,6 +5733,8 @@ class StoredSettingsScalarWhereWithAggregatesInput
   final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
       _i1.PrismaUnion<String, _i1.PrismaNull>>? ip;
 
+  final _i1.PrismaUnion<_i2.StringWithAggregatesFilter, String>? serverIp;
+
   final _i1.PrismaUnion<_i2.IntWithAggregatesFilter, int>? lastMode;
 
   final _i1.PrismaUnion<_i2.StringNullableWithAggregatesFilter,
@@ -5657,6 +5749,7 @@ class StoredSettingsScalarWhereWithAggregatesInput
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5669,6 +5762,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
     this.$all,
@@ -5682,6 +5776,8 @@ class StoredSettingsCountAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -5694,6 +5790,7 @@ class StoredSettingsCountAggregateOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
         '_all': $all,
@@ -5757,6 +5854,7 @@ class StoredSettingsMinAggregateOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5769,6 +5867,8 @@ class StoredSettingsMinAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -5779,6 +5879,7 @@ class StoredSettingsMinAggregateOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5801,6 +5902,7 @@ class StoredSettingsMaxAggregateOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
   });
@@ -5813,6 +5915,8 @@ class StoredSettingsMaxAggregateOutputTypeSelect
 
   final bool? ip;
 
+  final bool? serverIp;
+
   final bool? lastMode;
 
   final bool? cookie;
@@ -5823,6 +5927,7 @@ class StoredSettingsMaxAggregateOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
       };
@@ -5845,6 +5950,7 @@ class StoredSettingsGroupByOutputTypeSelect
     this.ownSource,
     this.onlineMode,
     this.ip,
+    this.serverIp,
     this.lastMode,
     this.cookie,
     this.$count,
@@ -5861,6 +5967,8 @@ class StoredSettingsGroupByOutputTypeSelect
   final bool? onlineMode;
 
   final bool? ip;
+
+  final bool? serverIp;
 
   final bool? lastMode;
 
@@ -5883,6 +5991,7 @@ class StoredSettingsGroupByOutputTypeSelect
         'ownSource': ownSource,
         'onlineMode': onlineMode,
         'ip': ip,
+        'serverIp': serverIp,
         'lastMode': lastMode,
         'cookie': cookie,
         '_count': $count,

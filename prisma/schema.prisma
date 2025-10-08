@@ -42,6 +42,7 @@ model StoredSettings {
   ownSource       Boolean  @default(true)
   onlineMode      Boolean  @default(true)
   ip              String?
+  serverIp        String   @default("https://sailblog.dergraph.at")
   lastMode        Int
   cookie          String?
 }

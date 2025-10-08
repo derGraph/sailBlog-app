@@ -10,6 +10,7 @@ import 'package:sailblog/location_service.dart';
 MainApp mainApp = MainApp();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await database.init();
   FlutterForegroundTask.initCommunicationPort();
   await initializeMap();

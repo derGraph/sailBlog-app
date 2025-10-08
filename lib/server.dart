@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/main.dart';
@@ -10,6 +13,7 @@ Server server = Server();
 
 class Server {
   bool loginUnderway = false;
+  var httpClient = http.Client();
 
   Future<int> login() async {
     if (loginUnderway) {
@@ -19,9 +23,8 @@ class Server {
     await showDialog(
         context: NavigationService.navigatorKey.currentContext!,
         builder: (context) => const LoginPopup());
-    Settings settings = Settings();
-    settings.init();
-    if (settings.cookie == "") {
+    appSettings.init();
+    if (appSettings.cookie == "") {
       return -2;
     }
     return 0;
@@ -39,9 +42,6 @@ class Server {
       return 0;
     }
 
-    Settings settings = Settings();
-    await settings.init();
-
     for (var datapoint in datapoints) {
       if (datapoint.id != null) {
         if(datapoint.propulsion! < 3) {
@@ -54,47 +54,60 @@ class Server {
       }
     }
 
-    if(settings.cookie == "") {
+    if(appSettings.cookie == "") {
       database.log("Not Cookie found!");
     }
 
-    if (settings.cookie == "" && allowLogin && database.connected) {
+    if (appSettings.cookie == "" && allowLogin && database.connected) {
       return await login();
     }
 
     database.log("Sending request!");
     List<String> acceptedDatapoints = [];
     List<String> differentDatapoints = [];
-    Response response;
+    // Response response;
+    http.Response response;
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Cookie': 'session_token=${appSettings.cookie}',
+    };
+
     try {
-      BaseOptions dioBaseOptions = BaseOptions(
-        baseUrl: 'https://sailblog.dergraph.at',
-        headers: {
-          'Host': "https://sailblog.dergraph.at",
-          'Cookie': 'session_token=${settings.cookie}',
-        },
-      );
-      Dio dio = Dio(dioBaseOptions);
-      await database.log(jsonData.toString());
-      response = await dio.post("/api/Datapoints", data: jsonData);
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.badResponse) {
-        response = e.response!;
-      } else {
-        return -1;
-      }
+      var url = Uri.https(appSettings.serverIp.replaceAll("https://", ""), 'api/Datapoints');
+      response = await httpClient.post(url, headers: headers, body: jsonEncode(jsonData));
+    } catch (e) {
+      database.log(e.toString());
+      return -1;
     }
+    // try {
+      
+    // BaseOptions dioBaseOptions = BaseOptions(
+    //   baseUrl: appSettings.serverIp,
+    //   headers: {
+    //     'Cookie': 'session_token=${appSettings.cookie}',
+    //   },
+    // );
+    // Dio dio = Dio(dioBaseOptions);
+    // response = await dio.post("/api/Datapoints", data: jsonData);
+    // } on DioException catch (e) {
+    //   if (e.type == DioExceptionType.badResponse) {
+    //     response = e.response!;
+    //   } else {
+    //     return -1;
+    //   }
+    // }
     switch (response.statusCode) {
       case 401:
         database.log("Not logged in!");
         return -2;
       case 400:
-        if (response.data is! Map<String, dynamic>) {
+        if (response.body is! Map<String, dynamic>) {
           database.log(
-              "Unexpected Server answer retrying: ${response.data.toString()}");
+              "Unexpected Server answer retrying: ${response.body.toString()}");
           break;
         }
-        Map<String, dynamic> results = response.data;
+        var responseData = jsonDecode(response.body);
+        Map<String, dynamic> results = responseData;
         results.forEach((key, value) async {
           if (value != "OK") {
             if (value ==
@@ -106,6 +119,8 @@ class Server {
             } else {
               await database.log("Unhandled error message!\n $key: $value");
             }
+          } else {
+            acceptedDatapoints.add(key);
           }
         });
         break;
@@ -117,7 +132,7 @@ class Server {
         break;
       default:
         database.log(
-            "Upload Datapoint Error: ${response.statusCode}: ${response.data}");
+            "Upload Datapoint Error: ${response.statusCode}: ${response.body}");
         return -1;
     }
 
@@ -144,8 +159,7 @@ class Server {
 
   Future<int?> loginRequest(String username, String password) async {
     await database.log("Logging in as $username!");
-    Settings settings = Settings();
-    await settings.init();
+    await appSettings.init();
     Response response;
     try {
       FormData formData = FormData.fromMap({
@@ -153,8 +167,7 @@ class Server {
         'password': password,
       });
       BaseOptions dioBaseOptions = BaseOptions(
-        baseUrl: 'https://sailblog.dergraph.at',
-        headers: {'Host': "sailblog.dergraph.at"},
+        baseUrl: appSettings.serverIp,
       );
       Dio dio = Dio(dioBaseOptions);
       response = await dio.post('/sign_in', data: formData);
@@ -169,7 +182,7 @@ class Server {
         return 404;
       case 200:
       case 302:
-        await settings.setCookie(response.headers["set-cookie"]![0]
+        await appSettings.setCookie(response.headers["set-cookie"]![0]
             .replaceAll("session_token=", "")
             .split(";")[0]);
         await database.log("Logged in!");

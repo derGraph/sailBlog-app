@@ -7,6 +7,9 @@ import 'package:sailblog/recorder.dart';
 import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
 
+Database backgroundDB = Database();
+Settings backgroundSettings = Settings(backgroundDB);
+
 @pragma('vm:entry-point')
 void startCallbackSelf() {
   FlutterForegroundTask.setTaskHandler(SelfHandler());
@@ -162,7 +165,7 @@ class SelfHandler extends TaskHandler {
       log("Got new Mode: $mode");
     }
 
-    if (mode == Modes.off) {
+    if (mode == Modes.off || !database.connected) {
       return;
     }
 
@@ -172,9 +175,9 @@ class SelfHandler extends TaskHandler {
         vAccuracy: position.accuracy.toString(),
         heading: position.heading.toString(),
         speed: position.speed.toString());
-    Settings settings = Settings();
-    await settings.init();
-    if (settings.onlineMode) {
+
+    await backgroundSettings.init();
+    if (backgroundSettings.onlineMode) {
       await server.uploadDatapoints();
     }
     int datapointsCount = (await database.getDatapoints()).length;
@@ -211,6 +214,7 @@ void defaultOnDestroy(DateTime timestamp, String source) {
 }
 
 void defaultOnStart(DateTime timestamp, String source, TaskStarter starter) {
+  backgroundDB.init();
   final Map<String, dynamic> data = {
     "command": "log",
     "message":

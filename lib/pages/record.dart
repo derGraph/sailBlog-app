@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
@@ -7,7 +8,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
 import 'package:sailblog/recorder.dart';
-import 'package:sailblog/server.dart';
 
 final tileProvider = FMTCTileProvider.allStores(
   allStoresStrategy: BrowseStoreStrategy.readUpdateCreate,
@@ -28,7 +28,7 @@ class RecordPageBGTask extends ChangeNotifier {
   List<Polyline> polylines = [];
   List<DatapointLocal> newDatapoints = [];
   int uploadedCount = 0;
-  int newUploadable = 0;
+  int newUploadableCount = 0;
   int oldPoints = 0;
 
   void scaleMap() {
@@ -64,17 +64,20 @@ class RecordPageBGTask extends ChangeNotifier {
   }
 
   Future<void> updateData(Timer timer) async {
-    newDatapoints = await database.getDatapoints();
-    newUploadable = await database.countUploadableDatapoints();
-    uploadedCount = newDatapoints.length - newUploadable;
+    database.getDatapoints().then((newDatapoints)=>{
+      database
+    });
 
-    if (newDatapoints.length > oldPoints) {
-      oldPoints = newDatapoints.length;
+    newDatapoints = await database.getDatapoints(200);
 
-      if (newDatapoints.length > 200) {
-        newDatapoints = newDatapoints.sublist(
-            newDatapoints.length - 200, newDatapoints.length);
-      }
+    //newDatapoints = await compute<int, List<DatapointLocal>>(getDatapointsBG, 200);
+
+    newUploadableCount = await database.countUploadableDatapoints();
+    int datapointsCount = await database.countDatapoints();
+    uploadedCount = datapointsCount - newUploadableCount;
+
+    if (datapointsCount > oldPoints) {
+      oldPoints = datapointsCount;
 
       int lastPropulsion = newDatapoints[0].propulsion!;
       List<LatLng> points = [];
@@ -101,9 +104,6 @@ class RecordPageBGTask extends ChangeNotifier {
       scaleMap();
     }
 
-    if (recorder.online) {
-      server.uploadDatapoints();
-    }
     notifyListeners();
   }
 }
@@ -248,7 +248,7 @@ class _StatusCardState extends State<StatusCard> {
   void initState() {
     super.initState();
     _timer =
-        Timer.periodic(const Duration(milliseconds: 100), bgTask.updateData);
+        Timer.periodic(const Duration(milliseconds: 10000), bgTask.updateData);
   }
 
   @override
@@ -281,7 +281,7 @@ class _StatusCardState extends State<StatusCard> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                        'uploaded ${bgTask.uploadedCount}/${bgTask.newDatapoints.length} ${_getGpsStatus()}'),
+                        'uploaded ${bgTask.uploadedCount}/${bgTask.oldPoints} ${_getGpsStatus()}'),
                     if (bgTask.newDatapoints.isNotEmpty)
                       Text(
                           'last Datapoint ${_timeFormat.format(bgTask.newDatapoints.last.time!.toLocal())} '
