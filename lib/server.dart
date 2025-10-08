@@ -79,35 +79,26 @@ class Server {
       database.log(e.toString());
       return -1;
     }
-    // try {
-      
-    // BaseOptions dioBaseOptions = BaseOptions(
-    //   baseUrl: appSettings.serverIp,
-    //   headers: {
-    //     'Cookie': 'session_token=${appSettings.cookie}',
-    //   },
-    // );
-    // Dio dio = Dio(dioBaseOptions);
-    // response = await dio.post("/api/Datapoints", data: jsonData);
-    // } on DioException catch (e) {
-    //   if (e.type == DioExceptionType.badResponse) {
-    //     response = e.response!;
-    //   } else {
-    //     return -1;
-    //   }
-    // }
+
     switch (response.statusCode) {
       case 401:
         database.log("Not logged in!");
         return -2;
       case 400:
-        if (response.body is! Map<String, dynamic>) {
-          database.log(
-              "Unexpected Server answer retrying: ${response.body.toString()}");
-          break;
+        Map<String, dynamic> results = {};
+        // Check if response is JSON
+        if (response.headers['content-type']?.contains('application/json') ?? false) {
+          try {
+            results = jsonDecode(response.body);
+          } catch (e) {
+            await database.log("HTTP Response was not valid JSON!");
+            return -1;
+          }
+        } else {
+          await database.log("HTTP Response header not JSON!");
+          return -1;
         }
-        var responseData = jsonDecode(response.body);
-        Map<String, dynamic> results = responseData;
+        
         results.forEach((key, value) async {
           if (value != "OK") {
             if (value ==

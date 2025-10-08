@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:sailblog/pages/alarm.dart';
@@ -10,7 +11,8 @@ import 'package:sailblog/location_service.dart';
 MainApp mainApp = MainApp();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
+
   await database.init();
   FlutterForegroundTask.initCommunicationPort();
   await initializeMap();

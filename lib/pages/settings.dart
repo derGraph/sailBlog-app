@@ -75,11 +75,11 @@ class _SettingsPage extends State<SettingsPage> {
         ElevatedButton(
           child: const Text("Export Database!"),
           onPressed: () async {
-            final supportDir = await getApplicationSupportDirectory();
-            final database = join(supportDir.path, 'database.sqlite.db');
+            final supportDir = await getExternalStorageDirectory();
+            final dbPath = join(supportDir!.path, 'database.sqlite.db');
             final params = ShareParams(
               text: 'sailBlog Database',
-              files: [XFile(database)],
+              files: [XFile(dbPath)],
             );
             await SharePlus.instance.share(params);
           }

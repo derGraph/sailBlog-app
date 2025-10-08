@@ -29,7 +29,6 @@ class LocationService {
           autoRunOnBoot: true),
     );
 
-    await appSettings.init();
     if (appSettings.ownSource) {
       if (!await _handlePermissionsSelf()) {
         _alert("You have to allow all permissions!");

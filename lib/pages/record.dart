@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
@@ -69,8 +68,6 @@ class RecordPageBGTask extends ChangeNotifier {
     });
 
     newDatapoints = await database.getDatapoints(200);
-
-    //newDatapoints = await compute<int, List<DatapointLocal>>(getDatapointsBG, 200);
 
     newUploadableCount = await database.countUploadableDatapoints();
     int datapointsCount = await database.countDatapoints();
@@ -207,10 +204,9 @@ class _ModeAndOnlineButtonsState extends State<ModeAndOnlineButtons> {
                   value: Modes.motor, label: Icon(Icons.directions_boat))
             ],
             selected: {recorder.mode},
-            onSelectionChanged: (selectedMode) {
-              setState(() {
-                recorder.setMode(selectedMode.first);
-              });
+            onSelectionChanged: (selectedMode) async {
+              await recorder.setMode(selectedMode.first);
+              setState(()=>{});
             },
           ),
           SegmentedButton(
@@ -221,10 +217,9 @@ class _ModeAndOnlineButtonsState extends State<ModeAndOnlineButtons> {
               ButtonSegment(value: true, label: Icon(Icons.wifi))
             ],
             selected: {recorder.online},
-            onSelectionChanged: (selectedOnline) {
-              setState(() {
-                recorder.setOnline(selectedOnline.first);
-              });
+            onSelectionChanged: (selectedOnline) async {
+              await recorder.setOnline(selectedOnline.first);
+              setState((){});
             },
           ),
         ]);
@@ -248,7 +243,8 @@ class _StatusCardState extends State<StatusCard> {
   void initState() {
     super.initState();
     _timer =
-        Timer.periodic(const Duration(milliseconds: 10000), bgTask.updateData);
+        Timer.periodic(const Duration(milliseconds: 5000), bgTask.updateData);
+    bgTask.updateData(_timer);
   }
 
   @override

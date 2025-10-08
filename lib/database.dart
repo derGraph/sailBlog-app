@@ -1,189 +1,104 @@
+import 'dart:isolate';
 import 'package:flutter/material.dart';
-import 'package:orm/orm.dart';
-import 'package:orm_flutter/orm_flutter.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
-import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/recorder.dart';
-import '_generated_prisma_client/client.dart';
-
-late final PrismaClient prisma;
+import 'db_isolate.dart';
 
 class Database {
+  Isolate? _isolate;
+  late SendPort _dbSendPort;
   bool connected = false;
-  String database = "";
+
   Future<void> init() async {
-    if (!connected) {
-      //
+    if (connected) return;
 
-      // if(kDebugMode) {
-        await Permission.manageExternalStorage.request();
-        final supportDir = await getExternalStorageDirectory();
-        database = join(supportDir!.path, 'database.sqlite.db'); 
-      // } else {
-      //   final supportDir = await getApplicationSupportDirectory();
-      //   database = join(supportDir.path, 'database.sqlite.db');
-      // }
+    WidgetsFlutterBinding.ensureInitialized();
 
-      prisma = PrismaClient(datasourceUrl: 'file:$database');
-      final engine = switch (prisma.$engine) {
-        LibraryEngine engine => engine,
-        _ => null,
-      };
-      await prisma.$connect();
-      await engine?.applyMigrations(path: 'prisma/migrations');
-      log("Connected to DB");
-      connected = true;
+    final rootToken = RootIsolateToken.instance;
+
+    final readyPort = ReceivePort();
+    _isolate = await Isolate.spawn(dbIsolateEntry, [rootToken, readyPort.sendPort]);
+    _dbSendPort = await readyPort.first as SendPort;
+    connected = true;
+  }
+
+  Future<dynamic> _send(String cmd, [dynamic args]) async {
+    final rp = ReceivePort();
+    _dbSendPort.send([cmd, args, rp.sendPort]);
+    final result = await rp.first;
+    rp.close();
+
+    // Standardize errors from isolate
+    if (result is Map && result.containsKey('error')) {
+      throw Exception(result['error']);
     }
+
+    return result;
   }
 
-  Future<void> log(String logMessage) async {
-    if (connected) {
-      await prisma.logMessage.create(
-          data: PrismaUnion.$1(LogMessageCreateInput(message: logMessage)));
-    }
-  }
-
-  Future<List<LogMessage>> getLogs() async {
-    List<LogMessage> logs =
-        (await prisma.logMessage.findMany()).toList().reversed.toList();
-    return logs;
-  }
+  // ----------------------- 1:1 API with JSON serialization -----------------------
 
   Future<List<DatapointLocal>> getDatapoints([int? val]) async {
-    if (val != null) {
-      List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
-            orderBy: PrismaUnion.$1([
-              DatapointLocalOrderByWithRelationInput(time: SortOrder.desc),
-            ]),
-            take: val
-        )).toList();
-      return datapoints;
-    }
-    List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
-            orderBy: PrismaUnion.$1([
-      DatapointLocalOrderByWithRelationInput(time: SortOrder.asc),
-    ])))
-        .toList();
-    return datapoints;
-  }
-
-  Future<int> countUploadableDatapoints() async {
-    try {
-      AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
-          where: DatapointLocalWhereInput(
-            uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0))),
-          ),
-          select: AggregateDatapointLocalSelect(
-              $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
-                  select: DatapointLocalCountAggregateOutputTypeSelect(
-                      uploaded: true))))));
-      if (result.$count?.uploaded == null) {
-        return 0;
-      } else {
-        return result.$count!.uploaded!;
-      }
-    } catch (exception) {
-      log("countUploadableDatapoints Error: $exception");
-      return 0;
-    }
-  }
-
-  Future<int> countDatapoints() async {
-    try {
-      AggregateDatapointLocal result = (await prisma.datapointLocal.aggregate(
-          select: AggregateDatapointLocalSelect(
-              $count: PrismaUnion.$2(AggregateDatapointLocalCountArgs(
-                  select: DatapointLocalCountAggregateOutputTypeSelect(
-                      uploaded: true))))));
-      if (result.$count?.uploaded == null) {
-        return 0;
-      } else {
-        return result.$count!.uploaded!;
-      }
-    } catch (exception) {
-      log("countDatapoints Error: $exception");
-      return 0;
-    }
+    final raw = await _send('getDatapoints', val) as List<dynamic>;
+    return raw.map((e) => DatapointLocal.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<DatapointLocal>> getUploadableDatapoints() async {
-    List<DatapointLocal> datapoints = (await prisma.datapointLocal.findMany(
-      where: DatapointLocalWhereInput(
-          uploaded: PrismaUnion.$1(IntFilter(equals: PrismaUnion.$1(0)))),
-      take: 500,
-    ))
-        .toList();
-    return datapoints;
+    final raw = await _send('getUploadableDatapoints') as List<dynamic>;
+    return raw.map((e) => DatapointLocal.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> setDatapointsUploaded(List<String> datapoints, int mode) async {
-    var result = await prisma.datapointLocal.updateMany(
-        where: DatapointLocalWhereInput(
-            id: PrismaUnion.$1(StringFilter($in: datapoints))),
-        data: PrismaUnion.$1(DatapointLocalUpdateManyMutationInput(
-            uploaded: PrismaUnion.$1(mode))));
+  Future<int> countDatapoints() async => await _send('countDatapoints');
+
+  Future<int> countUploadableDatapoints() async => await _send('countUploadableDatapoints');
+
+  Future<void> setDatapointsUploaded(List<String> datapoints, int mode) async =>
+      await _send('setDatapointsUploaded', {'datapoints': datapoints, 'mode': mode});
+
+  Future<void> log(String message) async => await _send('log', message);
+
+  Future<List<LogMessage>> getLogs() async {
+    final raw = await _send('getLogs') as List<dynamic>;
+    return raw.map((e) => LogMessage.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<StoredSettings> getSettings() async {
-    StoredSettings? settings;
-    try {
-      settings = (await prisma.storedSettings.findFirst(
-          orderBy: PrismaUnion.$1(
-              [StoredSettingsOrderByWithRelationInput(id: SortOrder.desc)])));
-    } catch (exception) {
-      log("getSettings Error: $exception");
-    }
-    settings ??= StoredSettings(
-        id: "id",
-        ownSource: true,
-        ip: null,
-        serverIp: "https://sailblog.dergraph.at",
-        lastMode: 0,
-        cookie: "",
-        onlineMode: true);
-    return settings;
+    final raw = await _send('getSettings') as Map<String, dynamic>;
+    return StoredSettings.fromJson(raw);
   }
 
-  Future<void> setSettings(bool ownSource, bool onlineMode, String? ip, String serverIp,
-      int lastMode, String? cookie) async {
-    try {
-      await prisma.storedSettings.create(
-          data: PrismaUnion.$1(StoredSettingsCreateInput(
-        ownSource: ownSource,
-        onlineMode: onlineMode,
-        ip: ip != null ? PrismaUnion.$1(ip) : null,
-        serverIp: serverIp,
-        lastMode: lastMode,
-        cookie: cookie != null ? PrismaUnion.$1(cookie) : null,
-      )));
-    } catch (exception) {
-      log("setSettings Error: $exception");
-    }
-  }
+  Future<void> setSettings(bool ownSource, bool onlineMode, String? ip,
+          String serverIp, int lastMode, String? cookie) async =>
+      await _send('setSettings', {
+        'ownSource': ownSource,
+        'onlineMode': onlineMode,
+        'ip': ip,
+        'serverIp': serverIp,
+        'lastMode': lastMode,
+        'cookie': cookie
+      });
 
   Future<void> addDatapoint(String latitude, String longitude, Modes mode,
-      {String? hAccuracy,
-      String? vAccuracy,
-      String? heading,
-      String? speed}) async {
-    await prisma.datapointLocal.create(
-      data: PrismaUnion.$1(DatapointLocalCreateInput(
-        lat: Decimal.fromJson(latitude.toString()),
-        long: Decimal.fromJson(longitude.toString()),
-        hAccuracy:
-            hAccuracy != null ? PrismaUnion.$1(Decimal.parse(hAccuracy)) : null,
-        vAccuracy:
-            vAccuracy != null ? PrismaUnion.$1(Decimal.parse(vAccuracy)) : null,
-        heading:
-            heading != null ? PrismaUnion.$1(Decimal.parse(heading)) : null,
-        speed: speed != null ? PrismaUnion.$1(Decimal.parse(speed)) : null,
-        propulsion: mode.index,
-      )),
-    );
+          {String? hAccuracy,
+          String? vAccuracy,
+          String? heading,
+          String? speed}) async =>
+      await _send('addDatapoint', {
+        'lat': latitude,
+        'long': longitude,
+        'hAccuracy': hAccuracy,
+        'vAccuracy': vAccuracy,
+        'heading': heading,
+        'speed': speed,
+        'mode': mode.index
+      });
+
+  Future<void> close() async {
+    //await _send('close');
+    _isolate?.kill(priority: Isolate.immediate);
+    connected = false;
   }
 }
 
-Database database = Database();
+final database = Database();
