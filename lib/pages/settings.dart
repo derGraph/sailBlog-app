@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sailblog/_generated_prisma_client/model.dart';
 import 'package:sailblog/database.dart';
+import 'package:sailblog/location_service.dart';
 import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
 import 'package:share_plus/share_plus.dart';
@@ -16,6 +19,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPage extends State<SettingsPage> {
   Future<bool> _ownSource = Settings().getOwnSource();
+  bool _importingDatabase = false;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -74,16 +79,93 @@ class _SettingsPage extends State<SettingsPage> {
           child: const Text("Export Database!"),
           onPressed: () async {
             final supportDir = await getApplicationSupportDirectory();
-            final database = join(supportDir.path, 'database.sqlite.db');
+            final database = p.join(supportDir.path, 'database.sqlite.db');
             final params = ShareParams(
               text: 'sailBlog Database',
               files: [XFile(database)],
             );
             final result = await SharePlus.instance.share(params);
           }
-        )
+        ),
+        ElevatedButton(
+          onPressed: _importingDatabase ? null : _importDatabase,
+          child: Text(
+              _importingDatabase ? "Importing Database..." : "Import Database!"),
+        ),
       ],
     );
+  }
+
+  Future<void> _importDatabase() async {
+    final shouldImport = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("Import database"),
+        content: const Text(
+            "This will overwrite the active database with the selected file."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text("Import"),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldImport != true) {
+      return;
+    }
+
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      withData: false,
+      type: FileType.custom,
+      allowedExtensions: const ['db', 'sqlite', 'sqlite3'],
+    );
+
+    if (result == null || result.files.isEmpty) {
+      return;
+    }
+
+    final selectedFile = result.files.single.path;
+    if (selectedFile == null || selectedFile.isEmpty) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Could not access the selected file.")),
+      );
+      return;
+    }
+
+    setState(() {
+      _importingDatabase = true;
+    });
+
+    try {
+      if (await locationService.isRunning()) {
+        await locationService.end();
+      }
+
+      await database.importDatabase(selectedFile);
+      await SystemNavigator.pop();
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _importingDatabase = false;
+        });
+      }
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Database import failed: $error")),
+      );
+    }
   }
 }
 

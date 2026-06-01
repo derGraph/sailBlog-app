@@ -56,7 +56,11 @@
     <key>NSUserNotificationUsageDescription</key>
     <string>We use notifications to inform you when GPS tracking is active.</string>
 
-    <!-- Background Modes -->
+	<!-- Background Modes -->
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.pravera.flutter_foreground_task.refresh</string>
+	</array>
     <key>UIBackgroundModes</key>
     <array>
         <string>location</string>

@@ -41,6 +41,10 @@ class LocationService {
         notificationText: "Click to return!",
         callback: startCallbackSelf,
       );
+      FlutterForegroundTask.sendDataToTask({
+        "command": "setMode",
+        "mode": recorder.mode.index.toString(),
+      });
     } else {
       if (!await _handlePermissionsNMEA()) {
         _alert("You have to allow all permissions!");
@@ -52,6 +56,10 @@ class LocationService {
         notificationText: "Click to stop recording!",
         callback: startCallbackNMEA,
       );
+      FlutterForegroundTask.sendDataToTask({
+        "command": "setMode",
+        "mode": recorder.mode.index.toString(),
+      });
     }
     _startRunning = false;
   }

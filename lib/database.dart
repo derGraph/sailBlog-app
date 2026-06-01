@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:orm/orm.dart';
 import 'package:orm_flutter/orm_flutter.dart';
@@ -8,16 +10,27 @@ import 'package:sailblog/_generated_prisma_client/prisma.dart';
 import 'package:sailblog/recorder.dart';
 import '_generated_prisma_client/client.dart';
 
-late final PrismaClient prisma;
+late PrismaClient prisma;
 
 class Database {
   bool connected = false;
+  String? _databasePath;
+
+  Future<String> getDatabasePath() async {
+    if (_databasePath != null) {
+      return _databasePath!;
+    }
+
+    WidgetsFlutterBinding.ensureInitialized();
+    final supportDir = await getApplicationSupportDirectory();
+    _databasePath = join(supportDir.path, 'database.sqlite.db');
+    return _databasePath!;
+  }
+
   Future<void> init() async {
     if (!connected) {
       WidgetsFlutterBinding.ensureInitialized();
-
-      final supportDir = await getApplicationSupportDirectory();
-      final database = join(supportDir.path, 'database.sqlite.db');
+      final database = await getDatabasePath();
 
       prisma = PrismaClient(datasourceUrl: 'file:$database');
       final engine = switch (prisma.$engine) {
@@ -29,6 +42,114 @@ class Database {
       log("Connected to DB");
       connected = true;
     }
+  }
+
+  Future<void> disconnect() async {
+    if (!connected) {
+      return;
+    }
+
+    await prisma.$disconnect();
+    connected = false;
+  }
+
+  Future<void> importDatabase(String sourcePath) async {
+    final sourceFile = File(sourcePath);
+    if (!await sourceFile.exists()) {
+      throw Exception("Selected database file was not found.");
+    }
+
+    final targetPath = await getDatabasePath();
+    if (sourceFile.absolute.path == targetPath) {
+      await init();
+      return;
+    }
+
+    final targetFile = File(targetPath);
+    final backupFile = File("$targetPath.bak");
+    final tempImportFile = File("$targetPath.import");
+    final sidecarFiles = _sidecarFiles(targetPath);
+    final backupSidecarFiles = _sidecarFiles("$targetPath.bak");
+
+    if (await tempImportFile.exists()) {
+      await tempImportFile.delete();
+    }
+    if (await backupFile.exists()) {
+      await backupFile.delete();
+    }
+    for (final file in backupSidecarFiles) {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+
+    if (await targetFile.exists()) {
+      await targetFile.rename(backupFile.path);
+    }
+    for (var i = 0; i < sidecarFiles.length; i++) {
+      final sidecarFile = sidecarFiles[i];
+      final backupSidecarFile = backupSidecarFiles[i];
+      if (await sidecarFile.exists()) {
+        await sidecarFile.rename(backupSidecarFile.path);
+      }
+    }
+
+    try {
+      await sourceFile.copy(tempImportFile.path);
+      await tempImportFile.rename(targetFile.path);
+      await _writeImportConfirmation(targetPath, sourcePath);
+      if (await backupFile.exists()) {
+        await backupFile.delete();
+      }
+      for (final file in backupSidecarFiles) {
+        if (await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (error) {
+      if (await tempImportFile.exists()) {
+        await tempImportFile.delete();
+      }
+      if (await targetFile.exists()) {
+        await targetFile.delete();
+      }
+      if (await backupFile.exists()) {
+        await backupFile.rename(targetFile.path);
+      }
+      for (var i = 0; i < sidecarFiles.length; i++) {
+        final sidecarFile = sidecarFiles[i];
+        final backupSidecarFile = backupSidecarFiles[i];
+        if (await sidecarFile.exists()) {
+          await sidecarFile.delete();
+        }
+        if (await backupSidecarFile.exists()) {
+          await backupSidecarFile.rename(sidecarFile.path);
+        }
+      }
+      rethrow;
+    }
+  }
+
+  List<File> _sidecarFiles(String databasePath) => [
+        File("$databasePath-shm"),
+        File("$databasePath-wal"),
+        File("$databasePath-journal"),
+      ];
+
+  Future<void> _writeImportConfirmation(
+      String databasePath, String sourcePath) async {
+    final importPrisma = PrismaClient(datasourceUrl: 'file:$databasePath');
+    final engine = switch (importPrisma.$engine) {
+      LibraryEngine engine => engine,
+      _ => null,
+    };
+    await importPrisma.$connect();
+    await engine?.applyMigrations(path: 'prisma/migrations');
+    await importPrisma.logMessage.create(
+      data: PrismaUnion.$1(
+        LogMessageCreateInput(message: "Imported database from $sourcePath"),
+      ),
+    );
   }
 
   Future<void> log(String logMessage) async {
@@ -51,6 +172,37 @@ class Database {
     ])))
         .toList();
     return datapoints;
+  }
+
+  Future<List<DatapointLocal>> getRecentDatapoints({int limit = 200}) async {
+    final datapoints = (await prisma.datapointLocal.findMany(
+      orderBy: PrismaUnion.$1([
+        DatapointLocalOrderByWithRelationInput(time: SortOrder.desc),
+      ]),
+      take: limit,
+    ))
+        .toList()
+        .reversed
+        .toList();
+    return datapoints;
+  }
+
+  Future<int> countDatapoints() async {
+    try {
+      final result = await prisma.datapointLocal.aggregate(
+        select: AggregateDatapointLocalSelect(
+          $count: PrismaUnion.$2(
+            AggregateDatapointLocalCountArgs(
+              select: DatapointLocalCountAggregateOutputTypeSelect(id: true),
+            ),
+          ),
+        ),
+      );
+      return result.$count?.id ?? 0;
+    } catch (exception) {
+      log("countDatapoints Error: $exception");
+      return 0;
+    }
   }
 
   Future<int> countUploadableDatapoints() async {

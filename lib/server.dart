@@ -157,7 +157,8 @@ class Server {
         headers: {'Host': "sailblog.dergraph.at"},
       );
       Dio dio = Dio(dioBaseOptions);
-      response = await dio.post('/sign_in', data: formData);
+      await database.log(formData.toString());
+      response = await dio.post('/sign_in?/login=', data: formData);
     } on DioException catch (e) {
       response = e.response!;
       database.log(e.toString());

@@ -1,7 +1,8 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=C:\Users\paul\AppData\Local\flutter"
-export "FLUTTER_APPLICATION_PATH=D:\Nextcloud\prog\sailBlog\sailBlog-app"
+export "FLUTTER_ROOT=/home/paul/flutter"
+export "FLUTTER_APPLICATION_PATH=/home/paul/Documents/code/sailBlog-app"
+export "FLUTTER_FRAMEWORK_SWIFT_PACKAGE_PATH=/home/paul/Documents/code/sailBlog-app/macos/Flutter/ephemeral/Packages/.packages/FlutterFramework"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.3.13"

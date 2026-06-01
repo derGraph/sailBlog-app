@@ -64,19 +64,21 @@ class RecordPageBGTask extends ChangeNotifier {
   }
 
   Future<void> updateData(Timer timer) async {
-    newDatapoints = await database.getDatapoints();
+    final totalDatapoints = await database.countDatapoints();
     newUploadable = await database.countUploadableDatapoints();
-    uploadedCount = newDatapoints.length - newUploadable;
+    uploadedCount = totalDatapoints - newUploadable;
 
-    if (newDatapoints.length > oldPoints) {
-      oldPoints = newDatapoints.length;
+    if (totalDatapoints > oldPoints) {
+      oldPoints = totalDatapoints;
+      newDatapoints = await database.getRecentDatapoints(limit: 200);
+      polylines = [];
 
-      if (newDatapoints.length > 200) {
-        newDatapoints = newDatapoints.sublist(
-            newDatapoints.length - 200, newDatapoints.length);
+      if (newDatapoints.isEmpty) {
+        notifyListeners();
+        return;
       }
 
-      int lastPropulsion = newDatapoints[0].propulsion!;
+      int lastPropulsion = newDatapoints.first.propulsion!;
       List<LatLng> points = [];
       for (DatapointLocal datapoint in newDatapoints) {
         if (datapoint.propulsion == lastPropulsion) {
@@ -247,8 +249,7 @@ class _StatusCardState extends State<StatusCard> {
   @override
   void initState() {
     super.initState();
-    _timer =
-        Timer.periodic(const Duration(milliseconds: 100), bgTask.updateData);
+    _timer = Timer.periodic(const Duration(seconds: 1), bgTask.updateData);
   }
 
   @override

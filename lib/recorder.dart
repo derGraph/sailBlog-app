@@ -1,4 +1,5 @@
 import 'package:sailblog/database.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:sailblog/location_service.dart';
 import 'package:sailblog/server.dart';
 import 'package:sailblog/settings.dart';
@@ -49,13 +50,19 @@ class Recorder {
     await settings.changeLastMode(newMode.index);
     if (newMode == Modes.off) {
       //disable logger
-      locationService.end();
+      await locationService.end();
     } else {
       //enable logger
       if (!(await locationService.isRunning())) {
-        locationService.start();
+        await locationService.start();
       }
     }
     mode = newMode;
+    if (await locationService.isRunning()) {
+      FlutterForegroundTask.sendDataToTask({
+        "command": "setMode",
+        "mode": newMode.index.toString(),
+      });
+    }
   }
 }

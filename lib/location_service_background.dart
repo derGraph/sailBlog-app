@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,117 +29,222 @@ class NMEAHandler extends TaskHandler {
 
   // Called when the task is destroyed.
   @override
-  Future<void> onDestroy(DateTime timestamp) async {
+  Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     defaultOnDestroy(timestamp, "NMEA");
   }
 
   // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
   @override
-  Future<void> onReceiveData(Object data) async {
+  void onReceiveData(Object data) {
     defaultOnRecieveData(data);
   }
 
   // Called when the notification itself is pressed.
   @override
-  Future<void> onNotificationPressed() async {
+  void onNotificationPressed() {
     defaultOnNotificationPressed();
   }
 
   // Called when the notification itself is dismissed.
   @override
-  Future<void> onNotificationDismissed() async {
+  void onNotificationDismissed() {
     defaultOnNotificationDismissed();
   }
 
   @override
-  Future<void> onRepeatEvent(DateTime timestamp) async {
-    await defaultOnRepeatEvent(timestamp);
+  void onRepeatEvent(DateTime timestamp) {
+    defaultOnRepeatEvent(timestamp);
   }
 }
 
 class SelfHandler extends TaskHandler {
+  StreamSubscription<Position>? _positionSubscription;
+  bool _isDestroying = false;
+  bool _isRestartingStream = false;
+
   // Called when the task is started.
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await database.init();
-    final LocationSettings locationSettings =
-        LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 0);
+    await _startPositionStream();
+    defaultOnStart(timestamp, "Self", starter);
+  }
 
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) async {
-      Modes oldMode = mode;
-      DateTime endTime =
-          DateTime.now().add(Duration(seconds: 1)); // Timeout for mode change
+  // Called when the task is destroyed.
+  @override
+  Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
+    _isDestroying = true;
+    await _positionSubscription?.cancel();
+    _positionSubscription = null;
+    defaultOnDestroy(timestamp, "Self");
+  }
 
-      Map<String, dynamic> data = {
-        "command": "getMode",
-      };
-      FlutterForegroundTask.sendDataToMain(data);
+  // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
+  @override
+  void onReceiveData(Object data) {
+    defaultOnRecieveData(data);
+  }
 
-      while (mode == oldMode && endTime.isAfter(DateTime.now())) {
-        // Wait for mode to be set
-        await Future.delayed(const Duration(milliseconds: 10));
+  // Called when the notification itself is pressed.
+  @override
+  void onNotificationPressed() {
+    defaultOnNotificationPressed();
+  }
+
+  // Called when the notification itself is dismissed.
+  @override
+  void onNotificationDismissed() {
+    defaultOnNotificationDismissed();
+  }
+
+  @override
+  void onRepeatEvent(DateTime timestamp) {
+    defaultOnRepeatEvent(timestamp);
+  }
+
+  LocationSettings _buildLocationSettings() {
+    if (Platform.isAndroid) {
+      return AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 0,
+        forceLocationManager: true,
+        intervalDuration: const Duration(seconds: 1),
+        useMSLAltitude: true,
+      );
+    }
+
+    if (Platform.isIOS) {
+      return AppleSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 0,
+        activityType: ActivityType.otherNavigation,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+        allowBackgroundLocationUpdates: true,
+      );
+    }
+
+    return LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 0,
+    );
+  }
+
+  Future<void> _startPositionStream() async {
+    await _positionSubscription?.cancel();
+    _positionSubscription = Geolocator.getPositionStream(
+      locationSettings: _buildLocationSettings(),
+    ).listen(
+      (Position? position) {
+        if (position == null) {
+          return;
+        }
+        unawaited(_handlePosition(position));
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        log("Position stream failed: $error\n$stackTrace");
+        unawaited(_restartPositionStream());
+      },
+      onDone: () {
+        log("Position stream closed, restarting.");
+        unawaited(_restartPositionStream());
+      },
+      cancelOnError: false,
+    );
+  }
+
+  Future<void> _restartPositionStream() async {
+    if (_isDestroying || _isRestartingStream) {
+      return;
+    }
+    _isRestartingStream = true;
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      if (_isDestroying) {
+        return;
       }
-      if (endTime.isBefore(DateTime.now())) {
-        log("Mode switch timed out!");
-      } else {
-        log("Got new Mode: $mode");
+      await _startPositionStream();
+    } catch (error, stackTrace) {
+      log("Restarting position stream failed: $error\n$stackTrace");
+    } finally {
+      _isRestartingStream = false;
+    }
+  }
+
+  Future<void> _handlePosition(Position position) async {
+    try {
+      if (!_isAcceptablePosition(position)) {
+        return;
       }
+
+      await _requestLatestMode();
 
       if (mode == Modes.off) {
         return;
       }
 
       await database.addDatapoint(
-          position!.latitude.toString(), position.longitude.toString(), mode,
-          hAccuracy: position.accuracy.toString(),
-          vAccuracy: position.accuracy.toString(),
-          heading: position.heading.toString(),
-          speed: position.speed.toString());
-      Settings settings = Settings();
+        position.latitude.toString(),
+        position.longitude.toString(),
+        mode,
+        hAccuracy: position.accuracy.toString(),
+        vAccuracy: position.accuracy.toString(),
+        heading: position.heading.toString(),
+        speed: position.speed.toString(),
+      );
+
+      final Settings settings = Settings();
       await settings.init();
       if (settings.onlineMode) {
         await server.uploadDatapoints();
       }
-      int datapointsCount = (await database.getDatapoints()).length;
-      int uploadableCount = await database.countUploadableDatapoints();
 
-      int uploadedCount = datapointsCount - uploadableCount;
-      FlutterForegroundTask.updateService(
+      final int datapointsCount = (await database.getDatapoints()).length;
+      final int uploadableCount = await database.countUploadableDatapoints();
+      final int uploadedCount = datapointsCount - uploadableCount;
+
+      await FlutterForegroundTask.updateService(
         notificationText:
             "last update at ${DateTime.now().toLocal()} uploaded $uploadedCount/$datapointsCount",
       );
-    });
-    defaultOnStart(timestamp, "Self", starter);
+    } catch (error, stackTrace) {
+      log("Failed to process position update: $error\n$stackTrace");
+    }
   }
 
-  // Called when the task is destroyed.
-  @override
-  Future<void> onDestroy(DateTime timestamp) async {
-    defaultOnDestroy(timestamp, "Self");
+  bool _isAcceptablePosition(Position position) {
+    if (!Platform.isAndroid) {
+      return true;
+    }
+
+    if (position is! AndroidPosition) {
+      log("Rejected non-Android position payload on Android.");
+      return false;
+    }
+
+    if (position.satellitesUsedInFix <= 0) {
+      log(
+        "Rejected non-GNSS fix: satellites used in fix=${position.satellitesUsedInFix}, total satellites=${position.satelliteCount}",
+      );
+      return false;
+    }
+
+    return true;
   }
 
-  // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
-  @override
-  Future<void> onReceiveData(Object data) async {
-    defaultOnRecieveData(data);
-  }
+  Future<void> _requestLatestMode() async {
+    final Modes oldMode = mode;
+    final DateTime endTime = DateTime.now().add(const Duration(seconds: 1));
 
-  // Called when the notification itself is pressed.
-  @override
-  Future<void> onNotificationPressed() async {
-    defaultOnNotificationPressed();
-  }
+    FlutterForegroundTask.sendDataToMain({"command": "getMode"});
 
-  // Called when the notification itself is dismissed.
-  @override
-  Future<void> onNotificationDismissed() async {
-    defaultOnNotificationDismissed();
-  }
+    while (mode == oldMode && endTime.isAfter(DateTime.now())) {
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
 
-  @override
-  Future<void> onRepeatEvent(DateTime timestamp) async {
-    await defaultOnRepeatEvent(timestamp);
+    if (endTime.isBefore(DateTime.now())) {
+      log("Mode sync timed out, continuing with $mode");
+    }
   }
 }
 

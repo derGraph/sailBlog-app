@@ -5,16 +5,29 @@ allprojects {
     }
 }
 
+def forcedCompileSdk = 36
+
+def configureAndroidProject = { project ->
+    project.extensions.configure("android") { androidExt ->
+        if (androidExt.hasProperty("compileSdk")) {
+            androidExt.compileSdk = forcedCompileSdk
+        } else if (androidExt.metaClass.respondsTo(androidExt, "compileSdkVersion", Integer)) {
+            androidExt.compileSdkVersion(forcedCompileSdk)
+        }
+        if (androidExt.hasProperty("namespace") && androidExt.namespace == null) {
+            androidExt.namespace = project.group
+        }
+    }
+}
+
 rootProject.buildDir = "../build"
 subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            project.android {
-                if (namespace == null) {
-                    namespace project.group
-                }
-            }
-        }
+    def androidProject = project
+    pluginManager.withPlugin("com.android.application") {
+        configureAndroidProject(androidProject)
+    }
+    pluginManager.withPlugin("com.android.library") {
+        configureAndroidProject(androidProject)
     }
 }
 subprojects {
