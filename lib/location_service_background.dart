@@ -229,6 +229,13 @@ class SelfHandler extends TaskHandler {
       return false;
     }
 
+    if (position.accuracy >= 200) {
+      log(
+        "Position to inaccurate (<200m)"
+      );
+      return false;
+    }
+
     return true;
   }
 
