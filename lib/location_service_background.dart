@@ -53,7 +53,7 @@ class NMEAHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) {
-    defaultOnRepeatEvent(timestamp);
+    defaultOnRepeatEvent(timestamp, null);
   }
 }
 
@@ -61,6 +61,10 @@ class SelfHandler extends TaskHandler {
   StreamSubscription<Position>? _positionSubscription;
   bool _isDestroying = false;
   bool _isRestartingStream = false;
+  bool _isProcessingPosition = false;
+  Position? _pendingPosition;
+  DateTime? _lastUploadAt;
+  DateTime? _lastAcceptedPositionAt;
 
   // Called when the task is started.
   @override
@@ -99,7 +103,7 @@ class SelfHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) {
-    defaultOnRepeatEvent(timestamp);
+    defaultOnRepeatEvent(timestamp, _lastAcceptedPositionAt);
   }
 
   LocationSettings _buildLocationSettings() {
@@ -139,7 +143,7 @@ class SelfHandler extends TaskHandler {
         if (position == null) {
           return;
         }
-        unawaited(_handlePosition(position));
+        _enqueuePosition(position);
       },
       onError: (Object error, StackTrace stackTrace) {
         log("Position stream failed: $error\n$stackTrace");
@@ -177,6 +181,8 @@ class SelfHandler extends TaskHandler {
         return;
       }
 
+      _lastAcceptedPositionAt = DateTime.now();
+
       await _requestLatestMode();
 
       if (mode == Modes.off) {
@@ -195,11 +201,15 @@ class SelfHandler extends TaskHandler {
 
       final Settings settings = Settings();
       await settings.init();
-      if (settings.onlineMode) {
+      final DateTime now = DateTime.now();
+      final bool shouldUpload = _lastUploadAt == null ||
+          now.difference(_lastUploadAt!) >= const Duration(seconds: 15);
+      if (settings.onlineMode && shouldUpload) {
+        _lastUploadAt = now;
         await server.uploadDatapoints();
       }
 
-      final int datapointsCount = (await database.getDatapoints()).length;
+      final int datapointsCount = await database.countDatapoints();
       final int uploadableCount = await database.countUploadableDatapoints();
       final int uploadedCount = datapointsCount - uploadableCount;
 
@@ -209,6 +219,30 @@ class SelfHandler extends TaskHandler {
       );
     } catch (error, stackTrace) {
       log("Failed to process position update: $error\n$stackTrace");
+    }
+  }
+
+  void _enqueuePosition(Position position) {
+    _pendingPosition = position;
+    if (_isProcessingPosition) {
+      return;
+    }
+    _isProcessingPosition = true;
+    unawaited(_drainPositionQueue());
+  }
+
+  Future<void> _drainPositionQueue() async {
+    try {
+      while (!_isDestroying && _pendingPosition != null) {
+        final Position nextPosition = _pendingPosition!;
+        _pendingPosition = null;
+        await _handlePosition(nextPosition);
+      }
+    } finally {
+      _isProcessingPosition = false;
+      if (!_isDestroying && _pendingPosition != null) {
+        _enqueuePosition(_pendingPosition!);
+      }
     }
   }
 
@@ -285,9 +319,21 @@ void defaultOnStart(DateTime timestamp, String source, TaskStarter starter) {
   FlutterForegroundTask.sendDataToMain(data);
 }
 
-Future<void> defaultOnRepeatEvent(DateTime timestamp) async {
+Future<void> defaultOnRepeatEvent(
+    DateTime timestamp, DateTime? lastAcceptedPositionAt) async {
   // This method is called periodically based on the repeat interval set in the task options.
-  // You can perform periodic tasks here, such as logging or updating the UI.
+  final String gpsState;
+  if (lastAcceptedPositionAt == null) {
+    gpsState = "waiting for first GPS fix";
+  } else {
+    final int secondsSinceFix =
+        timestamp.difference(lastAcceptedPositionAt).inSeconds;
+    gpsState = "last GPS fix ${secondsSinceFix}s ago";
+  }
+
+  await FlutterForegroundTask.updateService(
+    notificationText: gpsState,
+  );
 }
 
 Future<void> defaultOnRecieveData(Object data) async {

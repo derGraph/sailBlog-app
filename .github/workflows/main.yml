@@ -32,10 +32,16 @@ jobs:  # Telling what jobs we need to happen
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/keystore.jks
 
       - name: Decode android/key.properties
-        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/key.properties
+        run: |
+          echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > android/key.properties
+          grep -v '^storeFile=' android/key.properties > android/key.properties.tmp
+          mv android/key.properties.tmp android/key.properties
+          echo 'storeFile=keystore.jks' >> android/key.properties
 
-      - name: Decode android/local.properties
-        run: echo "${{ secrets.LOCAL_PROPERTIES }}" | base64 --decode > /Users/runner/work/sailBlog-app/sailBlog-app/android/local.properties
+      - name: Write android/local.properties
+        run: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
 
       - name: Install Flutter dependencies # Install Flutter packages
         run: |
