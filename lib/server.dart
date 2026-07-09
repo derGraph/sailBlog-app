@@ -32,10 +32,7 @@ class Server {
         (await database.getUploadableDatapoints()).toList();
     Map<String, Map<String, dynamic>> jsonData = {};
 
-    //database.log("Uploading Datapoints!");
-
     if (datapoints.isEmpty) {
-      //database.log("No Datapoints to upload!");
       return 0;
     }
 
@@ -55,7 +52,7 @@ class Server {
     }
 
     if(settings.cookie == "") {
-      database.log("Not Cookie found!");
+      database.log("No Cookie found!");
     }
 
     if (settings.cookie == "" && allowLogin && database.connected) {
@@ -76,7 +73,13 @@ class Server {
       );
       Dio dio = Dio(dioBaseOptions);
       await database.log(jsonData.toString());
-      response = await dio.post("/api/Datapoints", data: jsonData);
+      
+      // FIX: Added JSON Content-Type options here to bypass CSRF checks cleanly on this endpoint
+      response = await dio.post(
+        "/api/Datapoints", 
+        data: jsonData,
+        options: Options(contentType: Headers.jsonContentType),
+      );
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
         response = e.response!;
@@ -148,17 +151,28 @@ class Server {
     await settings.init();
     Response response;
     try {
-      FormData formData = FormData.fromMap({
+      // FIX 1: Swapped FormData out for a standard JSON Map payload
+      Map<String, dynamic> loginData = {
         'identifier': username,
         'password': password,
-      });
+      };
+      
       BaseOptions dioBaseOptions = BaseOptions(
         baseUrl: 'https://sailblog.dergraph.at',
-        headers: {'Host': "sailblog.dergraph.at"},
+        headers: {
+          'Host': "sailblog.dergraph.at",
+        },
       );
       Dio dio = Dio(dioBaseOptions);
-      await database.log(formData.toString());
-      response = await dio.post('/sign_in?/login=', data: formData);
+      await database.log(loginData.toString());
+
+      // FIX 2: Fixed action routing mapping (?/login instead of ?/login=) 
+      // FIX 3: Added Options setting explicit JSON Content-Type mapping
+      response = await dio.post(
+        '/sign_in?/login', 
+        data: loginData,
+        options: Options(contentType: Headers.jsonContentType),
+      );
     } on DioException catch (e) {
       response = e.response!;
       database.log(e.toString());
@@ -234,7 +248,7 @@ class LoginPopup extends StatelessWidget {
         TextButton(
           onPressed: () {
             server.loginUnderway = false;
-            Navigator.of(context).pop(); // Close the popup
+            Navigator.of(context).pop();
           },
           child: const Text('Cancel'),
         ),
@@ -243,11 +257,10 @@ class LoginPopup extends StatelessWidget {
             final email = emailController.text;
             final password = passwordController.text;
 
-            // Handle the login logic here
             server
                 .loginRequest(email, password)
                 .then((result) => {database.log("Stored Cookie!")});
-            Navigator.of(context).pop(); // Close the popup after login
+            Navigator.of(context).pop();
           },
           child: const Text('Login'),
         ),

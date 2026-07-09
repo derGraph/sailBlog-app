@@ -325,15 +325,17 @@ Future<void> defaultOnRepeatEvent(
   final String gpsState;
   if (lastAcceptedPositionAt == null) {
     gpsState = "waiting for first GPS fix";
-  } else {
+    await FlutterForegroundTask.updateService(
+      notificationText: gpsState,
+    );
+  } else if (DateTime.now().difference(lastAcceptedPositionAt).inSeconds >= 60) {
     final int secondsSinceFix =
         timestamp.difference(lastAcceptedPositionAt).inSeconds;
     gpsState = "last GPS fix ${secondsSinceFix}s ago";
+    await FlutterForegroundTask.updateService(
+      notificationText: gpsState,
+    );
   }
-
-  await FlutterForegroundTask.updateService(
-    notificationText: gpsState,
-  );
 }
 
 Future<void> defaultOnRecieveData(Object data) async {
