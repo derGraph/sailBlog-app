@@ -74,7 +74,6 @@ class Server {
       Dio dio = Dio(dioBaseOptions);
       await database.log(jsonData.toString());
       
-      // FIX: Added JSON Content-Type options here to bypass CSRF checks cleanly on this endpoint
       response = await dio.post(
         "/api/Datapoints", 
         data: jsonData,
@@ -151,7 +150,6 @@ class Server {
     await settings.init();
     Response response;
     try {
-      // FIX 1: Swapped FormData out for a standard JSON Map payload
       Map<String, dynamic> loginData = {
         'identifier': username,
         'password': password,
@@ -166,10 +164,9 @@ class Server {
       Dio dio = Dio(dioBaseOptions);
       await database.log(loginData.toString());
 
-      // FIX 2: Fixed action routing mapping (?/login instead of ?/login=) 
-      // FIX 3: Added Options setting explicit JSON Content-Type mapping
+      // IMPLEMENTATION FIX: Targeting the standalone API endpoint with JSON Content-Type
       response = await dio.post(
-        '/sign_in?/login', 
+        '/api/login', 
         data: loginData,
         options: Options(contentType: Headers.jsonContentType),
       );
@@ -184,10 +181,15 @@ class Server {
         return 404;
       case 200:
       case 302:
-        await settings.setCookie(response.headers["set-cookie"]![0]
-            .replaceAll("session_token=", "")
-            .split(";")[0]);
-        await database.log("Logged in!");
+        // Reads cookie header set from the standalone server framework endpoint
+        if (response.headers["set-cookie"] != null) {
+          await settings.setCookie(response.headers["set-cookie"]![0]
+              .replaceAll("session_token=", "")
+              .split(";")[0]);
+          await database.log("Logged in!");
+        } else {
+          database.log("Logged in, but couldn't parse cookie data header framework directly.");
+        }
         loginUnderway = false;
         return 302;
       default:
