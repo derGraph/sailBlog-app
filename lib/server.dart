@@ -169,7 +169,7 @@ class Server {
       // FIX 2: Fixed action routing mapping (?/login instead of ?/login=) 
       // FIX 3: Added Options setting explicit JSON Content-Type mapping
       response = await dio.post(
-        '/sign_in', 
+        '/sign_in?/login', 
         data: loginData,
         options: Options(contentType: Headers.jsonContentType),
       );
